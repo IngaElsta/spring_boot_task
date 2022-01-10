@@ -1,8 +1,10 @@
 package com.github.IngaElsta.spring_boot_task;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,8 +34,9 @@ public class SkiPlanController {
             return skiPlanService.getWeather(location);
         } catch (NumberFormatException e) {
             log.error("GetWeather: Non numeric values were passed as location - lat {}, lon {}", lat, lon);
-            //TODO: Add error message instead of return
-            return new ArrayList<>();
+            //TODO: Probably implement some sort of a more specific message
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Non numeric values were passed as location");
         }
     }
 

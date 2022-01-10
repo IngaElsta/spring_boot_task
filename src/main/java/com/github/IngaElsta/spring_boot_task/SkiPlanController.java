@@ -34,7 +34,6 @@ public class SkiPlanController {
             return skiPlanService.getWeather(location);
         } catch (NumberFormatException e) {
             log.error("GetWeather: Non numeric values were passed as location - lat {}, lon {}", lat, lon);
-            //TODO: Probably implement some sort of a more specific message
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Non numeric values were passed as location");
         }

@@ -3,11 +3,16 @@ package com.github.IngaElsta.spring_boot_task;
 import lombok.Data;
 import lombok.Builder;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @Builder
 public class SkiLocation {
 
-    private String lat;
-    private String lon;
+    @NotBlank
+    private String latitude;
+
+    @NotBlank
+    private String longitude;
 
 }

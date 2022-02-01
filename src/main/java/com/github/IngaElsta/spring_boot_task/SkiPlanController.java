@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -27,15 +26,11 @@ public class SkiPlanController {
             @RequestParam (value = "lat", required = false, defaultValue = "56.95") String lat,
             @RequestParam (value = "lon", required = false, defaultValue = "24.11") String lon) {
         try {
-            Double.valueOf(lat);
-            Double.valueOf(lon);
-
-            SkiLocation location = new SkiLocation (lat, lon);
-            return skiPlanService.getWeather(location);
-        } catch (NumberFormatException e) {
-            log.error("GetWeather: Non numeric values were passed as location - lat {}, lon {}", lat, lon);
+            return skiPlanService.getWeather(new SkiLocation (lat, lon));
+        } catch (HttpClientErrorException e) {
+            log.error("GetWeather: Invalid values were passed for location - lat {}, lon {}", lat, lon);
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Non numeric values were passed as location");
+                    HttpStatus.BAD_REQUEST, "Invalid values were passed for location");
         }
     }
 

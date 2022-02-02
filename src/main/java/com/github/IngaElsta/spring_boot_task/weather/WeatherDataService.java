@@ -1,6 +1,7 @@
-package com.github.IngaElsta.spring_boot_task;
+package com.github.IngaElsta.spring_boot_task.weather;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.IngaElsta.spring_boot_task.planning.SkiLocation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;

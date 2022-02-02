@@ -1,9 +1,10 @@
-package com.github.IngaElsta.spring_boot_task;
+package com.github.IngaElsta.spring_boot_task.planning;
 
+import com.github.IngaElsta.spring_boot_task.weather.WeatherConditions;
+import com.github.IngaElsta.spring_boot_task.weather.WeatherDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

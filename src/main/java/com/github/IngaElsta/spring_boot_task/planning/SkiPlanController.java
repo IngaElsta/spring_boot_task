@@ -1,5 +1,6 @@
-package com.github.IngaElsta.spring_boot_task;
+package com.github.IngaElsta.spring_boot_task.planning;
 
+import com.github.IngaElsta.spring_boot_task.weather.WeatherConditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

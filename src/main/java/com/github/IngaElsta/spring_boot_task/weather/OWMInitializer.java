@@ -1,4 +1,4 @@
-package com.github.IngaElsta.spring_boot_task;
+package com.github.IngaElsta.spring_boot_task.weather;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

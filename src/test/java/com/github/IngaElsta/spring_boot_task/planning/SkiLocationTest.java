@@ -1,6 +1,6 @@
-package com.github.IngaElsta.spring_boot_task;
+package com.github.IngaElsta.spring_boot_task.planning;
 
-import com.github.IngaElsta.spring_boot_task.SkiLocation;
+import com.github.IngaElsta.spring_boot_task.planning.SkiLocation;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

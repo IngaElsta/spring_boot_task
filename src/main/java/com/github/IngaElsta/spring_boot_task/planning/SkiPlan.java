@@ -1,4 +1,4 @@
-package com.github.IngaElsta.spring_boot_task;
+package com.github.IngaElsta.spring_boot_task.planning;
 
 import java.time.LocalDate;
 

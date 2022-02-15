@@ -1,15 +1,13 @@
 package com.github.IngaElsta.spring_boot_task.planning;
 
-import com.github.IngaElsta.spring_boot_task.planning.SkiLocation;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.util.Set;
 
 public class SkiLocationTest {
@@ -18,7 +16,6 @@ public class SkiLocationTest {
 
     @BeforeEach
     public void setup() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
@@ -67,6 +64,11 @@ public class SkiLocationTest {
         SkiLocation location = new SkiLocation(latitude, longitude);
         Set<ConstraintViolation<SkiLocation>> violations = validator.validate(location);
         assertFalse(violations.isEmpty());
+
+        longitude = "0.00001"; //too long fraction
+        location = new SkiLocation(latitude, longitude);
+        violations = validator.validate(location);
+        assertFalse(violations.isEmpty());
     }
 
     @Test
@@ -75,6 +77,12 @@ public class SkiLocationTest {
         String longitude = "-179";
         SkiLocation location = new SkiLocation(latitude, longitude);
         Set<ConstraintViolation<SkiLocation>> violations = validator.validate(location);
+        assertFalse(violations.isEmpty());
+
+
+        latitude = "-0.00001"; //too long fraction
+        location = new SkiLocation(latitude, longitude);
+        violations = validator.validate(location);
         assertFalse(violations.isEmpty());
     }
 

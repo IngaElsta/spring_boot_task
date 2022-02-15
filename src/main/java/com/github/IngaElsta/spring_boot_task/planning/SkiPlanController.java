@@ -8,7 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -23,7 +24,7 @@ public class SkiPlanController {
     }
 
     @GetMapping ("/weather")
-    public List<WeatherConditions> getWeather(
+    public Map<LocalDate, WeatherConditions> getWeather(
             @RequestParam (value = "lat", required = false, defaultValue = "56.95") String lat,
             @RequestParam (value = "lon", required = false, defaultValue = "24.11") String lon) {
         try {

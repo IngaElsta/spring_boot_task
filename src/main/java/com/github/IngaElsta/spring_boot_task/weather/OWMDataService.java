@@ -30,23 +30,30 @@ public class OWMDataService implements WeatherDataService {
 
     public Map<LocalDate, WeatherConditions> retrieveWeather (SkiLocation location) {
         var url = new UriTemplate(owmConfiguration.getOneApiUrl())
-                .expand(location.getLatitude(), location.getLongitude(), owmConfiguration.getAuthToken());
+                .expand(location.getLatitude(), location.getLongitude(),
+                        owmConfiguration.getAuthToken());
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         System.out.println(response);
 
-        Map<LocalDate, WeatherConditions> conditionsMap = processWeatherData(response);
-        return conditionsMap;
+        if (response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 400) {
+            Map<LocalDate, WeatherConditions> conditionsMap = processWeatherData(
+                    response.getBody());
+            return conditionsMap;
+        } else {
+            //todo: refactor the code to process error responses
+            return new HashMap<>();
+        }
     }
 
-    private Map<LocalDate, WeatherConditions> processWeatherData(ResponseEntity<String> WeatherJson) {
+    //might make this private again later
+    public static Map<LocalDate, WeatherConditions> processWeatherData(String weatherJson) {
         //TODO: add json processing here
         return new HashMap<>();
     }
 
     private LocalDateTime convertDate(long date_seconds){
         Instant instant = Instant.ofEpochSecond(date_seconds);
-        LocalDateTime result = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
-        return result;
+        return instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
 }

@@ -1,5 +1,7 @@
 package com.github.IngaElsta.spring_boot_task.weather;
 
+import com.github.IngaElsta.spring_boot_task.validation.LocalDateNotNull;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,11 +14,11 @@ import javax.validation.constraints.NotNull;
 @Data
 @Builder
 public class WeatherConditions {
-    @NotEmpty
+    @LocalDateNotNull
     private LocalDate date;
 
     @NotEmpty
-    private String weather; //weather: description
+    private String weatherDescription; //weather: description
 
     @NotNull
     private Temperature temperature;

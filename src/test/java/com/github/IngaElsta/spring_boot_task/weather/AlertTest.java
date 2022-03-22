@@ -105,7 +105,7 @@ public class AlertTest {
 
     @Test
     @Disabled
-    void WhenalertStartAfterEndOfDay_thenValidationFails(){
+    void WhenAlertStartAfterEndOfDay_thenValidationFails(){
         String alertType = "Yellow Flooding Warning";
         LocalDateTime alertEnd = LocalDateTime.now().minusHours(1);
 

@@ -6,6 +6,9 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.util.Map;
 
+/**
+ * This class is implemented only to manage deserialization
+ */
 @Data
 @AllArgsConstructor
 public class WeatherConditionsMapWrapper {

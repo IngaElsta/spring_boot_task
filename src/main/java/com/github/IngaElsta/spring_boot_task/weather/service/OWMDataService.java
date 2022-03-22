@@ -8,7 +8,6 @@ import com.github.IngaElsta.spring_boot_task.planning.domain.SkiLocation;
 import com.github.IngaElsta.spring_boot_task.weather.configuration.OWMConfiguration;
 import com.github.IngaElsta.spring_boot_task.weather.deserialize.OWMDeserializer;
 import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditions;
-import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditionsMapWrapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -49,9 +48,9 @@ public class OWMDataService implements WeatherDataService {
         System.out.println(response);
 
         if (response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 400) {
-            WeatherConditionsMapWrapper conditionsMap = processWeatherData(
+            Map<LocalDate, WeatherConditions> conditionsMap = processWeatherData(
                     response.getBody());
-            return conditionsMap.getWeatherConditionsMap();
+            return conditionsMap;
         } else {
             //todo: refactor the code to process error responses
             return new HashMap<>();
@@ -59,17 +58,17 @@ public class OWMDataService implements WeatherDataService {
     }
 
     //might make this private again later
-    public static WeatherConditionsMapWrapper processWeatherData(String weatherJson) {
+    public static Map<LocalDate, WeatherConditions> processWeatherData(String weatherJson) {
         //TODO: add json processing here
         TypeReference typeReference = new TypeReference<Map<LocalDate, WeatherConditions>>(){};
 
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule("OWMDeserializer", new Version(1, 0, 0, null, null, null));
-        module.addDeserializer(WeatherConditionsMapWrapper.class, new OWMDeserializer());
+        module.addDeserializer(Map.class, new OWMDeserializer());
         mapper.registerModule(module);
-        WeatherConditionsMapWrapper weatherConditionsMap = new WeatherConditionsMapWrapper(new HashMap<>());
+        Map<LocalDate, WeatherConditions> weatherConditionsMap = new HashMap<>();
         try {
-            weatherConditionsMap = mapper.readValue(weatherJson, WeatherConditionsMapWrapper.class);
+            weatherConditionsMap = mapper.readValue(weatherJson, Map.class);
         } catch (JsonProcessingException e) {
             log.error("processWeatherData: Failed to process weather data {}", weatherJson);
             //todo:throw something

@@ -6,14 +6,16 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.github.IngaElsta.spring_boot_task.weather.domain.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherConditions>> {
 
     public OWMDeserializer() {
@@ -28,21 +30,47 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
     public Map<LocalDate, WeatherConditions> deserialize(
             JsonParser parser, DeserializationContext deserializer) throws IOException {
 
-        Map<LocalDate, WeatherConditions> conditionsMap = new HashMap<LocalDate, WeatherConditions>();
+        Map<LocalDate, WeatherConditions> conditionsMap = new HashMap<>();
 
         ObjectCodec codec = parser.getCodec();
         JsonNode node = codec.readTree(parser);
+        JsonNode dailyNode = node.get("daily");
 
-        System.out.println(node);
+        if (dailyNode.isArray()) {
+            dailyNode.forEach(dailyWeather -> {
+                try {
+                    LocalDate date = WeatherConditions.convertDate(dailyWeather.get("dt").asLong()).toLocalDate();
 
-        //todo: add logic here
+                    JsonNode temperatureNode = dailyWeather.get("temp");
+                    Temperature temperature = new Temperature(
+                            temperatureNode.get("morn").asText(),
+                            temperatureNode.get("day").asText(),
+                            temperatureNode.get("eve").asText(),
+                            temperatureNode.get("night").asText()
+                    );
 
-        LocalDate date = Instant.ofEpochSecond(1643536800).atZone(ZoneId.systemDefault()).toLocalDate();
-        Temperature temperature = new Temperature("1.64", "1.09", "-0.16", "-0.94");
-        Wind wind = new Wind("8.23", "17.56", "S");
-        WeatherConditions conditions = new WeatherConditions(date, "rain and snow", temperature, wind, null);
+                    Wind wind = new Wind(
+                            dailyWeather.get("wind_speed").asText(),
+                            dailyWeather.get("wind_gust").asText(),
+                            Wind.degreesToDirection(dailyWeather.get("wind_deg").asInt()));
 
-        conditionsMap.put(date, conditions);
+                    JsonNode weatherNode = dailyWeather.get("weather");
+
+                    List<String> weatherDescriptions = new ArrayList<>();
+                    weatherNode.forEach(description -> {
+                        weatherDescriptions.add(description.get("description").asText());
+                    });
+
+                    WeatherConditions conditions = new WeatherConditions(
+                            date, weatherDescriptions, temperature, wind, null);
+
+                    conditionsMap.put(date, conditions);
+                } catch (NullPointerException e) {
+                    log.error("NullPointerException while processing {}", dailyWeather);
+                    throw e;
+                }
+            });
+        }
 
         return conditionsMap;
     }

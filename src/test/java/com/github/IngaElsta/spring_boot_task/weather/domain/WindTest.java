@@ -1,5 +1,6 @@
-package com.github.IngaElsta.spring_boot_task.weather;
+package com.github.IngaElsta.spring_boot_task.weather.domain;
 
+import com.github.IngaElsta.spring_boot_task.weather.domain.Wind;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

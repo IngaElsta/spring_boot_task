@@ -1,4 +1,4 @@
-package com.github.IngaElsta.spring_boot_task.weather;
+package com.github.IngaElsta.spring_boot_task.weather.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

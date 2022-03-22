@@ -1,4 +1,4 @@
-package com.github.IngaElsta.spring_boot_task.weather;
+package com.github.IngaElsta.spring_boot_task.weather.configuration;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

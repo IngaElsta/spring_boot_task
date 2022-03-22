@@ -1,12 +1,12 @@
-package com.github.IngaElsta.spring_boot_task.planning;
+package com.github.IngaElsta.spring_boot_task.planning.service;
 
-import com.github.IngaElsta.spring_boot_task.weather.WeatherConditions;
-import com.github.IngaElsta.spring_boot_task.weather.WeatherDataService;
+import com.github.IngaElsta.spring_boot_task.planning.domain.SkiLocation;
+import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditions;
+import com.github.IngaElsta.spring_boot_task.weather.service.WeatherDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Map;
 
 @Service

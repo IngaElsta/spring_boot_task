@@ -1,6 +1,8 @@
-package com.github.IngaElsta.spring_boot_task.planning;
+package com.github.IngaElsta.spring_boot_task.planning.controller;
 
-import com.github.IngaElsta.spring_boot_task.weather.WeatherConditions;
+import com.github.IngaElsta.spring_boot_task.planning.service.SkiPlanService;
+import com.github.IngaElsta.spring_boot_task.planning.domain.SkiLocation;
+import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +30,7 @@ public class SkiPlanController {
             @RequestParam (value = "lat", required = false, defaultValue = "56.95") String lat,
             @RequestParam (value = "lon", required = false, defaultValue = "24.11") String lon) {
         try {
-            return skiPlanService.getWeather(new SkiLocation (lat, lon));
+            return skiPlanService.getWeather(new SkiLocation(lat, lon));
         } catch (HttpClientErrorException e) {
             log.error("GetWeather: Invalid values were passed for location - lat {}, lon {}", lat, lon);
             throw new ResponseStatusException(

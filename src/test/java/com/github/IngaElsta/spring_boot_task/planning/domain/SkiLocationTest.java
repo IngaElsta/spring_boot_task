@@ -1,5 +1,6 @@
-package com.github.IngaElsta.spring_boot_task.planning;
+package com.github.IngaElsta.spring_boot_task.planning.domain;
 
+import com.github.IngaElsta.spring_boot_task.planning.domain.SkiLocation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;

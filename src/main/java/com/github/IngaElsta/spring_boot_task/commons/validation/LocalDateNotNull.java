@@ -1,4 +1,4 @@
-package com.github.IngaElsta.spring_boot_task.validation;
+package com.github.IngaElsta.spring_boot_task.commons.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

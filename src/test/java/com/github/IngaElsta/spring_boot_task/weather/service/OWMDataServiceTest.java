@@ -1,5 +1,9 @@
-package com.github.IngaElsta.spring_boot_task.weather;
+package com.github.IngaElsta.spring_boot_task.weather.service;
 
+import com.github.IngaElsta.spring_boot_task.weather.domain.Temperature;
+import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditions;
+import com.github.IngaElsta.spring_boot_task.weather.domain.Wind;
+import com.github.IngaElsta.spring_boot_task.weather.service.OWMDataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -7,8 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.client.RestTemplate;

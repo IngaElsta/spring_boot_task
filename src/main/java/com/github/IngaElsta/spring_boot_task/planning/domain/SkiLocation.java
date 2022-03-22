@@ -1,5 +1,6 @@
-package com.github.IngaElsta.spring_boot_task.planning;
+package com.github.IngaElsta.spring_boot_task.planning.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class SkiLocation {
 
     @NotEmpty(message = "Latitude value should not be empty")

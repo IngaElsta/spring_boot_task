@@ -1,5 +1,6 @@
-package com.github.IngaElsta.spring_boot_task.weather;
+package com.github.IngaElsta.spring_boot_task.weather.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class Wind {
     @NotEmpty
     @Digits(integer = 3, fraction = 2)

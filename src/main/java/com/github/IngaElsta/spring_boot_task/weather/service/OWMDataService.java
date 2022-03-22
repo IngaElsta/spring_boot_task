@@ -77,9 +77,4 @@ public class OWMDataService implements WeatherDataService {
         return weatherConditionsMap;
     }
 
-    private LocalDateTime convertDate(long date_seconds){
-        Instant instant = Instant.ofEpochSecond(date_seconds);
-        return instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
-    }
-
 }

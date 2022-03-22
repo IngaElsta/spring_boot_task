@@ -2,7 +2,6 @@ package com.github.IngaElsta.spring_boot_task.weather.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.IngaElsta.spring_boot_task.planning.domain.SkiLocation;
 import com.github.IngaElsta.spring_boot_task.weather.configuration.OWMConfiguration;
@@ -59,8 +58,6 @@ public class OWMDataService implements WeatherDataService {
 
     //might make this private again later
     public static Map<LocalDate, WeatherConditions> processWeatherData(String weatherJson) {
-        //TODO: add json processing here
-        TypeReference typeReference = new TypeReference<Map<LocalDate, WeatherConditions>>(){};
 
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule("OWMDeserializer", new Version(1, 0, 0, null, null, null));

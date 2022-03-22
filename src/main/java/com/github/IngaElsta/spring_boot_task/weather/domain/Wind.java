@@ -19,7 +19,7 @@ public class Wind {
 
     private String direction;
 
-    public String degreesToDirection (int degrees) {
+    public static String degreesToDirection (int degrees) {
         if (degrees >= 23 && degrees <= 67) { return "NE"; }
         else if (degrees >= 68 && degrees <= 112) { return "E"; }
         else if (degrees >= 113 && degrees <= 157) { return "SE"; }

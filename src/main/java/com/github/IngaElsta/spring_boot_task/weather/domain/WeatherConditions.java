@@ -21,7 +21,7 @@ public class WeatherConditions {
     private LocalDate date;
 
     @NotEmpty
-    private String weatherDescription; //weather: description
+    private List<String> weatherDescription; //weather: description
 
     @NotNull
     private Temperature temperature;

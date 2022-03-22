@@ -48,10 +48,10 @@ public class OWMDataServiceTest {
         String text = new String(Files.readAllBytes(noAlerts.toPath()));
         Map<LocalDate, WeatherConditions> result = OWMDataService.processWeatherData(text);
 
-        Temperature temperature = new Temperature("1.64", "1.09", "-0.16");
-        Wind wind = new Wind("8.23", "17.56", "S");
-        WeatherConditions conditions = new WeatherConditions("rain and snow", temperature, wind, null);
         LocalDate date = Instant.ofEpochSecond(1643536800).atZone(ZoneId.systemDefault()).toLocalDate();
+        Temperature temperature = new Temperature("1.64", "1.09", "-0.16", "-0.94");
+        Wind wind = new Wind("8.23", "17.56", "S");
+        WeatherConditions conditions = new WeatherConditions(date, "rain and snow", temperature, wind, null);
 
         Map<LocalDate, WeatherConditions> expected = new HashMap<>();
         expected.put(date, conditions);

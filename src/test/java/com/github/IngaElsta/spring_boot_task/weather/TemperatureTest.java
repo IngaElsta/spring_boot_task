@@ -24,8 +24,9 @@ public class TemperatureTest {
         String morning = "-3";
         String day = "2";
         String evening = "0";
+        String night = "-5";
 
-        Temperature temperature = new Temperature(morning, day, evening);
+        Temperature temperature = new Temperature(morning, day, evening, night);
         Set<ConstraintViolation<Temperature>> violations = validator.validate(temperature);
         assertTrue(violations.isEmpty());
     }
@@ -35,8 +36,9 @@ public class TemperatureTest {
         String morning = "a";
         String day = "2n";
         String evening = "*";
+        String night = "-5";
 
-        Temperature temperature = new Temperature(morning, day, evening);
+        Temperature temperature = new Temperature(morning, day, evening, night);
         Set<ConstraintViolation<Temperature>> violations = validator.validate(temperature);
         assertFalse(violations.isEmpty());
     }
@@ -45,7 +47,7 @@ public class TemperatureTest {
     void WhenEmptyValuesPassed_thenValidationFails(){
         String evening = "5";
 
-        Temperature temperature = new Temperature("", "", evening);
+        Temperature temperature = new Temperature("", "", evening, "");
         Set<ConstraintViolation<Temperature>> violations = validator.validate(temperature);
         assertFalse(violations.isEmpty());
     }
@@ -53,8 +55,9 @@ public class TemperatureTest {
     @Test
     void WhenNullValuesPassed_thenValidationFails(){
         String morning = "-5";
+        String night = "-7";
 
-        Temperature temperature = new Temperature(morning, null, null);
+        Temperature temperature = new Temperature(morning, null, null, night);
         Set<ConstraintViolation<Temperature>> violations = validator.validate(temperature);
         assertFalse(violations.isEmpty());
     }
@@ -64,14 +67,15 @@ public class TemperatureTest {
         String morning = "-500"; //integer part too long
         String day = "2";
         String evening = "0";
+        String night = "-5";
 
-        Temperature temperature = new Temperature(morning, null, null);
+        Temperature temperature = new Temperature(morning, null, null, night);
         Set<ConstraintViolation<Temperature>> violations = validator.validate(temperature);
         assertFalse(violations.isEmpty());
 
         morning = "0.00001"; //fraction part too long
 
-        temperature = new Temperature(morning, null, null);
+        temperature = new Temperature(morning, null, null, night);
         violations = validator.validate(temperature);
         assertFalse(violations.isEmpty());
     }

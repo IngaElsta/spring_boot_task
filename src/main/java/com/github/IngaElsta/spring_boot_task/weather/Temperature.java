@@ -11,5 +11,5 @@ import javax.validation.constraints.NotEmpty;
 public class Temperature {
     @NotEmpty
     @Digits(integer = 2, fraction = 2)
-    private String morning, day, evening; //temp: morn, day, eve
+    private String morn, day, eve, night; //temp: morn, day, eve, night
 }

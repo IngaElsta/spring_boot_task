@@ -79,7 +79,7 @@ public class AlertTest {
         assertFalse(violations.isEmpty());
     }
     
-    //Those tests bellow are expected to pass only when/if validation to time order added
+    //Those tests bellow are expected to pass only when/if validation of time order is implemented
     @Test
     @Disabled
     void WhenAlertEndBeforeAlertStart_thenValidationFails(){

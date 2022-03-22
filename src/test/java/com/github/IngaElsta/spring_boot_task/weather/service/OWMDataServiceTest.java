@@ -2,6 +2,7 @@ package com.github.IngaElsta.spring_boot_task.weather.service;
 
 import com.github.IngaElsta.spring_boot_task.weather.domain.Temperature;
 import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditions;
+import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditionsMapWrapper;
 import com.github.IngaElsta.spring_boot_task.weather.domain.Wind;
 import com.github.IngaElsta.spring_boot_task.weather.service.OWMDataService;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,14 +49,14 @@ public class OWMDataServiceTest {
         File noAlerts = ResourceUtils.getFile(
                 "classpath:single_day_no_alerts.json");
         String text = new String(Files.readAllBytes(noAlerts.toPath()));
-        Map<LocalDate, WeatherConditions> result = OWMDataService.processWeatherData(text);
+        WeatherConditionsMapWrapper result = OWMDataService.processWeatherData(text);
 
         LocalDate date = Instant.ofEpochSecond(1643536800).atZone(ZoneId.systemDefault()).toLocalDate();
         Temperature temperature = new Temperature("1.64", "1.09", "-0.16", "-0.94");
         Wind wind = new Wind("8.23", "17.56", "S");
         WeatherConditions conditions = new WeatherConditions(date, "rain and snow", temperature, wind, null);
 
-        Map<LocalDate, WeatherConditions> expected = new HashMap<>();
+        WeatherConditionsMapWrapper expected = new WeatherConditionsMapWrapper(new HashMap<>());
         expected.put(date, conditions);
 
         assertEquals(expected, result);

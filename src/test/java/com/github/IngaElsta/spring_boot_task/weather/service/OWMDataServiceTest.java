@@ -19,7 +19,9 @@ import java.nio.file.Files;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Mockito.mock;
@@ -52,7 +54,10 @@ public class OWMDataServiceTest {
         LocalDate date = WeatherConditions.convertDate(1643536800).toLocalDate();;
         Temperature temperature = new Temperature("1.64", "1.09", "-0.16", "-0.94");
         Wind wind = new Wind("8.23", "17.56", "S");
-        WeatherConditions conditions = new WeatherConditions(date, "rain and snow", temperature, wind, null);
+        List<String> weatherDescriptions = new ArrayList<>();
+        weatherDescriptions.add("rain and snow");
+
+        WeatherConditions conditions = new WeatherConditions(date, weatherDescriptions, temperature, wind, null);
 
         Map<LocalDate, WeatherConditions> expected = new HashMap<>();
         expected.put(date, conditions);

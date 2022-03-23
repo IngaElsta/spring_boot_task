@@ -33,10 +33,7 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
 
         List<Alert> allAlerts = processAlertNode(node.get("alerts"));
 
-        Map<LocalDate, WeatherConditions> conditionsMap =
-                processDailyWeatherArray(node.get("daily"), allAlerts);
-
-        return conditionsMap;
+        return processDailyWeatherArray(node.get("daily"), allAlerts);
     }
 
     private static List<Alert> processAlertNode (JsonNode alertNode) {
@@ -92,9 +89,7 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
         JsonNode weatherNode = dailyWeather.get("weather");
 
         List<String> weatherDescriptions = new ArrayList<>();
-        weatherNode.forEach(description -> {
-            weatherDescriptions.add(description.get("description").asText());
-        });
+        weatherNode.forEach(description -> weatherDescriptions.add(description.get("description").asText()));
 
         return new WeatherConditions(
                 date, weatherDescriptions, temperature, wind, null);
@@ -115,12 +110,11 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
     }
 
     private Temperature gatherTemperatureData(JsonNode temperatureNode){
-        Temperature temperature = new Temperature(
+        return new Temperature(
                 temperatureNode.get("morn").asText(),
                 temperatureNode.get("day").asText(),
                 temperatureNode.get("eve").asText(),
                 temperatureNode.get("night").asText()
         );
-        return temperature;
     }
 }

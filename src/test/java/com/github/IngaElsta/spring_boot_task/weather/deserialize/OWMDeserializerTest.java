@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 public class OWMDeserializerTest {
     private JacksonTester<Map<LocalDate, WeatherConditions>> json;

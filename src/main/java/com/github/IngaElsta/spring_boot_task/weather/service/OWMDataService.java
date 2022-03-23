@@ -44,11 +44,13 @@ public class OWMDataService implements WeatherDataService {
                 .expand(location.getLatitude(), location.getLongitude(),
                         owmConfiguration.getAuthToken());
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+        //todo: remove this
         System.out.println(response);
 
         if (response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 400) {
             Map<LocalDate, WeatherConditions> conditionsMap = processWeatherData(
-                    response.getBody());
+                    response.getBody(), objectMapper);
             return conditionsMap;
         } else {
             //todo: refactor the code to process error responses
@@ -57,15 +59,14 @@ public class OWMDataService implements WeatherDataService {
     }
 
     //might make this private again later
-    public static Map<LocalDate, WeatherConditions> processWeatherData(String weatherJson) {
+    public static Map<LocalDate, WeatherConditions> processWeatherData(String weatherJson, ObjectMapper objectMapper) {
 
-        ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule("OWMDeserializer", new Version(1, 0, 0, null, null, null));
         module.addDeserializer(Map.class, new OWMDeserializer());
-        mapper.registerModule(module);
+        objectMapper.registerModule(module);
         Map<LocalDate, WeatherConditions> weatherConditionsMap = new HashMap<>();
         try {
-            weatherConditionsMap = mapper.readValue(weatherJson, Map.class);
+            weatherConditionsMap = objectMapper.readValue(weatherJson, Map.class);
         } catch (JsonProcessingException e) {
             log.error("processWeatherData: Failed to process weather data {}", weatherJson);
             //todo:throw something

@@ -34,8 +34,14 @@ public class OWMDataService implements WeatherDataService {
     public OWMDataService(RestTemplateBuilder restTemplateBuilder, ObjectMapper objectMapper,
                           OWMConfiguration owmConfiguration) {
         this.restTemplate = restTemplateBuilder.build();
-        this.objectMapper = objectMapper;
         this.owmConfiguration = owmConfiguration;
+
+        this.objectMapper = objectMapper;
+        SimpleModule module = new SimpleModule("OWMDeserializer",
+                new Version(1, 0, 0, null, null, null));
+        module.addDeserializer(Map.class, new OWMDeserializer());
+        System.out.println(module);
+        objectMapper.registerModule(module);
     }
 
 
@@ -49,9 +55,8 @@ public class OWMDataService implements WeatherDataService {
         System.out.println(response);
 
         if (response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 400) {
-            Map<LocalDate, WeatherConditions> conditionsMap = processWeatherData(
+            return processWeatherData(
                     response.getBody(), objectMapper);
-            return conditionsMap;
         } else {
             //todo: refactor the code to process error responses
             return new HashMap<>();
@@ -59,12 +64,10 @@ public class OWMDataService implements WeatherDataService {
     }
 
     //might make this private again later
-    public static Map<LocalDate, WeatherConditions> processWeatherData(String weatherJson, ObjectMapper objectMapper) {
-
-        SimpleModule module = new SimpleModule("OWMDeserializer", new Version(1, 0, 0, null, null, null));
-        module.addDeserializer(Map.class, new OWMDeserializer());
-        objectMapper.registerModule(module);
-        Map<LocalDate, WeatherConditions> weatherConditionsMap = new HashMap<>();
+    public static Map<LocalDate, WeatherConditions> processWeatherData(
+            String weatherJson,
+            ObjectMapper objectMapper) {
+        Map weatherConditionsMap = new HashMap<>();
         try {
             weatherConditionsMap = objectMapper.readValue(weatherJson, Map.class);
         } catch (JsonProcessingException e) {

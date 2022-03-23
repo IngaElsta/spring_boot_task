@@ -10,10 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Slf4j
 public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherConditions>> {
@@ -30,48 +28,99 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
     public Map<LocalDate, WeatherConditions> deserialize(
             JsonParser parser, DeserializationContext deserializer) throws IOException {
 
-        Map<LocalDate, WeatherConditions> conditionsMap = new HashMap<>();
-
         ObjectCodec codec = parser.getCodec();
         JsonNode node = codec.readTree(parser);
-        JsonNode dailyNode = node.get("daily");
 
-        if (dailyNode.isArray()) {
-            dailyNode.forEach(dailyWeather -> {
+        List<Alert> allAlerts = processAlertNode(node.get("alerts"));
+
+        Map<LocalDate, WeatherConditions> conditionsMap =
+                processDailyWeatherArray(node.get("daily"), allAlerts);
+
+        return conditionsMap;
+    }
+
+    private static List<Alert> processAlertNode (JsonNode alertNode) {
+        List<Alert> alerts = new ArrayList<>();
+        if (alertNode != null && alertNode.isArray()) {
+            alertNode.forEach(alertItem -> {
                 try {
-                    LocalDate date = WeatherConditions.convertDate(dailyWeather.get("dt").asLong()).toLocalDate();
+                    String event = alertItem.get("event").asText();
+                    LocalDateTime start = WeatherConditions
+                            .convertDate(alertItem.get("start").asLong());
+                    LocalDateTime end = WeatherConditions
+                            .convertDate(alertItem.get("end").asLong());
 
-                    JsonNode temperatureNode = dailyWeather.get("temp");
-                    Temperature temperature = new Temperature(
-                            temperatureNode.get("morn").asText(),
-                            temperatureNode.get("day").asText(),
-                            temperatureNode.get("eve").asText(),
-                            temperatureNode.get("night").asText()
-                    );
-
-                    Wind wind = new Wind(
-                            dailyWeather.get("wind_speed").asText(),
-                            dailyWeather.get("wind_gust").asText(),
-                            Wind.degreesToDirection(dailyWeather.get("wind_deg").asInt()));
-
-                    JsonNode weatherNode = dailyWeather.get("weather");
-
-                    List<String> weatherDescriptions = new ArrayList<>();
-                    weatherNode.forEach(description -> {
-                        weatherDescriptions.add(description.get("description").asText());
-                    });
-
-                    WeatherConditions conditions = new WeatherConditions(
-                            date, weatherDescriptions, temperature, wind, null);
-
-                    conditionsMap.put(date, conditions);
+                    Alert alert = new Alert(event, start, end);
+                    alerts.add(alert);
                 } catch (NullPointerException e) {
-                    log.error("NullPointerException while processing {}", dailyWeather);
+                    log.error("OWMDeserializer: NullPointerException while processing alert in {}", alertItem);
                     throw e;
                 }
             });
         }
+        return alerts;
+    }
 
+    private Map<LocalDate, WeatherConditions> processDailyWeatherArray(
+            JsonNode DailyWeatherListNode, List<Alert> allAlerts) {
+
+        Map<LocalDate, WeatherConditions> conditionsMap = new LinkedHashMap<>();
+        if (DailyWeatherListNode.isArray()) {
+            DailyWeatherListNode.forEach(dailyWeatherNode -> {
+                try {
+                    LocalDate date = WeatherConditions.convertDate(dailyWeatherNode.get("dt").asLong()).toLocalDate();
+                    WeatherConditions conditions = processWeatherConditions(date, dailyWeatherNode);
+                    conditions.setAlerts(gatherAlertDataForDay(allAlerts, date));
+                    conditionsMap.put(date, conditions);
+                } catch (NullPointerException e) {
+                    log.error("OWMDeserializer: NullPointerException while processing daily data in {}", dailyWeatherNode);
+                    throw e;
+                }
+            });
+        }
         return conditionsMap;
+    }
+
+    private WeatherConditions processWeatherConditions(LocalDate date, JsonNode dailyWeather) {
+        Temperature temperature = gatherTemperatureData(dailyWeather.get("temp"));
+
+        Wind wind = new Wind(
+                dailyWeather.get("wind_speed").asText(),
+                dailyWeather.get("wind_gust").asText(),
+                Wind.degreesToDirection(dailyWeather.get("wind_deg").asInt()));
+
+        JsonNode weatherNode = dailyWeather.get("weather");
+
+        List<String> weatherDescriptions = new ArrayList<>();
+        weatherNode.forEach(description -> {
+            weatherDescriptions.add(description.get("description").asText());
+        });
+
+        return new WeatherConditions(
+                date, weatherDescriptions, temperature, wind, null);
+
+    }
+
+    private List<Alert> gatherAlertDataForDay(List<Alert> alerts, LocalDate date){
+        List<Alert> dailyAlerts = new ArrayList<>();
+
+        LocalDateTime beginningOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atStartOfDay().plusDays(1);
+        alerts.forEach(alert -> {
+            if ((alert.getAlertEnd().isAfter(beginningOfDay)) && (alert.getAlertStart().isBefore(endOfDay))) {
+                dailyAlerts.add(alert);
+            }
+        });
+        return dailyAlerts;
+    }
+
+    private Temperature gatherTemperatureData(JsonNode temperatureNode){
+        Temperature temperature = new Temperature(
+                temperatureNode.get("morn").asText(),
+                temperatureNode.get("day").asText(),
+                temperatureNode.get("eve").asText(),
+                temperatureNode.get("night").asText()
+        );
+        return temperature;
     }
 }

@@ -5,13 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
 @AllArgsConstructor
 public class Temperature {
-    @NotEmpty
+    @NotNull
     @Digits(integer = 2, fraction = 2)
-    private String morn, day, eve, night; //temp: morn, day, eve, night
+    private Double morn, day, eve, night; //temp: morn, day, eve, night
 }

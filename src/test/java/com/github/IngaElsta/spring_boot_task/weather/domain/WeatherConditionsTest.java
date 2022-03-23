@@ -24,7 +24,7 @@ public class WeatherConditionsTest {
             LocalDateTime.now(),
             LocalDateTime.now().plusHours(1));
 
-    private Temperature temperature = new Temperature( "-3", "2", "0", "-5");
+    private Temperature temperature = new Temperature( -3.0, 2.0, 0.2, -5.6);
     private Wind wind = new Wind("2", "7", "S");
     private List alerts;
 

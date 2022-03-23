@@ -38,7 +38,7 @@ public class OWMDeserializerTest {
         JacksonTester.initFields(this, mapper);
 
        jsonNoAlerts = ResourceUtils.getFile(
-                "classpath:single_day_no_alerts.json");
+               "classpath:single_day_no_alerts.json");
        jsonWithAlerts = ResourceUtils.getFile(
                "classpath:two_days_with_alerts.json");
     }
@@ -49,7 +49,7 @@ public class OWMDeserializerTest {
         Map<LocalDate, WeatherConditions> weatherConditionsMap = this.json.parseObject(text);
 
         LocalDate date = WeatherConditions.convertDate(1643536800).toLocalDate();;
-        Temperature temperature = new Temperature("1.64", "1.09", "-0.16", "-0.94");
+        Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
         Wind wind = new Wind("8.23", "17.56", "S");
         List<String> weatherDescriptions = new ArrayList<>();
         weatherDescriptions.add("rain and snow");
@@ -74,7 +74,7 @@ public class OWMDeserializerTest {
         //2022-01-30
         LocalDate date = WeatherConditions
                 .convertDate(1643536800).toLocalDate();
-        Temperature temperature = new Temperature("1.8", "1.19", "-0.18", "-0.47");
+        Temperature temperature = new Temperature(1.8, 1.19, -0.18, -0.47);
         Wind wind = new Wind("17.08", "21.9", "N");
 
         List<String> weatherDescriptions = new ArrayList<>();
@@ -102,18 +102,16 @@ public class OWMDeserializerTest {
         expected.put(date, conditions1);
 
         date = WeatherConditions.convertDate(1643623200).toLocalDate();;
-        temperature = new Temperature("-0.73", "-0.26", "-1.17", "-1.92");
+        temperature = new Temperature(-0.73, -0.26, -1.17, -1.92);
         wind = new Wind("12.78", "16.97", "N");
         weatherDescriptions = new ArrayList<>();
         weatherDescriptions.add("light snow");
-
 
         alerts = new ArrayList<>();
         alerts.add(alert1);
         alerts.add(alert3);
 
         WeatherConditions conditions2 = new WeatherConditions(date, weatherDescriptions, temperature, wind, alerts);
-
         expected.put(date, conditions2);
 
         assertEquals(expected, weatherConditionsMap);

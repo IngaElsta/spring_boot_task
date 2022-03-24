@@ -111,10 +111,10 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
 
     private Temperature gatherTemperatureData(JsonNode temperatureNode){
         return new Temperature(
-                temperatureNode.get("morn").asText(),
-                temperatureNode.get("day").asText(),
-                temperatureNode.get("eve").asText(),
-                temperatureNode.get("night").asText()
+                temperatureNode.get("morn").asDouble(),
+                temperatureNode.get("day").asDouble(),
+                temperatureNode.get("eve").asDouble(),
+                temperatureNode.get("night").asDouble()
         );
     }
 }

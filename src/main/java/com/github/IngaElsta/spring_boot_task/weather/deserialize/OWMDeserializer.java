@@ -82,8 +82,8 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
         Temperature temperature = gatherTemperatureData(dailyWeather.get("temp"));
 
         Wind wind = new Wind(
-                dailyWeather.get("wind_speed").asText(),
-                dailyWeather.get("wind_gust").asText(),
+                dailyWeather.get("wind_speed").asDouble(),
+                dailyWeather.get("wind_gust").asDouble(),
                 Wind.degreesToDirection(dailyWeather.get("wind_deg").asInt()));
 
         JsonNode weatherNode = dailyWeather.get("weather");

@@ -6,16 +6,16 @@ import lombok.Data;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
 @AllArgsConstructor
 public class Wind {
-    @NotEmpty
+    @NotNull
     @Digits(integer = 3, fraction = 2)
     @Min(value = 0)
-    private String speed, gusts;
+    private Double speed, gusts;
 
     private String direction;
 

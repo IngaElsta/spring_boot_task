@@ -53,7 +53,7 @@ public class OWMDataServiceTest {
 
         LocalDate date = WeatherConditions.convertDate(1643536800).toLocalDate();
         Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
-        Wind wind = new Wind("8.23", "17.56", "S");
+        Wind wind = new Wind(8.23, 17.56, "S");
         List<String> weatherDescriptions = new ArrayList<>();
         weatherDescriptions.add("rain and snow");
 

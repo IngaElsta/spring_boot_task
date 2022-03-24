@@ -23,8 +23,8 @@ public class WindTest {
 
     @Test
     void WhenWindSpeedValuesAreAcceptable_thenValidationSucceeds(){
-        String speed = "5";
-        String gusts = "7.2";
+        Double speed = 5.4;
+        Double gusts = 7.2;
         String direction = "NW";
 
         Wind location = new Wind(speed, gusts, direction);
@@ -34,8 +34,8 @@ public class WindTest {
 
     @Test
     void WhenWindDirectionIsEmpty_thenValidationSucceeds(){
-        String speed = "5";
-        String gusts = "7.2";
+        Double speed = 5.0;
+        Double gusts = 7.2;
 
         Wind location = new Wind(speed, gusts, null);
         Set<ConstraintViolation<Wind>> violations = validator.validate(location);
@@ -44,16 +44,16 @@ public class WindTest {
 
     @Test
     void WhenGustSpeedNotPassed_thenValidationFails(){
-        String speed = "5";
+        Double speed = 5.8;
 
-        Wind location = new Wind(speed, "", "NW");
+        Wind location = new Wind(speed, null, "NW");
         Set<ConstraintViolation<Wind>> violations = validator.validate(location);
         assertFalse(violations.isEmpty());
     }
 
     @Test
     void WhenWindSpeedNotPassed_thenValidationFails(){
-        String gusts = "7.2";
+        Double gusts = 7.2;
         String direction = "NW";
 
         Wind location = new Wind(null, gusts, direction);
@@ -63,8 +63,8 @@ public class WindTest {
 
     @Test
     void WhenWindDirectionNotPassed_thenValidationFails(){
-        String speed = "5";
-        String gusts = "7.2";
+        Double speed = 5.0;
+        Double gusts = 7.2;
 
         Wind location = new Wind(null, gusts, "");
         Set<ConstraintViolation<Wind>> violations = validator.validate(location);
@@ -72,32 +72,21 @@ public class WindTest {
     }
 
     @Test
-    void WhenNonDigitsNotPassed_thenValidationFails(){
-        String speed = "a";
-        String gusts = "3.b";
-        String direction = "NW";
-
-        Wind location = new Wind(speed, gusts, direction);
-        Set<ConstraintViolation<Wind>> violations = validator.validate(location);
-        assertFalse(violations.isEmpty());
-    }
-
-    @Test
     void WhenInvalidWindSpeedPassed_thenValidationFails() {
-        String speed = "1010";
-        String gusts = "7.2";
+        Double speed = 1010.4;
+        Double gusts = 7.2;
         String direction = "NW";
 
         Wind location = new Wind(speed, gusts, direction);
         Set<ConstraintViolation<Wind>> violations = validator.validate(location);
         assertFalse(violations.isEmpty());
 
-        speed = "-1";
+        speed = -1.9;
         location = new Wind(speed, gusts, direction);
         violations = validator.validate(location);
         assertFalse(violations.isEmpty());
 
-        speed = "0.123";
+        speed = 0.123;
         location = new Wind(speed, gusts, direction);
         violations = validator.validate(location);
         assertFalse(violations.isEmpty());
@@ -105,18 +94,19 @@ public class WindTest {
 
     @Test
     void WhenInvalidGustSpeedPassed_thenValidationFails() {
-        String speed = "5";
-        String gusts = "1100";String direction = "NW";
+        Double speed = 5.6;
+        Double gusts = 1100.0;
+        String direction = "NW";
         Wind location = new Wind(speed, gusts, direction);
         Set<ConstraintViolation<Wind>> violations = validator.validate(location);
         assertFalse(violations.isEmpty());
 
-        gusts = "-3.5";
+        gusts = -3.5;
         location = new Wind(speed, gusts, direction);
         violations = validator.validate(location);
         assertFalse(violations.isEmpty());
 
-        gusts = "0.123";
+        gusts = 0.123;
         location = new Wind(speed, gusts, direction);
         violations = validator.validate(location);
         assertFalse(violations.isEmpty());

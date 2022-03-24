@@ -25,10 +25,10 @@ public class WeatherConditionsTest {
             LocalDateTime.now().plusHours(1));
 
     private Temperature temperature = new Temperature( -3.0, 2.0, 0.2, -5.6);
-    private Wind wind = new Wind("2", "7", "S");
+    private Wind wind = new Wind(2.1, 7.4, "S");
     private List alerts;
 
-    private List weatherDescriptions;
+    private List weatherDescriptions = new ArrayList<>();
     private Validator validator;
 
     @BeforeEach
@@ -39,7 +39,6 @@ public class WeatherConditionsTest {
         alerts.add(alert1);
         alerts.add(alert2);
 
-        weatherDescriptions = new ArrayList<>();
         weatherDescriptions.add("rain and snow");
     }
 

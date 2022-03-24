@@ -14,11 +14,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +27,6 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 public class OWMDataServiceTest {
-
 
     @Mock
     RestTemplate restTemplate;
@@ -45,7 +42,6 @@ public class OWMDataServiceTest {
     }
 
     @Test
-    @Disabled
     void When_data_valid_with_no_alerts_then_conversion_succeeds ()
         throws IOException, NullPointerException{
 

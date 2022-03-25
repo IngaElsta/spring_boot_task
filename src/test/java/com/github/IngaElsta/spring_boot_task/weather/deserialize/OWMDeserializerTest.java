@@ -9,6 +9,7 @@ import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditions;
 import com.github.IngaElsta.spring_boot_task.weather.domain.Wind;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.util.ResourceUtils;
 
@@ -23,8 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class OWMDeserializerTest {
     private JacksonTester<Map<LocalDate, WeatherConditions>> json;
     private ObjectMapper mapper;
-    File jsonNoAlerts;
-    File jsonWithAlerts;
+    private File jsonNoAlerts;
+    private File jsonWithAlerts;
+    private File jsonWrongDataType;
+    private File jsonMissingData;
 
     @BeforeEach
     public void setup() throws IOException {
@@ -38,9 +41,13 @@ public class OWMDeserializerTest {
         JacksonTester.initFields(this, mapper);
 
         jsonNoAlerts = ResourceUtils.getFile(
-               "classpath:single_day_no_alerts.json");
+                "classpath:valid_single_day_no_alerts.json");
         jsonWithAlerts = ResourceUtils.getFile(
-               "classpath:two_days_with_alerts.json");
+                "classpath:valid_two_days_with_alerts.json");
+        jsonWrongDataType = ResourceUtils.getFile(
+                "classpath:invalid_single_day_wrong_data_type.json");
+        jsonMissingData = ResourceUtils.getFile(
+                "classpath:invalid_single_day_missing_data.json");
     }
 
     @Test
@@ -115,5 +122,19 @@ public class OWMDeserializerTest {
         expected.put(date, conditions2);
 
         assertEquals(expected, weatherConditionsMap);
+    }
+
+    @Test
+    void When_data_value_missing_then_conversion_fails () throws IOException {
+        String text = new String(Files.readAllBytes(jsonMissingData.toPath()));
+
+        assertThrows(NullPointerException.class, () -> {this.json.parseObject(text);});
+    }
+
+    @Test
+    void When_json_has_non_numeric_value_for_number_then_conversion_fails () throws IOException {
+        String text = new String(Files.readAllBytes(jsonWrongDataType.toPath()));
+
+        assertThrows(NumberFormatException.class, () -> {this.json.parseObject(text);});
     }
 }

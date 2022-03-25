@@ -65,7 +65,8 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
         if (DailyWeatherListNode.isArray()) {
             DailyWeatherListNode.forEach(dailyWeatherNode -> {
                 try {
-                    LocalDate date = WeatherConditions.convertDate(dailyWeatherNode.get("dt").asLong()).toLocalDate();
+                    long dateValue = Long.valueOf(dailyWeatherNode.get("dt").asText());
+                    LocalDate date = WeatherConditions.convertDate(dateValue).toLocalDate();
                     WeatherConditions conditions = processWeatherConditions(date, dailyWeatherNode);
                     conditions.setAlerts(gatherAlertDataForDay(allAlerts, date));
                     conditionsMap.put(date, conditions);
@@ -82,8 +83,8 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
         Temperature temperature = gatherTemperatureData(dailyWeather.get("temp"));
 
         Wind wind = new Wind(
-                dailyWeather.get("wind_speed").asDouble(),
-                dailyWeather.get("wind_gust").asDouble(),
+                Double.valueOf(dailyWeather.get("wind_speed").asText()),
+                Double.valueOf(dailyWeather.get("wind_gust").asText()),
                 Wind.degreesToDirection(dailyWeather.get("wind_deg").asInt()));
 
         JsonNode weatherNode = dailyWeather.get("weather");
@@ -111,10 +112,10 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
 
     private Temperature gatherTemperatureData(JsonNode temperatureNode){
         return new Temperature(
-                temperatureNode.get("morn").asDouble(),
-                temperatureNode.get("day").asDouble(),
-                temperatureNode.get("eve").asDouble(),
-                temperatureNode.get("night").asDouble()
+                Double.valueOf(temperatureNode.get("morn").asText()),
+                Double.valueOf(temperatureNode.get("day").asText()),
+                Double.valueOf(temperatureNode.get("eve").asText()),
+                Double.valueOf(temperatureNode.get("night").asText())
         );
     }
 }

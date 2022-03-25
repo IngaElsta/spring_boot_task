@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.IngaElsta.spring_boot_task.weather.domain.Temperature;
 import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditions;
 import com.github.IngaElsta.spring_boot_task.weather.domain.Wind;
+import com.github.IngaElsta.spring_boot_task.weather.exception.OWMErrorException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ public class OWMDataServiceTest {
 
     @Test
     void When_data_valid_with_no_alerts_then_conversion_succeeds ()
-        throws IOException, NullPointerException{
+            throws IOException, NullPointerException, OWMErrorException {
 
         ObjectMapper mapper = Mockito.mock(ObjectMapper.class);
 

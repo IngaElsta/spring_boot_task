@@ -3,6 +3,7 @@ package com.github.IngaElsta.spring_boot_task.weather.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.github.IngaElsta.spring_boot_task.weather.exception.OWMErrorException;
 import com.github.IngaElsta.spring_boot_task.planning.domain.SkiLocation;
 import com.github.IngaElsta.spring_boot_task.weather.configuration.OWMConfiguration;
 import com.github.IngaElsta.spring_boot_task.weather.deserialize.OWMDeserializer;
@@ -45,37 +46,30 @@ public class OWMDataService implements WeatherDataService {
     }
 
 
-    public Map<LocalDate, WeatherConditions> retrieveWeather (SkiLocation location) {
+    public Map<LocalDate, WeatherConditions> retrieveWeather (SkiLocation location) throws OWMErrorException {
         var url = new UriTemplate(owmConfiguration.getOneApiUrl())
                 .expand(location.getLatitude(), location.getLongitude(),
                         owmConfiguration.getAuthToken());
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-        //todo: remove this
-        System.out.println(response);
-
         if (response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 400) {
             return processWeatherData(
                     response.getBody(), objectMapper);
         } else {
-            //todo: refactor the code to process error responses
-            return new HashMap<>();
+            throw new OWMErrorException("OWM returned an error response", response.getStatusCodeValue(), response.getBody());
         }
     }
 
-    //might make this private again later
+    //todo: probably integrate it back into retrieve weather method
     public static Map<LocalDate, WeatherConditions> processWeatherData(
             String weatherJson,
-            ObjectMapper objectMapper) {
-        Map weatherConditionsMap = new HashMap<>();
+            ObjectMapper objectMapper) throws OWMErrorException {
         try {
-            weatherConditionsMap = objectMapper.readValue(weatherJson, Map.class);
+            return objectMapper.readValue(weatherJson, Map.class);
         } catch (JsonProcessingException e) {
             log.error("processWeatherData: Failed to process weather data {}", weatherJson);
-            //todo:throw something
+            throw new OWMErrorException("Failed to process weather data received from OWM");
         }
-
-        return weatherConditionsMap;
     }
 
 }

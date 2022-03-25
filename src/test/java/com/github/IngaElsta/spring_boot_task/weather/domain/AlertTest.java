@@ -1,17 +1,16 @@
 package com.github.IngaElsta.spring_boot_task.weather.domain;
 
-import com.github.IngaElsta.spring_boot_task.weather.domain.Alert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.time.LocalDateTime;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class AlertTest {
@@ -26,46 +25,25 @@ public class AlertTest {
     void WhenAllValidParametersPassed_thenValidationSucceeds(){
         String alertType = "Yellow Flooding Warning";
         LocalDateTime alertStart = LocalDateTime.now();
-        LocalDateTime alertEnds = LocalDateTime.now().plusHours(1);
+        LocalDateTime alertEnd = LocalDateTime.now().plusHours(1);
 
-        Alert alert = new Alert(alertType, alertStart, alertEnds);
+        Alert alert = new Alert(alertType, alertStart, alertEnd);
         Set<ConstraintViolation<Alert>> violations = validator.validate(alert);
         assertTrue(violations.isEmpty());
     }
 
     @Test
-    void WhenOnlyAlertTypePassed_thenValidationSucceeds(){
-        String alertType = "Yellow Flooding Warning";
-
-        Alert alert = new Alert(alertType, null, null);
-        Set<ConstraintViolation<Alert>> violations = validator.validate(alert);
-        assertTrue(violations.isEmpty());
-    }
-
-    @Test
-    void WhenAlertTypeAndAlertStartPassed_thenValidationSucceeds(){
+    void WhenAnyAlertEndpointNotPassed_thenValidationFails(){
         String alertType = "Yellow Flooding Warning";
         LocalDateTime alertStart = LocalDateTime.now();
+        LocalDateTime alertEnd = LocalDateTime.now().plusHours(1);
 
         Alert alert = new Alert(alertType, alertStart, null);
         Set<ConstraintViolation<Alert>> violations = validator.validate(alert);
-        assertTrue(violations.isEmpty());
-    }
-    
-    @Test
-    void WhenAlertTypeAndAlertEndPassed_thenValidationSucceeds(){
-        String alertType = "Yellow Flooding Warning";
-        LocalDateTime alertEnd = LocalDateTime.now();
+        assertFalse(violations.isEmpty());
 
-        Alert alert = new Alert(alertType, null, alertEnd);
-        Set<ConstraintViolation<Alert>> violations = validator.validate(alert);
-        assertTrue(violations.isEmpty());
-    }
-
-    @Test
-    void WhenNoParametersPassed_thenValidationFails(){
-        Alert alert = new Alert("", null, null);
-        Set<ConstraintViolation<Alert>> violations = validator.validate(alert);
+        alert = new Alert(alertType, null, alertEnd);
+        violations = validator.validate(alert);
         assertFalse(violations.isEmpty());
     }
 
@@ -79,17 +57,21 @@ public class AlertTest {
         Set<ConstraintViolation<Alert>> violations = validator.validate(alert);
         assertFalse(violations.isEmpty());
     }
-    
-    //Test bellow is expected to pass only when/if validation of time order is implemented
+
     @Test
-    @Disabled
-    void WhenAlertEndBeforeAlertStart_thenValidationFails(){
+    void ItIsPossibleToRetrieveAndResetAnyValue() {
         String alertType = "Yellow Flooding Warning";
         LocalDateTime alertStart = LocalDateTime.now();
-        LocalDateTime alertEnd = LocalDateTime.now().minusHours(1);
+        LocalDateTime alertEnd = LocalDateTime.now().plusHours(1);
 
         Alert alert = new Alert(alertType, alertStart, alertEnd);
-        Set<ConstraintViolation<Alert>> violations = validator.validate(alert);
-        assertFalse(violations.isEmpty());
+
+        assertEquals(alert.getAlertType(), alertType);
+        assertEquals(alert.getAlertStart(), alertStart);
+        assertEquals(alert.getAlertEnd(),alertEnd);
+
+        alert.setAlertType("Red Snow Warning");
+        alert.setAlertStart(LocalDateTime.now().minusDays(1));
+        alert.setAlertEnd(LocalDateTime.now().plusDays(2));
     }
 }

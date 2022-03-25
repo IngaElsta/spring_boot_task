@@ -1,6 +1,6 @@
 package com.github.IngaElsta.spring_boot_task.weather.domain;
 
-import com.github.IngaElsta.spring_boot_task.weather.domain.Wind;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,8 +9,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WindTest {
 
@@ -27,8 +26,8 @@ public class WindTest {
         Double gusts = 7.2;
         String direction = "NW";
 
-        Wind location = new Wind(speed, gusts, direction);
-        Set<ConstraintViolation<Wind>> violations = validator.validate(location);
+        Wind wind = new Wind(speed, gusts, direction);
+        Set<ConstraintViolation<Wind>> violations = validator.validate(wind);
         assertTrue(violations.isEmpty());
     }
 
@@ -37,8 +36,8 @@ public class WindTest {
         Double speed = 5.0;
         Double gusts = 7.2;
 
-        Wind location = new Wind(speed, gusts, null);
-        Set<ConstraintViolation<Wind>> violations = validator.validate(location);
+        Wind wind = new Wind(speed, gusts, null);
+        Set<ConstraintViolation<Wind>> violations = validator.validate(wind);
         assertTrue(violations.isEmpty());
     }
 
@@ -46,8 +45,8 @@ public class WindTest {
     void WhenGustSpeedNotPassed_thenValidationFails(){
         Double speed = 5.8;
 
-        Wind location = new Wind(speed, null, "NW");
-        Set<ConstraintViolation<Wind>> violations = validator.validate(location);
+        Wind wind = new Wind(speed, null, "NW");
+        Set<ConstraintViolation<Wind>> violations = validator.validate(wind);
         assertFalse(violations.isEmpty());
     }
 
@@ -56,8 +55,8 @@ public class WindTest {
         Double gusts = 7.2;
         String direction = "NW";
 
-        Wind location = new Wind(null, gusts, direction);
-        Set<ConstraintViolation<Wind>> violations = validator.validate(location);
+        Wind wind = new Wind(null, gusts, direction);
+        Set<ConstraintViolation<Wind>> violations = validator.validate(wind);
         assertFalse(violations.isEmpty());
     }
 
@@ -66,9 +65,9 @@ public class WindTest {
         Double speed = 5.0;
         Double gusts = 7.2;
 
-        Wind location = new Wind(null, gusts, "");
-        Set<ConstraintViolation<Wind>> violations = validator.validate(location);
-        assertFalse(violations.isEmpty());
+        Wind wind = new Wind(speed, gusts, "");
+        Set<ConstraintViolation<Wind>> violations = validator.validate(wind);
+        assertTrue(violations.isEmpty());
     }
 
     @Test
@@ -77,18 +76,18 @@ public class WindTest {
         Double gusts = 7.2;
         String direction = "NW";
 
-        Wind location = new Wind(speed, gusts, direction);
-        Set<ConstraintViolation<Wind>> violations = validator.validate(location);
+        Wind wind = new Wind(speed, gusts, direction);
+        Set<ConstraintViolation<Wind>> violations = validator.validate(wind);
         assertFalse(violations.isEmpty());
 
         speed = -1.9;
-        location = new Wind(speed, gusts, direction);
-        violations = validator.validate(location);
+        wind = new Wind(speed, gusts, direction);
+        violations = validator.validate(wind);
         assertFalse(violations.isEmpty());
 
         speed = 0.123;
-        location = new Wind(speed, gusts, direction);
-        violations = validator.validate(location);
+        wind = new Wind(speed, gusts, direction);
+        violations = validator.validate(wind);
         assertFalse(violations.isEmpty());
     }
 
@@ -97,19 +96,45 @@ public class WindTest {
         Double speed = 5.6;
         Double gusts = 1100.0;
         String direction = "NW";
-        Wind location = new Wind(speed, gusts, direction);
-        Set<ConstraintViolation<Wind>> violations = validator.validate(location);
+        Wind wind = new Wind(speed, gusts, direction);
+        Set<ConstraintViolation<Wind>> violations = validator.validate(wind);
         assertFalse(violations.isEmpty());
 
         gusts = -3.5;
-        location = new Wind(speed, gusts, direction);
-        violations = validator.validate(location);
+        wind = new Wind(speed, gusts, direction);
+        violations = validator.validate(wind);
         assertFalse(violations.isEmpty());
 
         gusts = 0.123;
-        location = new Wind(speed, gusts, direction);
-        violations = validator.validate(location);
+        wind = new Wind(speed, gusts, direction);
+        violations = validator.validate(wind);
         assertFalse(violations.isEmpty());
+    }
+
+    @Test
+    void ItIsPossibleToRetrieveOrResetAnyValue() {
+        Wind wind = new Wind(2.5, 6.0, "S");
+        assertEquals(wind.getSpeed(), Double.valueOf(2.5));
+        assertEquals(wind.getGusts(), Double.valueOf(6.0));
+        assertEquals(wind.getDirection(), "S");
+
+        wind.setSpeed(16.9);
+        wind.setGusts(23.1);
+        wind.setDirection("W");
+    }
+
+    @Test
+    void WindDegreesAreSuccessfullyConvertedToMainDirections(){
+
+        assertEquals(Wind.degreesToDirection(60), ("NE"));
+        assertEquals(Wind.degreesToDirection(80), ("E"));
+        assertEquals(Wind.degreesToDirection(115), ("SE"));
+        assertEquals(Wind.degreesToDirection(202), ("S"));
+        assertEquals(Wind.degreesToDirection(203), ("SW"));
+        assertEquals(Wind.degreesToDirection(260), ("W"));
+        assertEquals(Wind.degreesToDirection(300), ("NW"));
+        assertEquals(Wind.degreesToDirection(0), ("N"));
+        assertEquals(Wind.degreesToDirection(-400), null);
     }
 
 }

@@ -9,7 +9,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
-@Builder
 @AllArgsConstructor
 public class Wind {
     @NotNull
@@ -29,7 +28,6 @@ public class Wind {
         else if (degrees >= 293 && degrees <= 337) { return "NW"; }
         else if ((degrees >= 338 && degrees <= 360) ||
                 (degrees >= 0 && degrees <= 22)) { return "N"; }
-        else { return ""; }
+        else { return null; }
     }
-
 }

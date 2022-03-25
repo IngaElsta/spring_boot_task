@@ -1,10 +1,7 @@
 package com.github.IngaElsta.spring_boot_task.weather.domain;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -14,6 +11,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WeatherConditionsTest {
 
@@ -57,16 +56,13 @@ public class WeatherConditionsTest {
     }
 
     @Test
-    void WhenWeatherDescriptionIsNull_thenValidationFails(){
+    void WhenWeatherDescriptionListIsNullOrEmpty_thenValidationFails(){
         WeatherConditions conditions = new WeatherConditions(LocalDate.now(), null, temperature, wind, alerts);
         Set<ConstraintViolation<WeatherConditions>> violations = validator.validate(conditions);
         assertFalse(violations.isEmpty());
-    }
 
-    @Test
-    void WhenWeatherDescriptionIsEmpty_thenValidationFails(){
-        WeatherConditions conditions = new WeatherConditions(LocalDate.now(), new ArrayList<>(), temperature, wind, alerts);
-        Set<ConstraintViolation<WeatherConditions>> violations = validator.validate(conditions);
+        conditions = new WeatherConditions(LocalDate.now(), new ArrayList<>(), temperature, wind, alerts);
+        violations = validator.validate(conditions);
         assertFalse(violations.isEmpty());
     }
 
@@ -91,21 +87,30 @@ public class WeatherConditionsTest {
         assertFalse(violations.isEmpty());
     }
 
-    //Those tests bellow are expected to pass only when/if validation of date check is added
-    @Disabled
     @Test
-    void WhenAlertEndsBeforeStartOfDayIsNull_thenValidationFails(){
-        WeatherConditions conditions = new WeatherConditions(LocalDate.now().plusDays(2), weatherDescriptions, temperature, wind, alerts);
-        Set<ConstraintViolation<WeatherConditions>> violations = validator.validate(conditions);
-        assertFalse(violations.isEmpty());
+    void ConversionFromSecondsToDateTimeIsSuccessful() {
+        LocalDateTime expectedDateTime = LocalDateTime.of(2022, 01, 28,12,0);
+        assertEquals(WeatherConditions.convertDate(1643364000), expectedDateTime);
     }
 
-    @Disabled
     @Test
-    void WhenAlertStartsBeforeEndOfDayIsNull_thenValidationFails(){
-        WeatherConditions conditions = new WeatherConditions(LocalDate.now().minusDays(2), weatherDescriptions, temperature, wind, alerts);
-        Set<ConstraintViolation<WeatherConditions>> violations = validator.validate(conditions);
-        assertFalse(violations.isEmpty());
+    void ItIsPossibleToRetrieveOrUpdateAnyValues() {
+        LocalDate date = LocalDate.now();
+        WeatherConditions conditions = new WeatherConditions(date, weatherDescriptions, temperature, wind, alerts);
+
+        assertEquals(conditions.getDate(), date);
+        assertEquals(conditions.getAlerts(), alerts);
+        assertEquals(conditions.getTemperature(), temperature);
+        assertEquals(conditions.getWind(), wind);
+        assertEquals(conditions.getWeatherDescriptions(),weatherDescriptions);
+
+        conditions.setDate(date.minusDays(1));
+        conditions.setAlerts(null);
+        conditions.setTemperature(new Temperature(1.1, 2.3, 0.0, -6.9));
+        conditions.setWind(new Wind(10.5,16.7, "E"));
+        weatherDescriptions.clear();
+        weatherDescriptions.add("clouds");
+        conditions.setWeatherDescriptions(weatherDescriptions);
     }
 
 }

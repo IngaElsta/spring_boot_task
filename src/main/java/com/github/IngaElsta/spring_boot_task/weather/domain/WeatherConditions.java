@@ -8,20 +8,18 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Builder;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data
-@Builder
 @AllArgsConstructor
 public class WeatherConditions {
     @NotNull
     private LocalDate date;
 
     @NotEmpty
-    private List<String> weatherDescription; //weather: description
+    private List<String> weatherDescriptions; //weather: description
 
     @NotNull
     private Temperature temperature;

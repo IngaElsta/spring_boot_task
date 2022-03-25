@@ -46,9 +46,10 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
                             .convertDate(alertItem.get("start").asLong());
                     LocalDateTime end = WeatherConditions
                             .convertDate(alertItem.get("end").asLong());
-
-                    Alert alert = new Alert(event, start, end);
-                    alerts.add(alert);
+                    if (start.isBefore(end)) {
+                        Alert alert = new Alert(event, start, end);
+                        alerts.add(alert);
+                    }
                 } catch (NullPointerException e) {
                     log.error("OWMDeserializer: NullPointerException while processing alert in {}", alertItem);
                     throw e;
@@ -83,8 +84,8 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
         Temperature temperature = gatherTemperatureData(dailyWeather.get("temp"));
 
         Wind wind = new Wind(
-                Double.valueOf(dailyWeather.get("wind_speed").asText()),
-                Double.valueOf(dailyWeather.get("wind_gust").asText()),
+                valueToDoubleOrNull(dailyWeather.get("wind_speed").asText()),
+                valueToDoubleOrNull(dailyWeather.get("wind_gust").asText()),
                 Wind.degreesToDirection(dailyWeather.get("wind_deg").asInt()));
 
         JsonNode weatherNode = dailyWeather.get("weather");
@@ -103,7 +104,8 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
         LocalDateTime beginningOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atStartOfDay().plusDays(1);
         alerts.forEach(alert -> {
-            if ((alert.getAlertEnd().isAfter(beginningOfDay)) && (alert.getAlertStart().isBefore(endOfDay))) {
+            if ((alert.getAlertEnd().isAfter(beginningOfDay)) &&
+                    (alert.getAlertStart().isBefore(endOfDay))) {
                 dailyAlerts.add(alert);
             }
         });
@@ -112,10 +114,19 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
 
     private Temperature gatherTemperatureData(JsonNode temperatureNode){
         return new Temperature(
-                Double.valueOf(temperatureNode.get("morn").asText()),
-                Double.valueOf(temperatureNode.get("day").asText()),
-                Double.valueOf(temperatureNode.get("eve").asText()),
-                Double.valueOf(temperatureNode.get("night").asText())
+                valueToDoubleOrNull(temperatureNode.get("morn").asText()),
+                valueToDoubleOrNull(temperatureNode.get("day").asText()),
+                valueToDoubleOrNull(temperatureNode.get("eve").asText()),
+                valueToDoubleOrNull(temperatureNode.get("night").asText())
         );
     }
+
+    private static Double valueToDoubleOrNull(String text) {
+        try {
+            return Double.valueOf(text);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
 }

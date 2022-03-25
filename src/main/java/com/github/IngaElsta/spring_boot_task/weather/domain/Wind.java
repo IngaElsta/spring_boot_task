@@ -1,24 +1,21 @@
 package com.github.IngaElsta.spring_boot_task.weather.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 @Data
-@Builder
 @AllArgsConstructor
 public class Wind {
-    @NotNull
     @Digits(integer = 3, fraction = 2)
     @Min(value = 0)
     private Double speed, gusts;
 
     private String direction;
 
+    //todo: test this as well
     public static String degreesToDirection (int degrees) {
         if (degrees >= 23 && degrees <= 67) { return "NE"; }
         else if (degrees >= 68 && degrees <= 112) { return "E"; }
@@ -29,7 +26,7 @@ public class Wind {
         else if (degrees >= 293 && degrees <= 337) { return "NW"; }
         else if ((degrees >= 338 && degrees <= 360) ||
                 (degrees >= 0 && degrees <= 22)) { return "N"; }
-        else { return ""; }
+        else { return null; }
     }
 
 }

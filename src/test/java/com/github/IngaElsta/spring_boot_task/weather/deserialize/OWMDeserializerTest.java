@@ -28,6 +28,7 @@ public class OWMDeserializerTest {
     private File jsonWithAlerts;
     private File jsonWrongDataType;
     private File jsonMissingData;
+    private File jsonIncomprehensibleDate;
 
     @BeforeEach
     public void setup() throws IOException {
@@ -45,7 +46,9 @@ public class OWMDeserializerTest {
         jsonWithAlerts = ResourceUtils.getFile(
                 "classpath:valid_two_days_with_alerts.json");
         jsonWrongDataType = ResourceUtils.getFile(
-                "classpath:invalid_single_day_wrong_data_type.json");
+                "classpath:invalid_single_day_nan_for_numeric_data.json");
+        jsonIncomprehensibleDate = ResourceUtils.getFile(
+                "classpath:invalid_single_day_unreadable_date.json");
         jsonMissingData = ResourceUtils.getFile(
                 "classpath:invalid_single_day_missing_data.json");
     }
@@ -133,8 +136,28 @@ public class OWMDeserializerTest {
 
     @Test
     void When_json_has_non_numeric_value_for_number_then_conversion_fails () throws IOException {
-        String text = new String(Files.readAllBytes(jsonWrongDataType.toPath()));
+        String text = new String(Files.readAllBytes(jsonIncomprehensibleDate.toPath()));
 
         assertThrows(NumberFormatException.class, () -> {this.json.parseObject(text);});
+    }
+
+    @Test
+    void When_json_has_nan_for_number_field_then_replaced_by_null () throws IOException {
+        String text = new String(Files.readAllBytes(jsonWrongDataType.toPath()));
+        Map<LocalDate, WeatherConditions> weatherConditionsMap = this.json.parseObject(text);
+
+        LocalDate date = WeatherConditions.convertDate(1643536800).toLocalDate();;
+        Temperature temperature = new Temperature(1.64, null, -0.16, -0.94);
+        Wind wind = new Wind(8.23, 17.56, "S");
+        List<String> weatherDescriptions = new ArrayList<>();
+        weatherDescriptions.add("rain and snow");
+
+        WeatherConditions conditions = new WeatherConditions(
+                date, weatherDescriptions, temperature, wind, new ArrayList<>());
+
+        Map<LocalDate, WeatherConditions> expected = new HashMap<>();
+        expected.put(date, conditions);
+
+        assertEquals(expected, weatherConditionsMap);
     }
 }

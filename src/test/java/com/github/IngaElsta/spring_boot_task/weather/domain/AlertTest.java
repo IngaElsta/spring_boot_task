@@ -80,7 +80,7 @@ public class AlertTest {
         assertFalse(violations.isEmpty());
     }
     
-    //Those tests bellow are expected to pass only when/if validation of time order is implemented
+    //Test bellow is expected to pass only when/if validation of time order is implemented
     @Test
     @Disabled
     void WhenAlertEndBeforeAlertStart_thenValidationFails(){
@@ -89,28 +89,6 @@ public class AlertTest {
         LocalDateTime alertEnd = LocalDateTime.now().minusHours(1);
 
         Alert alert = new Alert(alertType, alertStart, alertEnd);
-        Set<ConstraintViolation<Alert>> violations = validator.validate(alert);
-        assertFalse(violations.isEmpty());
-    }
-
-    @Test
-    @Disabled
-    void WhenAlertEndBeforeStartOfDay_thenValidationFails(){
-        String alertType = "Yellow Flooding Warning";
-        LocalDateTime alertEnd = LocalDateTime.now().minusHours(1);
-
-        Alert alert = new Alert(alertType, null, alertEnd);
-        Set<ConstraintViolation<Alert>> violations = validator.validate(alert);
-        assertFalse(violations.isEmpty());
-    }
-
-    @Test
-    @Disabled
-    void WhenAlertStartAfterEndOfDay_thenValidationFails(){
-        String alertType = "Yellow Flooding Warning";
-        LocalDateTime alertEnd = LocalDateTime.now().minusHours(1);
-
-        Alert alert = new Alert(alertType, null, alertEnd);
         Set<ConstraintViolation<Alert>> violations = validator.validate(alert);
         assertFalse(violations.isEmpty());
     }

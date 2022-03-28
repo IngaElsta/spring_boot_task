@@ -1,7 +1,6 @@
 package com.github.IngaElsta.spring_boot_task.weather.domain;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;

@@ -1,10 +1,8 @@
 package com.github.IngaElsta.spring_boot_task.planning.domain;
 
-import com.github.IngaElsta.spring_boot_task.planning.domain.SkiLocation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -61,7 +59,7 @@ public class SkiLocationTest {
     @Test
     void WhenInvalidLongitudePassed_thenValidationFails() {
         String latitude = "80"; //valid
-        String longitude = "181"; //larger than max
+        String longitude = "1900"; //larger than max and integer part too long
         SkiLocation location = new SkiLocation(latitude, longitude);
         Set<ConstraintViolation<SkiLocation>> violations = validator.validate(location);
         assertFalse(violations.isEmpty());
@@ -85,6 +83,19 @@ public class SkiLocationTest {
         location = new SkiLocation(latitude, longitude);
         violations = validator.validate(location);
         assertFalse(violations.isEmpty());
+    }
+
+    @Test
+    void ItIsPossibleToRetrieveAndResetAnyValue() {
+        String latitude = "52.1";
+        String longitude = "-0.78";
+        SkiLocation location = new SkiLocation(latitude, longitude);
+
+        assertEquals(location.getLatitude(), latitude);
+        assertEquals(location.getLongitude(), longitude);
+
+        location.setLatitude("50");
+        location.setLongitude("20");
     }
 
 }

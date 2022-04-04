@@ -1,17 +1,14 @@
 package com.github.IngaElsta.spring_boot_task.planning.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
 @Data
-@Builder
 @AllArgsConstructor
 public class SkiLocation {
 

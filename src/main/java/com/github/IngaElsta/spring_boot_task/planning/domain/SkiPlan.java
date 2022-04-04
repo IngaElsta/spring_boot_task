@@ -4,12 +4,10 @@ import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Builder;
 
 import javax.validation.constraints.NotNull;
 
 @Data
-@Builder
 @AllArgsConstructor
 public class SkiPlan {
 

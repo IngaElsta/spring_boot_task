@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SkiPlanTest {
 
     private Validator validator;
-    private SkiLocation location = new SkiLocation("56.95", "24.11");
+    private SkiLocation location = new SkiLocation(56.95, 24.11);
     private LocalDate date = LocalDate.now();
 
     @BeforeEach
@@ -50,7 +50,7 @@ class SkiPlanTest {
         assertEquals(skiPlan.getLocation(), location);
         assertEquals(skiPlan.getSkiingDate(), date);
 
-        skiPlan.setLocation(new SkiLocation("89", "-2"));
+        skiPlan.setLocation(new SkiLocation(89.6, -2.1));
         skiPlan.setSkiingDate(LocalDate.now().plusDays(4));
     }
 

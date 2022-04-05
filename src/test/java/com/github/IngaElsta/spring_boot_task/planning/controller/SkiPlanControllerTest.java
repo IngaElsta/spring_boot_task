@@ -50,7 +50,7 @@ class SkiPlanControllerTest {
         expected.put(date, new WeatherConditions(
                 date, weatherDescriptions, temperature, wind, new ArrayList<>()));
 
-        when(service.getWeather(new SkiLocation("56.95", "24.11"))).thenReturn(expected);
+        when(service.getWeather(new SkiLocation(56.95, 24.11))).thenReturn(expected);
 
         this.mockMvc
                 .perform(get("/api/v1/ski-planner/weather"))
@@ -71,7 +71,7 @@ class SkiPlanControllerTest {
         expected.put(date, new WeatherConditions(
                 date, weatherDescriptions, temperature, wind, new ArrayList<>()));
 
-        when(service.getWeather(new SkiLocation("55.87", "26.52"))).thenReturn(expected);
+        when(service.getWeather(new SkiLocation(55.87, 26.52))).thenReturn(expected);
 
         this.mockMvc
                 .perform(get("/api/v1/ski-planner/weather?lat=55.87&lon=26.52"))

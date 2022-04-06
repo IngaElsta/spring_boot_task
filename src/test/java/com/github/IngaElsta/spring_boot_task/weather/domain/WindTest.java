@@ -70,43 +70,23 @@ public class WindTest {
     }
 
     @Test
-    void WhenInvalidWindSpeedPassed_thenValidationFails() {
-        Double speed = 1010.4;
+    void WhenNegativeWindSpeedPassed_thenValidationFails() {
+        Double speed = -1.9;
         Double gusts = 7.2;
         String direction = "NW";
 
         Wind wind = new Wind(speed, gusts, direction);
         Set<ConstraintViolation<Wind>> violations = validator.validate(wind);
         assertFalse(violations.isEmpty());
-
-        speed = -1.9;
-        wind = new Wind(speed, gusts, direction);
-        violations = validator.validate(wind);
-        assertFalse(violations.isEmpty());
-
-        speed = 0.123;
-        wind = new Wind(speed, gusts, direction);
-        violations = validator.validate(wind);
-        assertFalse(violations.isEmpty());
     }
 
     @Test
-    void WhenInvalidGustSpeedPassed_thenValidationFails() {
-        Double speed = 5.6;
+    void WhenNegativeGustSpeedPassed_thenValidationFails() {
+        Double speed = -3.5;
         Double gusts = 1100.0;
         String direction = "NW";
         Wind wind = new Wind(speed, gusts, direction);
         Set<ConstraintViolation<Wind>> violations = validator.validate(wind);
-        assertFalse(violations.isEmpty());
-
-        gusts = -3.5;
-        wind = new Wind(speed, gusts, direction);
-        violations = validator.validate(wind);
-        assertFalse(violations.isEmpty());
-
-        gusts = 0.123;
-        wind = new Wind(speed, gusts, direction);
-        violations = validator.validate(wind);
         assertFalse(violations.isEmpty());
     }
 

@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class Wind {
     @NotNull
-    @Digits(integer = 3, fraction = 2)
     @Min(value = 0)
     private Double speed, gusts;
 

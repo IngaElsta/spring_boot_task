@@ -47,28 +47,17 @@ public class SkiLocationTest {
 
     @Test
     void WhenInvalidLongitudePassed_thenValidationFails() {
-        Double longitude = 1900.9; //larger than max and integer part too long
+        Double longitude = 1900.9; //larger than max
         SkiLocation location = new SkiLocation(latitude, longitude);
         Set<ConstraintViolation<SkiLocation>> violations = validator.validate(location);
-        assertFalse(violations.isEmpty());
-
-        longitude = 0.00001; //too long fraction
-        location = new SkiLocation(latitude, longitude);
-        violations = validator.validate(location);
         assertFalse(violations.isEmpty());
     }
 
     @Test
     void WhenInvalidLatitudePassed_thenValidationFails() {
-        Double latitude = 100.0; //both too long and larger than max
+        Double latitude = 100.0; //larger than max
         SkiLocation location = new SkiLocation(latitude, longitude);
         Set<ConstraintViolation<SkiLocation>> violations = validator.validate(location);
-        assertFalse(violations.isEmpty());
-
-
-        latitude = -0.00001; //too long fraction
-        location = new SkiLocation(latitude, longitude);
-        violations = validator.validate(location);
         assertFalse(violations.isEmpty());
     }
 

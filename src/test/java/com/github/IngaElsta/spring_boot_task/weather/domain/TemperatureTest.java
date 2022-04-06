@@ -41,24 +41,6 @@ public class TemperatureTest {
         assertFalse(violations.isEmpty());
     }
 
-    @Test
-    void WhenInvalidNumericValuesPassed_thenValidationFails(){
-        Double  morning = -500.2; //Integer part too long
-        Double  day = 2.6;
-        Double  evening = 0.5;
-        Double  night = -5.8;
-
-        Temperature temperature = new Temperature(morning, day, evening, night);
-        Set<ConstraintViolation<Temperature>> violations = validator.validate(temperature);
-        assertFalse(violations.isEmpty());
-
-        morning = 0.00001; //fraction part too long
-
-        temperature = new Temperature(morning, null, null, night);
-        violations = validator.validate(temperature);
-        assertFalse(violations.isEmpty());
-    }
-
 
     @Test
     void ItIsPossibleToRetrieveAndResetAnyValue(){

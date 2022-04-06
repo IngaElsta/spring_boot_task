@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-//@Validated
+@Validated
 @RequestMapping ("api/v1/ski-planner")
 public class SkiPlanController {
 

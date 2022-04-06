@@ -33,10 +33,10 @@ public class SkiPlanController {
     public Map<LocalDate, WeatherConditions> getWeather(
             @RequestParam (value = "lat", required = false, defaultValue = "56.95")
             @Min(-90) @Max(90)
-                    double lat,
+                    Double lat,
             @RequestParam (value = "lon", required = false, defaultValue = "24.11")
             @Min(-180) @Max(180)
-                    double lon) {
+                    Double lon) {
         try {
             return skiPlanService.getWeather(new SkiLocation(lat, lon));
         } catch (HttpClientErrorException e) {

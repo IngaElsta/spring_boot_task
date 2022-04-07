@@ -6,13 +6,12 @@ import com.github.IngaElsta.spring_boot_task.weather.domain.Temperature;
 import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditions;
 import com.github.IngaElsta.spring_boot_task.weather.domain.Wind;
 
+import com.github.IngaElsta.spring_boot_task.weather.exception.WeatherDataException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.client.HttpClientErrorException;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
@@ -27,8 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @WebMvcTest(SkiPlanController.class)
 class SkiPlanControllerTest {
 
@@ -36,7 +33,7 @@ class SkiPlanControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private SkiPlanService service;
+    private SkiPlanService skiPlanServiceMock;
 
     @Test
     public void WhenNoParametersPassedToGetWeather_ShouldUseDefaultValuesAndReturnData() throws Exception {
@@ -50,7 +47,7 @@ class SkiPlanControllerTest {
         expected.put(date, new WeatherConditions(
                 date, weatherDescriptions, temperature, wind, new ArrayList<>()));
 
-        when(service.getWeather(new SkiLocation(56.95, 24.11))).thenReturn(expected);
+        when(skiPlanServiceMock.getWeather(new SkiLocation(56.95, 24.11))).thenReturn(expected);
 
         this.mockMvc
                 .perform(get("/api/v1/ski-planner/weather"))
@@ -71,7 +68,7 @@ class SkiPlanControllerTest {
         expected.put(date, new WeatherConditions(
                 date, weatherDescriptions, temperature, wind, new ArrayList<>()));
 
-        when(service.getWeather(new SkiLocation(55.87, 26.52))).thenReturn(expected);
+        when(skiPlanServiceMock.getWeather(new SkiLocation(55.87, 26.52))).thenReturn(expected);
 
         this.mockMvc
                 .perform(get("/api/v1/ski-planner/weather?lat=55.87&lon=26.52"))
@@ -86,6 +83,18 @@ class SkiPlanControllerTest {
                 .perform(get("/api/v1/ski-planner/weather?lat=555&lon=26.52"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void WhenWeatherDataRetrievalUnsuccessful_GetWeatherShouldReturnError() throws Exception {
+        when(skiPlanServiceMock.getWeather(new SkiLocation(55.87, 26.52)))
+                .thenThrow(new WeatherDataException("placeholder") {});
+
+        this.mockMvc
+                .perform(get("/api/v1/ski-planner/weather?lat=55.87&lon=26.52"))
+                .andDo(print())
+                .andExpect(status().is5xxServerError())
+                .andExpect(content().string(containsString("placeholder")));
     }
 
 }

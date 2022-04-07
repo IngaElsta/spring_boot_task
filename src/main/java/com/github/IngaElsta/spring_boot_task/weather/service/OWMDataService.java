@@ -56,7 +56,7 @@ public class OWMDataService implements WeatherDataService {
             return processWeatherData(
                     response.getBody(), objectMapper);
         } else {
-            throw new OWMDataException("OWM returned an error response", response.getStatusCodeValue(), response.getBody());
+            throw new OWMDataException("Failed to retrieve weather data");
         }
     }
 

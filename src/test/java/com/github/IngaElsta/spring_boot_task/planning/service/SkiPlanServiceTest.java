@@ -1,9 +1,9 @@
 package com.github.IngaElsta.spring_boot_task.planning.service;
 
-import com.github.IngaElsta.spring_boot_task.planning.domain.SkiLocation;
-import com.github.IngaElsta.spring_boot_task.weather.domain.Temperature;
-import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditions;
-import com.github.IngaElsta.spring_boot_task.weather.domain.Wind;
+import com.github.IngaElsta.spring_boot_task.planning.entity.SkiLocation;
+import com.github.IngaElsta.spring_boot_task.weather.entity.Temperature;
+import com.github.IngaElsta.spring_boot_task.weather.entity.WeatherConditions;
+import com.github.IngaElsta.spring_boot_task.weather.entity.Wind;
 import com.github.IngaElsta.spring_boot_task.weather.exception.WeatherDataException;
 import com.github.IngaElsta.spring_boot_task.weather.service.WeatherDataService;
 import org.junit.jupiter.api.BeforeEach;

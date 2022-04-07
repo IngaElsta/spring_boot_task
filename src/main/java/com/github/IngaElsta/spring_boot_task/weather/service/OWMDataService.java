@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.IngaElsta.spring_boot_task.weather.exception.OWMDataException;
-import com.github.IngaElsta.spring_boot_task.planning.domain.SkiLocation;
+import com.github.IngaElsta.spring_boot_task.planning.entity.SkiLocation;
 import com.github.IngaElsta.spring_boot_task.weather.configuration.OWMConfiguration;
 import com.github.IngaElsta.spring_boot_task.weather.deserialize.OWMDeserializer;
-import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditions;
+import com.github.IngaElsta.spring_boot_task.weather.entity.WeatherConditions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.github.IngaElsta.spring_boot_task.weather.domain.*;
+import com.github.IngaElsta.spring_boot_task.weather.entity.*;
 import com.github.IngaElsta.spring_boot_task.weather.exception.OWMDataException;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,6 +1,5 @@
-package com.github.IngaElsta.spring_boot_task.planning.domain;
+package com.github.IngaElsta.spring_boot_task.planning.entity;
 
-import com.github.IngaElsta.spring_boot_task.weather.domain.Alert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

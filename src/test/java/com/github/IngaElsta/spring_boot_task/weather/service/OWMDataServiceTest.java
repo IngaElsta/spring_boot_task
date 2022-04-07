@@ -1,9 +1,9 @@
 package com.github.IngaElsta.spring_boot_task.weather.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.IngaElsta.spring_boot_task.weather.domain.Temperature;
-import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditions;
-import com.github.IngaElsta.spring_boot_task.weather.domain.Wind;
+import com.github.IngaElsta.spring_boot_task.weather.entity.Temperature;
+import com.github.IngaElsta.spring_boot_task.weather.entity.WeatherConditions;
+import com.github.IngaElsta.spring_boot_task.weather.entity.Wind;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;

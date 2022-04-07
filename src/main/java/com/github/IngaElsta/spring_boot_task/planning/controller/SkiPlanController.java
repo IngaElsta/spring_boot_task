@@ -1,8 +1,8 @@
 package com.github.IngaElsta.spring_boot_task.planning.controller;
 
 import com.github.IngaElsta.spring_boot_task.planning.service.SkiPlanService;
-import com.github.IngaElsta.spring_boot_task.planning.domain.SkiLocation;
-import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditions;
+import com.github.IngaElsta.spring_boot_task.planning.entity.SkiLocation;
+import com.github.IngaElsta.spring_boot_task.weather.entity.WeatherConditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;

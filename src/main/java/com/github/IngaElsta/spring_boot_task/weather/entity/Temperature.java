@@ -1,9 +1,8 @@
-package com.github.IngaElsta.spring_boot_task.weather.domain;
+package com.github.IngaElsta.spring_boot_task.weather.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 @Data

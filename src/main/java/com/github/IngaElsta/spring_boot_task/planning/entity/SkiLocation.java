@@ -1,4 +1,4 @@
-package com.github.IngaElsta.spring_boot_task.planning.domain;
+package com.github.IngaElsta.spring_boot_task.planning.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

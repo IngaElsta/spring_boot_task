@@ -1,4 +1,4 @@
-package com.github.IngaElsta.spring_boot_task.weather.domain;
+package com.github.IngaElsta.spring_boot_task.weather.entity;
 
 import java.time.Instant;
 import java.time.LocalDate;

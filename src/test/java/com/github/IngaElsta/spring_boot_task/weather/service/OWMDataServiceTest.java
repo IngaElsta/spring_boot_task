@@ -1,6 +1,7 @@
 package com.github.IngaElsta.spring_boot_task.weather.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.IngaElsta.spring_boot_task.commons.Conversion;
 import com.github.IngaElsta.spring_boot_task.weather.entity.Temperature;
 import com.github.IngaElsta.spring_boot_task.weather.entity.WeatherConditions;
 import com.github.IngaElsta.spring_boot_task.weather.entity.Wind;
@@ -46,7 +47,7 @@ public class OWMDataServiceTest {
 
         ObjectMapper mapper = Mockito.mock(ObjectMapper.class);
 
-        LocalDate date = WeatherConditions.convertDate(1643536800).toLocalDate();
+        LocalDate date = Conversion.convertDate(1643536800).toLocalDate();
         Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
         Wind wind = new Wind(8.23, 17.56, "S");
         List<String> weatherDescriptions = new ArrayList<>();

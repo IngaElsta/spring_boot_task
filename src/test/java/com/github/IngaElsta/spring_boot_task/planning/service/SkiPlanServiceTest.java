@@ -1,5 +1,6 @@
 package com.github.IngaElsta.spring_boot_task.planning.service;
 
+import com.github.IngaElsta.spring_boot_task.commons.Conversion;
 import com.github.IngaElsta.spring_boot_task.planning.entity.SkiLocation;
 import com.github.IngaElsta.spring_boot_task.weather.entity.Temperature;
 import com.github.IngaElsta.spring_boot_task.weather.entity.WeatherConditions;
@@ -34,7 +35,7 @@ class SkiPlanServiceTest {
 
     @Test
     public void WhenWeatherDataProcessedSuccessfully_GetWeatherShouldReturnData() throws Exception {
-        LocalDate date = WeatherConditions.convertDate(1643536800).toLocalDate();
+        LocalDate date = Conversion.convertDate(1643536800).toLocalDate();
         Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
         Wind wind = new Wind(8.23, 17.56, "S");
         List<String> weatherDescriptions = new ArrayList<>();

@@ -3,6 +3,7 @@ package com.github.IngaElsta.spring_boot_task.weather.deserialize;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.github.IngaElsta.spring_boot_task.commons.Conversion;
 import com.github.IngaElsta.spring_boot_task.weather.entity.Alert;
 import com.github.IngaElsta.spring_boot_task.weather.entity.Temperature;
 import com.github.IngaElsta.spring_boot_task.weather.entity.WeatherConditions;
@@ -56,7 +57,7 @@ public class OWMDeserializerTest {
         String text = new String(Files.readAllBytes(jsonNoAlerts.toPath()));
         Map<LocalDate, WeatherConditions> weatherConditionsMap = this.json.parseObject(text);
 
-        LocalDate date = WeatherConditions.convertDate(1643536800).toLocalDate();;
+        LocalDate date = Conversion.convertDate(1643536800).toLocalDate();;
         Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
         Wind wind = new Wind(8.23, 17.56, "S");
         List<String> weatherDescriptions = new ArrayList<>();
@@ -80,7 +81,7 @@ public class OWMDeserializerTest {
         Map<LocalDate, WeatherConditions> expected = new LinkedHashMap<>();
 
         //2022-01-30
-        LocalDate date = WeatherConditions
+        LocalDate date = Conversion
                 .convertDate(1643536800).toLocalDate();
         Temperature temperature = new Temperature(1.8, 1.19, -0.18, -0.47);
         Wind wind = new Wind(17.08, 21.9, "N");
@@ -90,16 +91,16 @@ public class OWMDeserializerTest {
 
         List<Alert> alerts = new ArrayList<>();
         Alert alert1 = new Alert("Yellow Flooding Warning",
-                WeatherConditions.convertDate(1643364000),
-                WeatherConditions.convertDate(1643716800));
+                Conversion.convertDate(1643364000),
+                Conversion.convertDate(1643716800));
 
         Alert alert2 = new Alert("Red Wind Warning",
-                WeatherConditions.convertDate(1643518800),
-                WeatherConditions.convertDate(1643554800));
+                Conversion.convertDate(1643518800),
+                Conversion.convertDate(1643554800));
 
         Alert alert3 = new Alert("Orange Snow-Ice Warning",
-                WeatherConditions.convertDate(1643536800),
-                WeatherConditions.convertDate(1643590800));
+                Conversion.convertDate(1643536800),
+                Conversion.convertDate(1643590800));
 
         alerts.add(alert1);
         alerts.add(alert2);
@@ -109,7 +110,7 @@ public class OWMDeserializerTest {
         WeatherConditions conditions1 = new WeatherConditions(date, weatherDescriptions, temperature, wind, alerts);
         expected.put(date, conditions1);
 
-        date = WeatherConditions.convertDate(1643623200).toLocalDate();;
+        date = Conversion.convertDate(1643623200).toLocalDate();;
         temperature = new Temperature(-0.73, -0.26, -1.17, -1.92);
         wind = new Wind(12.78, 16.97, "N");
         weatherDescriptions = new ArrayList<>();

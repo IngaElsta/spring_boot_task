@@ -1,5 +1,6 @@
 package com.github.IngaElsta.spring_boot_task.weather.entity;
 
+import com.github.IngaElsta.spring_boot_task.commons.Conversion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -85,12 +86,6 @@ public class WeatherConditionsTest {
         WeatherConditions conditions = new WeatherConditions(LocalDate.now(), weatherDescriptions, temperature, null, alerts);
         Set<ConstraintViolation<WeatherConditions>> violations = validator.validate(conditions);
         assertFalse(violations.isEmpty());
-    }
-
-    @Test
-    void ConversionFromSecondsToDateTimeIsSuccessful() {
-        LocalDateTime expectedDateTime = LocalDateTime.of(2022, 01, 28,12,0);
-        assertEquals(WeatherConditions.convertDate(1643364000), expectedDateTime);
     }
 
     @Test

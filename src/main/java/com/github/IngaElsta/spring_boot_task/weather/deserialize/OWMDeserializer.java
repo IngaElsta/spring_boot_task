@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.github.IngaElsta.spring_boot_task.commons.Conversion;
 import com.github.IngaElsta.spring_boot_task.weather.entity.*;
 import com.github.IngaElsta.spring_boot_task.weather.exception.OWMDataException;
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +44,9 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
             alertNode.forEach(alertItem -> {
                 try {
                     String event = alertItem.get("event").asText();
-                    LocalDateTime start = WeatherConditions
+                    LocalDateTime start = Conversion
                             .convertDate(alertItem.get("start").asLong());
-                    LocalDateTime end = WeatherConditions
+                    LocalDateTime end = Conversion
                             .convertDate(alertItem.get("end").asLong());
 
                     Alert alert = new Alert(event, start, end);
@@ -70,7 +71,7 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
             DailyWeatherListNode.forEach(dailyWeatherNode -> {
                 try {
                     long dateValue = Long.valueOf(dailyWeatherNode.get("dt").asText());
-                    LocalDate date = WeatherConditions.convertDate(dateValue).toLocalDate();
+                    LocalDate date = Conversion.convertDate(dateValue).toLocalDate();
                     WeatherConditions conditions = processWeatherConditions(date, dailyWeatherNode);
                     conditions.setAlerts(gatherAlertDataForDay(allAlerts, date));
                     conditionsMap.put(date, conditions);

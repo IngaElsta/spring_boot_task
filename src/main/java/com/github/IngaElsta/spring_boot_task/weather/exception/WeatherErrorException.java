@@ -1,6 +1,6 @@
 package com.github.IngaElsta.spring_boot_task.weather.exception;
 
-public abstract class WeatherErrorException extends Exception {
+public abstract class WeatherErrorException extends RuntimeException {
     private int ReturnedErrorCode;
     private String ReturnedErrorMessage;
 

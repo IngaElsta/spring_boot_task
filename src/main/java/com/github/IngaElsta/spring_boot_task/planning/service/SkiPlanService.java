@@ -1,6 +1,5 @@
 package com.github.IngaElsta.spring_boot_task.planning.service;
 
-import com.github.IngaElsta.spring_boot_task.weather.exception.WeatherErrorException;
 import com.github.IngaElsta.spring_boot_task.planning.domain.SkiLocation;
 import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditions;
 import com.github.IngaElsta.spring_boot_task.weather.service.WeatherDataService;
@@ -23,14 +22,8 @@ public class SkiPlanService {
     //return weather information for following 7 days
     public Map<LocalDate, WeatherConditions> getWeather (SkiLocation location) {
         //TODO: implement actual connecting to cache and processing
-        try{
-            Map<LocalDate, WeatherConditions> weatherConditionsMap = weatherDataService.retrieveWeather(location);
-            return weatherConditionsMap;
-        } catch (WeatherErrorException e) {
-            //todo: process or throw this instead of printing out
-            System.out.println(e.getMessage());
-        }
-        return null;
+        Map<LocalDate, WeatherConditions> weatherConditionsMap = weatherDataService.retrieveWeather(location);
+        return weatherConditionsMap;
     }
 
 }

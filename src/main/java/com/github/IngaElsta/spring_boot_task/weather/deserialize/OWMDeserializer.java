@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.github.IngaElsta.spring_boot_task.weather.domain.*;
-import com.github.IngaElsta.spring_boot_task.weather.exception.OWMErrorException;
+import com.github.IngaElsta.spring_boot_task.weather.exception.OWMDataException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -52,10 +52,10 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
                     alerts.add(alert);
                 } catch (NullPointerException e) {
                     log.error("OWMDeserializer: Node or element missing while processing alert in {}", alertItem);
-                    throw new OWMErrorException("Failed to process weather data");
+                    throw new OWMDataException("Failed to process weather data");
                 } catch (NumberFormatException e) {
                     log.error("OWMDeserializer: Numeric value unreadable while processing alert data in {}", alertItem);
-                    throw new OWMErrorException("Failed to process weather data");
+                    throw new OWMDataException("Failed to process weather data");
                 }
             });
         }
@@ -76,10 +76,10 @@ public class OWMDeserializer extends StdDeserializer<Map<LocalDate, WeatherCondi
                     conditionsMap.put(date, conditions);
                 } catch (NullPointerException e) {
                     log.error("OWMDeserializer: Node or element missing while processing daily data in {}", dailyWeatherNode);
-                    throw new OWMErrorException("Failed to process weather data");
+                    throw new OWMDataException("Failed to process weather data");
                 } catch (NumberFormatException e) {
                     log.error("OWMDeserializer: Numeric value unreadable while processing daily data in {}", dailyWeatherNode);
-                    throw new OWMErrorException("Failed to process weather data");
+                    throw new OWMDataException("Failed to process weather data");
                 }
             });
         }

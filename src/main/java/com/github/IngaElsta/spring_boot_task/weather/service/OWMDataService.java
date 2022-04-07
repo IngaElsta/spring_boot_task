@@ -3,7 +3,7 @@ package com.github.IngaElsta.spring_boot_task.weather.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.github.IngaElsta.spring_boot_task.weather.exception.OWMErrorException;
+import com.github.IngaElsta.spring_boot_task.weather.exception.OWMDataException;
 import com.github.IngaElsta.spring_boot_task.planning.domain.SkiLocation;
 import com.github.IngaElsta.spring_boot_task.weather.configuration.OWMConfiguration;
 import com.github.IngaElsta.spring_boot_task.weather.deserialize.OWMDeserializer;
@@ -46,7 +46,7 @@ public class OWMDataService implements WeatherDataService {
     }
 
 
-    public Map<LocalDate, WeatherConditions> retrieveWeather (SkiLocation location) throws OWMErrorException {
+    public Map<LocalDate, WeatherConditions> retrieveWeather (SkiLocation location) {
         var url = new UriTemplate(owmConfiguration.getOneApiUrl())
                 .expand(location.getLatitude(), location.getLongitude(),
                         owmConfiguration.getAuthToken());
@@ -56,19 +56,19 @@ public class OWMDataService implements WeatherDataService {
             return processWeatherData(
                     response.getBody(), objectMapper);
         } else {
-            throw new OWMErrorException("OWM returned an error response", response.getStatusCodeValue(), response.getBody());
+            throw new OWMDataException("OWM returned an error response", response.getStatusCodeValue(), response.getBody());
         }
     }
 
     //todo: probably integrate it back into retrieve weather method
     public static Map<LocalDate, WeatherConditions> processWeatherData(
             String weatherJson,
-            ObjectMapper objectMapper) throws OWMErrorException {
+            ObjectMapper objectMapper) {
         try {
             return objectMapper.readValue(weatherJson, Map.class);
         } catch (JsonProcessingException e) {
             log.error("processWeatherData: Failed to process weather data {}", weatherJson);
-            throw new OWMErrorException("Failed to process weather data received from OWM");
+            throw new OWMDataException("Failed to process weather data received from OWM");
         }
     }
 

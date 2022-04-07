@@ -7,6 +7,7 @@ import com.github.IngaElsta.spring_boot_task.weather.domain.Alert;
 import com.github.IngaElsta.spring_boot_task.weather.domain.Temperature;
 import com.github.IngaElsta.spring_boot_task.weather.domain.WeatherConditions;
 import com.github.IngaElsta.spring_boot_task.weather.domain.Wind;
+import com.github.IngaElsta.spring_boot_task.weather.exception.OWMErrorException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -128,13 +129,13 @@ public class OWMDeserializerTest {
     void When_data_value_missing_then_conversion_fails () throws IOException {
         String text = new String(Files.readAllBytes(jsonMissingData.toPath()));
 
-        assertThrows(NullPointerException.class, () -> {this.json.parseObject(text);});
+        assertThrows(OWMErrorException.class, () -> {this.json.parseObject(text);});
     }
 
     @Test
     void When_json_has_non_numeric_value_for_number_then_conversion_fails () throws IOException {
         String text = new String(Files.readAllBytes(jsonWrongDataType.toPath()));
 
-        assertThrows(NumberFormatException.class, () -> {this.json.parseObject(text);});
+        assertThrows(OWMErrorException.class, () -> {this.json.parseObject(text);});
     }
 }

@@ -47,10 +47,10 @@ class OutdoorActivitiesPlanTest {
         OutdoorActivitiesPlan outdoorActivitiesPlan = new OutdoorActivitiesPlan(location, date);
 
         assertEquals(outdoorActivitiesPlan.getLocation(), location);
-        assertEquals(outdoorActivitiesPlan.getSkiingDate(), date);
+        assertEquals(outdoorActivitiesPlan.getDate(), date);
 
         outdoorActivitiesPlan.setLocation(new OutdoorActivitiesLocation(89.6, -2.1));
-        outdoorActivitiesPlan.setSkiingDate(LocalDate.now().plusDays(4));
+        outdoorActivitiesPlan.setDate(LocalDate.now().plusDays(4));
     }
 
 }

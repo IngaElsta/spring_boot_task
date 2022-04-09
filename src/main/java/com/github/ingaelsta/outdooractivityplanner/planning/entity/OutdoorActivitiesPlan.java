@@ -15,6 +15,6 @@ public class OutdoorActivitiesPlan {
     private OutdoorActivitiesLocation location;
 
     @NotNull
-    private LocalDate skiingDate;
+    private LocalDate date;
 
 }

@@ -51,7 +51,7 @@ class OutdoorPlanControllerTest {
         when(outdoorActivityPlanningServiceMock.getWeather(new OutdoorActivitiesLocation(56.95, 24.11))).thenReturn(expected);
 
         this.mockMvc
-                .perform(get("/api/v1/ski-planner/weather"))
+                .perform(get("/api/v1/outdoor-planner/weather"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("rain and snow")));
@@ -72,7 +72,7 @@ class OutdoorPlanControllerTest {
         when(outdoorActivityPlanningServiceMock.getWeather(new OutdoorActivitiesLocation(55.87, 26.52))).thenReturn(expected);
 
         this.mockMvc
-                .perform(get("/api/v1/ski-planner/weather?lat=55.87&lon=26.52"))
+                .perform(get("/api/v1/outdoor-planner/weather?lat=55.87&lon=26.52"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("rain and snow")));
@@ -81,7 +81,7 @@ class OutdoorPlanControllerTest {
     @Test
     public void WhenInvalidLocationPassedToGetWeather_ShouldReturnError() throws Exception {
         this.mockMvc
-                .perform(get("/api/v1/ski-planner/weather?lat=555&lon=26.52"))
+                .perform(get("/api/v1/outdoor-planner/weather?lat=555&lon=26.52"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
@@ -92,7 +92,7 @@ class OutdoorPlanControllerTest {
                 .thenThrow(new WeatherDataException("placeholder") {});
 
         this.mockMvc
-                .perform(get("/api/v1/ski-planner/weather?lat=55.87&lon=26.52"))
+                .perform(get("/api/v1/outdoor-planner/weather?lat=55.87&lon=26.52"))
                 .andDo(print())
                 .andExpect(status().is5xxServerError())
                 .andExpect(content().string(containsString("placeholder")));

@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @Validated
-@RequestMapping ("api/v1/ski-planner")
+@RequestMapping ("api/v1/outdoor-planner")
 public class OutdoorPlanController {
 
     private final OutdoorPlanService outdoorActivityPlanningService;

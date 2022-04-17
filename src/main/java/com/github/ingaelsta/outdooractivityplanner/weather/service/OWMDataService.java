@@ -37,6 +37,7 @@ public class OWMDataService implements WeatherDataService {
         this.restTemplate = restTemplateBuilder.build();
         this.owmConfiguration = owmConfiguration;
 
+        //todo: move this to a separate config class?
         this.objectMapper = objectMapper;
         SimpleModule module = new SimpleModule("OWMDeserializer",
                 new Version(1, 0, 0, null, null, null));
@@ -52,6 +53,7 @@ public class OWMDataService implements WeatherDataService {
                         owmConfiguration.getAuthToken());
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
+        //todo: manage error responses properly
         if (response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 400) {
             return processWeatherData(
                     response.getBody(), objectMapper);

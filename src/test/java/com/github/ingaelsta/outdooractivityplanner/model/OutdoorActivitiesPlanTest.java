@@ -1,5 +1,7 @@
-package com.github.ingaelsta.outdooractivityplanner.planning.entity;
+package com.github.ingaelsta.outdooractivityplanner.model;
 
+import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivitiesLocation;
+import com.github.ingaelsta.outdooractivityplanner.planning.model.OutdoorActivitiesPlan;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

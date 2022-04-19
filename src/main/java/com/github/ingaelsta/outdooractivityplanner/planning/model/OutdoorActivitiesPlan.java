@@ -1,7 +1,8 @@
-package com.github.ingaelsta.outdooractivityplanner.planning.entity;
+package com.github.ingaelsta.outdooractivityplanner.planning.model;
 
 import java.time.LocalDate;
 
+import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivitiesLocation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

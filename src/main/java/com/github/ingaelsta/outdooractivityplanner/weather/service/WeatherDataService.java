@@ -1,6 +1,6 @@
 package com.github.ingaelsta.outdooractivityplanner.weather.service;
 
-import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivitiesLocation;
+import com.github.ingaelsta.outdooractivityplanner.planning.model.OutdoorActivitiesLocation;
 import com.github.ingaelsta.outdooractivityplanner.weather.entity.WeatherConditions;
 
 import java.time.LocalDate;

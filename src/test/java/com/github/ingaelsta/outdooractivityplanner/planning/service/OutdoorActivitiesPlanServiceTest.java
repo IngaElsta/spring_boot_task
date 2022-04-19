@@ -3,7 +3,7 @@ package com.github.ingaelsta.outdooractivityplanner.planning.service;
 import com.github.ingaelsta.outdooractivityplanner.weather.entity.Temperature;
 import com.github.ingaelsta.outdooractivityplanner.weather.entity.WeatherConditions;
 import com.github.ingaelsta.outdooractivityplanner.commons.Conversion;
-import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivitiesLocation;
+import com.github.ingaelsta.outdooractivityplanner.planning.model.OutdoorActivitiesLocation;
 import com.github.ingaelsta.outdooractivityplanner.weather.entity.Wind;
 import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherDataException;
 import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherDataService;

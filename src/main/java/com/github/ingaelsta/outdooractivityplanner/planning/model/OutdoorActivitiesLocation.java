@@ -1,4 +1,4 @@
-package com.github.ingaelsta.outdooractivityplanner.planning.entity;
+package com.github.ingaelsta.outdooractivityplanner.planning.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

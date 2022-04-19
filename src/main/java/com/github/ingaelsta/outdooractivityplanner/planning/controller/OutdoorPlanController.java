@@ -1,6 +1,6 @@
 package com.github.ingaelsta.outdooractivityplanner.planning.controller;
 
-import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivitiesLocation;
+import com.github.ingaelsta.outdooractivityplanner.planning.model.OutdoorActivitiesLocation;
 import com.github.ingaelsta.outdooractivityplanner.weather.entity.WeatherConditions;
 import com.github.ingaelsta.outdooractivityplanner.planning.service.OutdoorPlanService;
 import org.springframework.beans.factory.annotation.Autowired;

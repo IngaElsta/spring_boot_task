@@ -3,7 +3,7 @@ package com.github.ingaelsta.outdooractivityplanner.weather.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivitiesLocation;
+import com.github.ingaelsta.outdooractivityplanner.planning.model.OutdoorActivitiesLocation;
 import com.github.ingaelsta.outdooractivityplanner.weather.configuration.OWMConfiguration;
 import com.github.ingaelsta.outdooractivityplanner.weather.deserialize.OWMDeserializer;
 import com.github.ingaelsta.outdooractivityplanner.weather.entity.WeatherConditions;

@@ -1,7 +1,7 @@
 package com.github.ingaelsta.outdooractivityplanner.planning.controller;
 
 import com.github.ingaelsta.outdooractivityplanner.commons.Conversion;
-import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivitiesLocation;
+import com.github.ingaelsta.outdooractivityplanner.planning.model.OutdoorActivitiesLocation;
 import com.github.ingaelsta.outdooractivityplanner.planning.service.OutdoorPlanService;
 import com.github.ingaelsta.outdooractivityplanner.weather.entity.Temperature;
 import com.github.ingaelsta.outdooractivityplanner.weather.entity.WeatherConditions;

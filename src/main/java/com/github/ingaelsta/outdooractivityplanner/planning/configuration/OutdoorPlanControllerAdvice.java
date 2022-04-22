@@ -1,5 +1,6 @@
 package com.github.ingaelsta.outdooractivityplanner.planning.configuration;
 
+import com.github.ingaelsta.outdooractivityplanner.planning.exception.PastDateException;
 import com.github.ingaelsta.outdooractivityplanner.planning.response.ErrorResponse;
 import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherDataException;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class OutdoorPlanControllerAdvice {
                 .replace("getWeather.", "")
                 .split(", "));
 
-        return new ResponseEntity<ErrorResponse>(new ErrorResponse(
+        return new ResponseEntity<>(new ErrorResponse(
                 HttpStatus.BAD_REQUEST, errors),
                 HttpStatus.BAD_REQUEST);
     }
@@ -34,7 +35,7 @@ public class OutdoorPlanControllerAdvice {
         List<String> errors = new ArrayList<>();
         errors.add (e.getMessage());
 
-        return new ResponseEntity<ErrorResponse>(new ErrorResponse(
+        return new ResponseEntity<>(new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR, errors),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -50,8 +51,18 @@ public class OutdoorPlanControllerAdvice {
             String errorMessage = error.getDefaultMessage();
             errors.add(errorMessage);
         });
-        return new ResponseEntity<ErrorResponse>(
+        return new ResponseEntity<>(
                 new ErrorResponse(HttpStatus.BAD_REQUEST, errors),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PastDateException.class)
+    public ResponseEntity<ErrorResponse> HandlePastDateException(Exception e) {
+        List<String> errors = new ArrayList<>();
+        errors.add (e.getMessage());
+
+        return new ResponseEntity<>(new ErrorResponse(
+                HttpStatus.BAD_REQUEST, errors),
                 HttpStatus.BAD_REQUEST);
     }
 

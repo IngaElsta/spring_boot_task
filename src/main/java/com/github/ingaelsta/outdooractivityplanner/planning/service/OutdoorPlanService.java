@@ -1,6 +1,6 @@
 package com.github.ingaelsta.outdooractivityplanner.planning.service;
 
-import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivitiesDAO;
+import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivity;
 import com.github.ingaelsta.outdooractivityplanner.commons.model.Location;
 import com.github.ingaelsta.outdooractivityplanner.planning.repository.OutdoorActivitiesRepository;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
@@ -31,7 +31,7 @@ public class OutdoorPlanService {
         return weatherConditionsMap;
     }
 
-    public OutdoorActivitiesDAO saveOutdoorPlan  (OutdoorActivitiesDAO plan) {
+    public OutdoorActivity saveOutdoorPlan  (OutdoorActivity plan) {
         //todo: add check for weather alerts
         return outdoorActivitiesPlanRepository.save(plan);
     }

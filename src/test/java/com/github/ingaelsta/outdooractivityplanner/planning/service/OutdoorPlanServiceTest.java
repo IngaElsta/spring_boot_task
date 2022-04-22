@@ -1,6 +1,6 @@
 package com.github.ingaelsta.outdooractivityplanner.planning.service;
 
-import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivitiesDAO;
+import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivity;
 import com.github.ingaelsta.outdooractivityplanner.planning.repository.OutdoorActivitiesRepository;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Temperature;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
@@ -74,14 +74,14 @@ class OutdoorPlanServiceTest {
         LocalDate date = LocalDate.now();
         Double latitude = 52.1;
         Double longitude = -0.78;
-        OutdoorActivitiesDAO outdoorActivitiesDAO = new OutdoorActivitiesDAO(latitude, longitude, date);
-        outdoorActivitiesDAO.setId(1L);
+        OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
+        outdoorActivity.setId(1L);
 
-        when(outdoorPlanRepositoryMock.save(outdoorActivitiesDAO)).thenReturn(outdoorActivitiesDAO);
+        when(outdoorPlanRepositoryMock.save(outdoorActivity)).thenReturn(outdoorActivity);
 
-        OutdoorActivitiesDAO result = outdoorServiceMock.saveOutdoorPlan(outdoorActivitiesDAO);
+        OutdoorActivity result = outdoorServiceMock.saveOutdoorPlan(outdoorActivity);
 
-        assertEquals(outdoorActivitiesDAO, result);
+        assertEquals(outdoorActivity, result);
     }
 
 }

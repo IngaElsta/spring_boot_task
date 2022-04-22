@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Entity(name = "OutdoorActivitiesPlan")
 @Table(name = "OUTDOORACTIVITIESPLAN")
-public class OutdoorActivitiesDAO {
+public class OutdoorActivity {
 
     @Id
     @SequenceGenerator(
@@ -37,13 +37,13 @@ public class OutdoorActivitiesDAO {
     @Max(value = 180, message = "Longitude must be less than or equal to 180 (180 West)")
     private Double longitude;
     @NotNull
-    private LocalDate plandate;
+    private LocalDate planDate;
 
-    public OutdoorActivitiesDAO(Double latitude, Double longitude, LocalDate date) {
+    public OutdoorActivity(Double latitude, Double longitude, LocalDate date) {
         this();
         this.latitude = latitude;
         this.longitude = longitude;
-        this.plandate = date;
+        this.planDate = date;
     }
 
 }

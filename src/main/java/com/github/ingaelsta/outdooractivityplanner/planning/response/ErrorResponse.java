@@ -3,20 +3,23 @@ package com.github.ingaelsta.outdooractivityplanner.planning.response;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
+import java.util.Map;
+
 @Data
 public class ErrorResponse {
     private HttpStatus status;
-    private String message;
+    private List<String> messages;
     private String stackTrace;
 
-    public ErrorResponse(HttpStatus status, String message) {
+    public ErrorResponse(HttpStatus status, List<String> messages) {
         this.status = status;
-        this.message = message;
+        this.messages = messages;
     }
 
-    public ErrorResponse(HttpStatus status, String message, String stackTrace) {
+    public ErrorResponse(HttpStatus status, List<String> messages, String stackTrace) {
         this.status = status;
-        this.message = message;
+        this.messages = messages;
         this.stackTrace = stackTrace;
     }
 }

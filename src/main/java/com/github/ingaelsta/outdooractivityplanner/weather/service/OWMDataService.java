@@ -3,7 +3,7 @@ package com.github.ingaelsta.outdooractivityplanner.weather.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.github.ingaelsta.outdooractivityplanner.planning.model.OutdoorLocation;
+import com.github.ingaelsta.outdooractivityplanner.commons.model.Location;
 import com.github.ingaelsta.outdooractivityplanner.weather.configuration.OWMConfiguration;
 import com.github.ingaelsta.outdooractivityplanner.weather.deserialize.OWMDeserializer;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
@@ -47,7 +47,7 @@ public class OWMDataService implements WeatherDataService {
     }
 
 
-    public Map<LocalDate, WeatherConditions> retrieveWeather (OutdoorLocation location) {
+    public Map<LocalDate, WeatherConditions> retrieveWeather (Location location) {
         var url = new UriTemplate(owmConfiguration.getOneApiUrl())
                 .expand(location.getLatitude(), location.getLongitude(),
                         owmConfiguration.getAuthToken());

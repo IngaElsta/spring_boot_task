@@ -26,12 +26,13 @@ public class OutdoorPlanService {
 
     //return weather information for following 7 days
     public Map<LocalDate, WeatherConditions> getWeather (Location location) {
-        //TODO: implement actual connecting to cache and processing
+        //todo: implement actual connecting to cache and processing
         Map<LocalDate, WeatherConditions> weatherConditionsMap = weatherDataService.retrieveWeather(location);
         return weatherConditionsMap;
     }
 
     public OutdoorActivitiesDAO saveOutdoorPlan  (OutdoorActivitiesDAO plan) {
+        //todo: add check for weather alerts
         return outdoorActivitiesPlanRepository.save(plan);
     }
 

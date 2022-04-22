@@ -26,7 +26,6 @@ public class OutdoorActivitiesPlanDAOTest {
     @Test
     void WhenAllDataValid_thenValidationSucceeds(){
         OutdoorActivitiesDAO planDAO = new OutdoorActivitiesDAO(latitude, longitude, date);
-        System.out.println(planDAO);
 
         Set<ConstraintViolation<OutdoorActivitiesDAO>> violations = validator.validate(planDAO);
         assertTrue(violations.isEmpty());

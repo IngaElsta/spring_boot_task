@@ -1,6 +1,5 @@
 package com.github.ingaelsta.outdooractivityplanner.commons.model;
 
-import com.github.ingaelsta.outdooractivityplanner.commons.model.Location;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

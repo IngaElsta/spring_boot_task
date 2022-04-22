@@ -1,5 +1,6 @@
 package com.github.ingaelsta.outdooractivityplanner.planning.service;
 
+import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivitiesDAO;
 import com.github.ingaelsta.outdooractivityplanner.planning.repository.OutdoorActivitiesRepository;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Temperature;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
@@ -23,21 +24,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class OutdoorActivitiesPlanServiceTest {
+class OutdoorPlanServiceTest {
 
-    private WeatherDataService weatherDataServiceMock = Mockito.mock(WeatherDataService.class);
-    private OutdoorActivitiesRepository outdoorPlanRepositoryMock = Mockito.mock(OutdoorActivitiesRepository.class);
+    private final WeatherDataService weatherDataServiceMock = Mockito.mock(WeatherDataService.class);
+    private final OutdoorActivitiesRepository outdoorPlanRepositoryMock = Mockito.mock(OutdoorActivitiesRepository.class);
 
     private OutdoorPlanService outdoorServiceMock;
 
     @BeforeEach
     public void setup() {
         outdoorServiceMock =new OutdoorPlanService(
-                weatherDataServiceMock);
+                weatherDataServiceMock,
+                outdoorPlanRepositoryMock);
     }
 
     @Test
-    public void WhenWeatherDataProcessedSuccessfully_GetWeatherShouldReturnData() throws Exception {
+    public void WhenWeatherDataProcessedSuccessfully_GetWeatherShouldReturnData() {
         LocalDate date = Conversion.convertDate(1643536800).toLocalDate();
         Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
         Wind wind = new Wind(8.23, 17.56, "S");
@@ -57,15 +59,29 @@ class OutdoorActivitiesPlanServiceTest {
     }
 
     @Test
-    public void WhenWeatherDataProcessingHasFailed_GetWeatherShouldThrowException() throws Exception {
+    public void WhenWeatherDataProcessingHasFailed_GetWeatherShouldThrowException() {
         Location location = new Location(55.87, 26.52);
 
         when(weatherDataServiceMock.retrieveWeather(location))
                 .thenThrow(new WeatherDataException("Failed") {
         });
 
-        assertThrows(WeatherDataException.class, () -> {
-            outdoorServiceMock.getWeather(location);});
+        assertThrows(WeatherDataException.class, () -> outdoorServiceMock.getWeather(location));
+    }
+
+    @Test
+    public void WhenAttemptingToSaveActivity_ReturnsSavedEntity() {
+        LocalDate date = LocalDate.now();
+        Double latitude = 52.1;
+        Double longitude = -0.78;
+        OutdoorActivitiesDAO outdoorActivitiesDAO = new OutdoorActivitiesDAO(latitude, longitude, date);
+        outdoorActivitiesDAO.setId(1L);
+
+        when(outdoorPlanRepositoryMock.save(outdoorActivitiesDAO)).thenReturn(outdoorActivitiesDAO);
+
+        OutdoorActivitiesDAO result = outdoorPlanRepositoryMock.save(outdoorActivitiesDAO);
+
+        assertEquals(outdoorActivitiesDAO, result);
     }
 
 }

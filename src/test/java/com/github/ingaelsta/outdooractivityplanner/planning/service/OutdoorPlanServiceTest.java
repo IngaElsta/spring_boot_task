@@ -1,6 +1,7 @@
 package com.github.ingaelsta.outdooractivityplanner.planning.service;
 
 import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivity;
+import com.github.ingaelsta.outdooractivityplanner.planning.exception.PastDateException;
 import com.github.ingaelsta.outdooractivityplanner.planning.repository.OutdoorActivitiesRepository;
 import com.github.ingaelsta.outdooractivityplanner.planning.response.OutdoorPlanResponse;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Alert;
@@ -22,7 +23,6 @@ import static org.mockito.Mockito.*;
 import org.mockito.Mockito;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,11 +105,9 @@ class OutdoorPlanServiceTest {
         when(outdoorPlanRepositoryMock.save(outdoorActivity)).thenReturn(outdoorActivity);
         when(weatherDataServiceMock.retrieveWeather(location)).thenReturn(weatherConditionsMap);
 
-        OutdoorPlanResponse expected = new OutdoorPlanResponse(outdoorActivity, new ArrayList<Alert>());
+        OutdoorPlanResponse expected = new OutdoorPlanResponse(outdoorActivity, new ArrayList<>());
 
         OutdoorPlanResponse result = outdoorServiceMock.saveOutdoorPlan(outdoorActivity);
-        System.out.println(expected);
-        System.out.println(result);
 
         assertEquals(expected, result);
     }
@@ -126,5 +124,40 @@ class OutdoorPlanServiceTest {
         OutdoorPlanResponse result = outdoorServiceMock.saveOutdoorPlan(outdoorActivity);
 
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void WhenAttemptingToSaveActivityOnDayAfterWeatherPrognosisAvailable_ReturnsSavedEntityAndAlertList() {
+        LocalDate afterPrognosisPlanDate = date.plusDays(2);
+        OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, afterPrognosisPlanDate);
+        outdoorActivity.setId(1L);
+
+        when(outdoorPlanRepositoryMock.save(outdoorActivity)).thenReturn(outdoorActivity);
+        when(weatherDataServiceMock.retrieveWeather(location)).thenReturn(weatherConditionsMap);
+
+        Alert alertsUnknownAlert = new Alert(
+                (String.format("%s is after the last day when alerts can be predicted", afterPrognosisPlanDate)),
+                afterPrognosisPlanDate.atStartOfDay(),
+                afterPrognosisPlanDate.atStartOfDay());
+        List<Alert> alertsUnknown = new ArrayList<>();
+        alertsUnknown.add(alertsUnknownAlert);
+
+        OutdoorPlanResponse expected = new OutdoorPlanResponse(outdoorActivity, alertsUnknown);
+
+        OutdoorPlanResponse result = outdoorServiceMock.saveOutdoorPlan(outdoorActivity);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void WhenAttemptingToSaveActivityBeforePrognosisRange_ThrowsPastDateException() {
+        LocalDate afterPrognosisPlanDate = date.minusDays(2);
+        OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, afterPrognosisPlanDate);
+        outdoorActivity.setId(1L);
+
+        when(outdoorPlanRepositoryMock.save(outdoorActivity)).thenReturn(outdoorActivity);
+        when(weatherDataServiceMock.retrieveWeather(location)).thenReturn(weatherConditionsMap);
+
+        assertThrows(PastDateException.class, () -> outdoorServiceMock.saveOutdoorPlan(outdoorActivity));
     }
 }

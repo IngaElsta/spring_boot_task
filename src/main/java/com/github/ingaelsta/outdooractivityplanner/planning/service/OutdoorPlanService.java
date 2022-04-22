@@ -8,6 +8,7 @@ import com.github.ingaelsta.outdooractivityplanner.planning.response.OutdoorPlan
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Alert;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
 import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherDataService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class OutdoorPlanService {
 
@@ -40,7 +42,13 @@ public class OutdoorPlanService {
     public OutdoorPlanResponse saveOutdoorPlan  (OutdoorActivity plan) {
         Location location = new Location(plan.getLatitude(), plan.getLongitude());
         LocalDate planDate = plan.getPlanDate();
-        List<Alert> alerts = getAlerts(location, planDate);
+        List<Alert> alerts;
+        try {
+            alerts = getAlerts(location, planDate);
+        } catch (PastDateException e) {
+            log.error(String.format("%s is in the past", plan));
+            throw e;
+        }
 
         //todo: check if a day has plans already and refuse if so?
         outdoorActivitiesPlanRepository.save(plan);
@@ -62,7 +70,7 @@ public class OutdoorPlanService {
         LocalDate weatherConditionFirstDay = weatherConditionsMap.keySet().stream().findFirst().get();
         if (planDate.isBefore(weatherConditionFirstDay)) {
             //todo: probably should check for past while validating when I figure out testing for it
-            throw new PastDateException(planDate + " is in the past");
+            throw new PastDateException(String.format("%s is in the past", planDate));
         }
 
         if (weatherConditionsMap.containsKey(planDate)) {

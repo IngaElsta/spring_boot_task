@@ -1,4 +1,4 @@
-package com.github.ingaelsta.outdooractivityplanner.weather.entity;
+package com.github.ingaelsta.outdooractivityplanner.weather.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

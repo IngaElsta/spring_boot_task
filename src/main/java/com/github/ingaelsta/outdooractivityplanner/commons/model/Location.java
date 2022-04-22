@@ -1,4 +1,4 @@
-package com.github.ingaelsta.outdooractivityplanner.planning.model;
+package com.github.ingaelsta.outdooractivityplanner.commons.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import javax.validation.constraints.*;
 
 @Data
 @AllArgsConstructor
-public class OutdoorActivitiesLocation {
+public class Location {
 
     @NotNull(message = "Latitude value should not be empty")
     @Min(value = -90, message = "Latitude should not be less than -90 (90 South)")

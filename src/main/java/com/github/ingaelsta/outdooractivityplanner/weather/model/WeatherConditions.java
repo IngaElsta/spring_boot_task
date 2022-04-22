@@ -1,4 +1,4 @@
-package com.github.ingaelsta.outdooractivityplanner.weather.entity;
+package com.github.ingaelsta.outdooractivityplanner.weather.model;
 
 import java.time.LocalDate;
 import java.util.List;

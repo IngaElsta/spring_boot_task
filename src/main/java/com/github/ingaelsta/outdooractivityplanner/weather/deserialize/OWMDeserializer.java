@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.github.ingaelsta.outdooractivityplanner.commons.Conversion;
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.Alert;
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.Temperature;
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.WeatherConditions;
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.Wind;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.Alert;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.Temperature;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.Wind;
 import com.github.ingaelsta.outdooractivityplanner.weather.exception.OWMDataException;
 import lombok.extern.slf4j.Slf4j;
 

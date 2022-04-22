@@ -1,10 +1,10 @@
 package com.github.ingaelsta.outdooractivityplanner.weather.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.Temperature;
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.WeatherConditions;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.Temperature;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
 import com.github.ingaelsta.outdooractivityplanner.commons.Conversion;
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.Wind;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.Wind;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;

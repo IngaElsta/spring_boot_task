@@ -28,13 +28,13 @@ public class OutdoorActivitiesDAO {
     )
     private Long id;
     @NotNull(message = "Latitude value should not be empty")
-    @Min(value = -90, message = "Latitude should not be less than -90 (90 South)")
-    @Max(value = 90, message = "Latitude should not be more than 90 (90 North)")
+    @Min(value = -90, message = "Latitude must be greater than or equal to -90 (90 South)")
+    @Max(value = 90, message = "Latitude must be less than or equal to 90 (90 North)")
     private Double latitude;
 
     @NotNull(message = "Longitude value should not be empty")
-    @Min(value = -180, message = "Longitude should not be less than -180 (180 East)")
-    @Max(value = 180, message = "Longitude should not be less than 180 (180 West)")
+    @Min(value = -180, message = "Longitude must be greater than or equal to -180 (180 East)")
+    @Max(value = 180, message = "Longitude must be less than or equal to 180 (180 West)")
     private Double longitude;
     @NotNull
     private LocalDate plandate;

@@ -36,7 +36,8 @@ public class OutdoorActivity {
     @Min(value = -180, message = "Longitude must be greater than or equal to -180 (180 East)")
     @Max(value = 180, message = "Longitude must be less than or equal to 180 (180 West)")
     private Double longitude;
-    @NotNull
+
+    @NotNull(message = "planDate should not be null1")
     private LocalDate planDate;
 
     public OutdoorActivity(Double latitude, Double longitude, LocalDate date) {

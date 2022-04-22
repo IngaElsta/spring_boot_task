@@ -2,6 +2,7 @@ package com.github.ingaelsta.outdooractivityplanner.planning.controller;
 
 import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivity;
 import com.github.ingaelsta.outdooractivityplanner.commons.model.Location;
+import com.github.ingaelsta.outdooractivityplanner.planning.response.OutdoorPlanResponse;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
 import com.github.ingaelsta.outdooractivityplanner.planning.service.OutdoorPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class OutdoorPlanController {
     }
 
     @PostMapping (value = "/activity", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public OutdoorActivity saveOutdoorPlan (
+    public OutdoorPlanResponse saveOutdoorPlan (
             @Validated
             @RequestBody
             OutdoorActivity plan) {

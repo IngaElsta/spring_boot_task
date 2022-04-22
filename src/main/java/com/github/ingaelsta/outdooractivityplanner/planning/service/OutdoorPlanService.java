@@ -1,7 +1,7 @@
 package com.github.ingaelsta.outdooractivityplanner.planning.service;
 
-import com.github.ingaelsta.outdooractivityplanner.planning.model.OutdoorActivitiesLocation;
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.WeatherConditions;
+import com.github.ingaelsta.outdooractivityplanner.commons.model.Location;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
 import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +16,11 @@ public class OutdoorPlanService {
 
     @Autowired
     public OutdoorPlanService(WeatherDataService weatherDataService) {
-        this.weatherDataService = weatherDataService;
+        this.weatherDataService = weatherDataService
     }
 
     //return weather information for following 7 days
-    public Map<LocalDate, WeatherConditions> getWeather (OutdoorActivitiesLocation location) {
+    public Map<LocalDate, WeatherConditions> getWeather (Location location) {
         //TODO: implement actual connecting to cache and processing
         Map<LocalDate, WeatherConditions> weatherConditionsMap = weatherDataService.retrieveWeather(location);
         return weatherConditionsMap;

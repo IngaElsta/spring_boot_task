@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Entity(name = "OutdoorActivitiesPlan")
 @Table(name = "OUTDOORACTIVITIESPLAN")
-public class OutdoorActivitiesPlanDAO {
+public class OutdoorActivitiesDAO {
 
     @Id
     @SequenceGenerator(
@@ -39,7 +39,7 @@ public class OutdoorActivitiesPlanDAO {
     @NotNull
     private LocalDate plandate;
 
-    public OutdoorActivitiesPlanDAO (Double latitude, Double longitude, LocalDate date) {
+    public OutdoorActivitiesDAO(Double latitude, Double longitude, LocalDate date) {
         this();
         this.latitude = latitude;
         this.longitude = longitude;

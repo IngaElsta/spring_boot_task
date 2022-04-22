@@ -1,7 +1,7 @@
 package com.github.ingaelsta.outdooractivityplanner.planning.controller;
 
-import com.github.ingaelsta.outdooractivityplanner.planning.model.OutdoorActivitiesLocation;
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.WeatherConditions;
+import com.github.ingaelsta.outdooractivityplanner.commons.model.Location;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
 import com.github.ingaelsta.outdooractivityplanner.planning.service.OutdoorPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -32,8 +32,7 @@ public class OutdoorPlanController {
             @RequestParam (value = "lon", required = false, defaultValue = "24.11")
             @Min(-180) @Max(180)
                     Double lon) {
-        return outdoorActivityPlanningService.getWeather(new OutdoorActivitiesLocation(lat, lon));
+        return outdoorActivityPlanningService.getWeather(new Location(lat, lon));
     }
-
 
 }

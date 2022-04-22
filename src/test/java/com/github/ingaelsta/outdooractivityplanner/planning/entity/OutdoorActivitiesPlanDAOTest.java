@@ -25,24 +25,24 @@ public class OutdoorActivitiesPlanDAOTest {
 
     @Test
     void WhenAllDataValid_thenValidationSucceeds(){
-        OutdoorActivitiesPlanDAO planDAO = new OutdoorActivitiesPlanDAO(latitude, longitude, date);
+        OutdoorActivitiesDAO planDAO = new OutdoorActivitiesDAO(latitude, longitude, date);
         System.out.println(planDAO);
 
-        Set<ConstraintViolation<OutdoorActivitiesPlanDAO>> violations = validator.validate(planDAO);
+        Set<ConstraintViolation<OutdoorActivitiesDAO>> violations = validator.validate(planDAO);
         assertTrue(violations.isEmpty());
     }
 
     @Test
     void WhenAnyVariableIsNull_thenValidationFails(){
-        OutdoorActivitiesPlanDAO planDAO = new OutdoorActivitiesPlanDAO(latitude, longitude, null);
-        Set<ConstraintViolation<OutdoorActivitiesPlanDAO>> violations = validator.validate(planDAO);
+        OutdoorActivitiesDAO planDAO = new OutdoorActivitiesDAO(latitude, longitude, null);
+        Set<ConstraintViolation<OutdoorActivitiesDAO>> violations = validator.validate(planDAO);
         assertFalse(violations.isEmpty());
 
-        planDAO = new OutdoorActivitiesPlanDAO(null, longitude, date);
+        planDAO = new OutdoorActivitiesDAO(null, longitude, date);
         violations = validator.validate(planDAO);
         assertFalse(violations.isEmpty());
 
-        planDAO = new OutdoorActivitiesPlanDAO(latitude, null, date);
+        planDAO = new OutdoorActivitiesDAO(latitude, null, date);
         violations = validator.validate(planDAO);
         assertFalse(violations.isEmpty());
     }
@@ -50,19 +50,19 @@ public class OutdoorActivitiesPlanDAOTest {
     @Test
     void WhenInvalidCoordinatesPassed_thenValidationFails() {
         Double longitude = 1900.9; //larger than max
-        OutdoorActivitiesPlanDAO planDAO = new OutdoorActivitiesPlanDAO(latitude, longitude, date);
-        Set<ConstraintViolation<OutdoorActivitiesPlanDAO>> violations = validator.validate(planDAO);
+        OutdoorActivitiesDAO planDAO = new OutdoorActivitiesDAO(latitude, longitude, date);
+        Set<ConstraintViolation<OutdoorActivitiesDAO>> violations = validator.validate(planDAO);
         assertFalse(violations.isEmpty());
         
         Double latitude = 100.0; //larger than max
-        planDAO = new OutdoorActivitiesPlanDAO(latitude, longitude, date);
+        planDAO = new OutdoorActivitiesDAO(latitude, longitude, date);
         violations = validator.validate(planDAO);
         assertFalse(violations.isEmpty());
     }
 
     @Test
     void ItIsPossibleToRetrieveAndResetValues() {
-        OutdoorActivitiesPlanDAO planDAO = new OutdoorActivitiesPlanDAO(latitude, longitude, date);
+        OutdoorActivitiesDAO planDAO = new OutdoorActivitiesDAO(latitude, longitude, date);
 
         assertEquals(planDAO.getLatitude(), latitude);
         assertEquals(planDAO.getLongitude(),longitude);

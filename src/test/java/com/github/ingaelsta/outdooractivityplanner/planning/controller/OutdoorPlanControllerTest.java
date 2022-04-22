@@ -1,11 +1,11 @@
 package com.github.ingaelsta.outdooractivityplanner.planning.controller;
 
 import com.github.ingaelsta.outdooractivityplanner.commons.Conversion;
-import com.github.ingaelsta.outdooractivityplanner.planning.model.OutdoorActivitiesLocation;
+import com.github.ingaelsta.outdooractivityplanner.commons.model.Location;
 import com.github.ingaelsta.outdooractivityplanner.planning.service.OutdoorPlanService;
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.Temperature;
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.WeatherConditions;
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.Wind;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.Temperature;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.Wind;
 
 import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherDataException;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class OutdoorPlanControllerTest {
         expected.put(date, new WeatherConditions(
                 date, weatherDescriptions, temperature, wind, new ArrayList<>()));
 
-        when(outdoorActivityPlanningServiceMock.getWeather(new OutdoorActivitiesLocation(56.95, 24.11))).thenReturn(expected);
+        when(outdoorActivityPlanningServiceMock.getWeather(new Location(56.95, 24.11))).thenReturn(expected);
 
         this.mockMvc
                 .perform(get("/api/v1/outdoor-planner/weather"))
@@ -69,7 +69,7 @@ class OutdoorPlanControllerTest {
         expected.put(date, new WeatherConditions(
                 date, weatherDescriptions, temperature, wind, new ArrayList<>()));
 
-        when(outdoorActivityPlanningServiceMock.getWeather(new OutdoorActivitiesLocation(55.87, 26.52))).thenReturn(expected);
+        when(outdoorActivityPlanningServiceMock.getWeather(new Location(55.87, 26.52))).thenReturn(expected);
 
         this.mockMvc
                 .perform(get("/api/v1/outdoor-planner/weather?lat=55.87&lon=26.52"))
@@ -88,7 +88,7 @@ class OutdoorPlanControllerTest {
 
     @Test
     public void WhenWeatherDataRetrievalUnsuccessful_GetWeatherShouldReturnError() throws Exception {
-        when(outdoorActivityPlanningServiceMock.getWeather(new OutdoorActivitiesLocation(55.87, 26.52)))
+        when(outdoorActivityPlanningServiceMock.getWeather(new Location(55.87, 26.52)))
                 .thenThrow(new WeatherDataException("placeholder") {});
 
         this.mockMvc

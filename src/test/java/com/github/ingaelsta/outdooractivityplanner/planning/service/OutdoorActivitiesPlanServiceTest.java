@@ -1,10 +1,11 @@
 package com.github.ingaelsta.outdooractivityplanner.planning.service;
 
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.Temperature;
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.WeatherConditions;
+import com.github.ingaelsta.outdooractivityplanner.planning.repository.OutdoorActivitiesRepository;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.Temperature;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
 import com.github.ingaelsta.outdooractivityplanner.commons.Conversion;
-import com.github.ingaelsta.outdooractivityplanner.planning.model.OutdoorActivitiesLocation;
-import com.github.ingaelsta.outdooractivityplanner.weather.entity.Wind;
+import com.github.ingaelsta.outdooractivityplanner.commons.model.Location;
+import com.github.ingaelsta.outdooractivityplanner.weather.model.Wind;
 import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherDataException;
 import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherDataService;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,12 +26,14 @@ import java.util.Map;
 class OutdoorActivitiesPlanServiceTest {
 
     private WeatherDataService weatherDataServiceMock = Mockito.mock(WeatherDataService.class);
+    private OutdoorActivitiesRepository outdoorPlanRepositoryMock = Mockito.mock(OutdoorActivitiesRepository.class);
 
-    private OutdoorPlanService outdoorActivityPlanningServiceMock;
+    private OutdoorPlanService outdoorServiceMock;
 
     @BeforeEach
     public void setup() {
-        outdoorActivityPlanningServiceMock = new OutdoorPlanService(weatherDataServiceMock);
+        outdoorServiceMock =new OutdoorPlanService(
+                weatherDataServiceMock);
     }
 
     @Test
@@ -44,25 +47,25 @@ class OutdoorActivitiesPlanServiceTest {
         Map<LocalDate, WeatherConditions> expected = new HashMap<>();
         expected.put(date, new WeatherConditions(
                 date, weatherDescriptions, temperature, wind, new ArrayList<>()));
-        OutdoorActivitiesLocation location = new OutdoorActivitiesLocation(55.87, 26.52);
+        Location location = new Location(55.87, 26.52);
 
         when(weatherDataServiceMock.retrieveWeather(location)).thenReturn(expected);
 
-        Map<LocalDate, WeatherConditions> result = outdoorActivityPlanningServiceMock.getWeather(location);
+        Map<LocalDate, WeatherConditions> result = outdoorServiceMock.getWeather(location);
 
         assertEquals(expected, result);
     }
 
     @Test
     public void WhenWeatherDataProcessingHasFailed_GetWeatherShouldThrowException() throws Exception {
-        OutdoorActivitiesLocation location = new OutdoorActivitiesLocation(55.87, 26.52);
+        Location location = new Location(55.87, 26.52);
 
         when(weatherDataServiceMock.retrieveWeather(location))
                 .thenThrow(new WeatherDataException("Failed") {
         });
 
         assertThrows(WeatherDataException.class, () -> {
-            outdoorActivityPlanningServiceMock.getWeather(location);});
+            outdoorServiceMock.getWeather(location);});
     }
 
 }

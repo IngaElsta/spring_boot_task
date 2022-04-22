@@ -79,7 +79,7 @@ class OutdoorPlanServiceTest {
 
         when(outdoorPlanRepositoryMock.save(outdoorActivitiesDAO)).thenReturn(outdoorActivitiesDAO);
 
-        OutdoorActivitiesDAO result = outdoorPlanRepositoryMock.save(outdoorActivitiesDAO);
+        OutdoorActivitiesDAO result = outdoorServiceMock.saveOutdoorPlan(outdoorActivitiesDAO);
 
         assertEquals(outdoorActivitiesDAO, result);
     }

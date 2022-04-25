@@ -14,6 +14,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -45,6 +46,11 @@ public class OutdoorPlanController {
             @RequestBody
             OutdoorActivity plan) {
         return outdoorPlanService.saveOutdoorPlan(plan);
+    }
+
+    @GetMapping(value = "activity/all")
+    public List<OutdoorActivity> getAllPlans() {
+        return outdoorPlanService.getAllPlans();
     }
 
     @DeleteMapping(value = "activity")

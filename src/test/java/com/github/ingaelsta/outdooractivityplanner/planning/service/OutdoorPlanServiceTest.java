@@ -171,6 +171,39 @@ class OutdoorPlanServiceTest {
         assertThrows(PastDateException.class, () -> outdoorServiceMock.saveOutdoorPlan(outdoorActivity));
     }
 
+    //get all saved activities
+    @Test
+    public void WhenRetrievingSavedAllPlans_thenReturnsData () {
+        List<OutdoorActivity> expected = new ArrayList<>();
+
+        OutdoorActivity activity1  = new OutdoorActivity(latitude, longitude, date);
+        activity1.setId(1L);
+        expected.add(activity1);
+
+        OutdoorActivity activity2  = new OutdoorActivity(latitude, longitude, date.plusDays(2));
+        activity1.setId(2L);
+        expected.add(activity2);
+
+        when(outdoorPlanRepositoryMock.findAll())
+                .thenReturn(expected);
+
+        List<OutdoorActivity> result = outdoorServiceMock.getAllPlans();
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void WhenNoActivitiesSavedAndRetrievingSavedAllPlans_thenReturnsEmptyList () {
+        List<OutdoorActivity> expected = new ArrayList<>();
+
+        when(outdoorPlanRepositoryMock.findAll())
+                .thenReturn(expected);
+
+        List<OutdoorActivity> result = outdoorServiceMock.getAllPlans();
+
+        assertEquals(expected, result);
+    }
+
     //delete activity by id
     @Test void WhenAttemptingToDeleteActivityById_thenNoExceptionIsThrown() {
         doNothing().when(outdoorPlanRepositoryMock).deleteById(1L);

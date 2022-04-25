@@ -77,8 +77,12 @@ public class OutdoorPlanService {
         return new OutdoorPlanResponse(plan, alerts);
     }
 
-    //todo: add method to retrieve all plans
-    //todo: add a method to retrieve all future plans
+    //retrieves all plans
+    public List<OutdoorActivity> getAllPlans() {
+        return (List<OutdoorActivity>) outdoorActivitiesPlanRepository.findAll();
+    }
+
+    //todo: add a method to retrieve all plans past a certain date
     //todo: add a method to retrieve all future plans that have an alert currently
     //todo: add method to retrieve a plan by id, date or probably location
     //todo: add method to delete plans

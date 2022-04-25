@@ -223,6 +223,44 @@ class OutdoorPlanControllerIntegrationTest {
                 .andExpect(content().string(containsString("Longitude value should not be empty")));
     }
 
+    //get all activities
+    @Test
+    public void WhenRetrievingSavedAllPlans_thenReturnsData () throws Exception{
+        List<OutdoorActivity> expected = new ArrayList<>();
+
+        OutdoorActivity activity1  = new OutdoorActivity(latitude, longitude, date);
+        activity1.setId(1L);
+        expected.add(activity1);
+
+        OutdoorActivity activity2  = new OutdoorActivity(latitude, longitude, date.plusDays(2));
+        activity1.setId(2L);
+        expected.add(activity2);
+
+        when(outdoorPlanServiceMock.getAllPlans())
+                .thenReturn(expected);
+
+        this.mockMvc
+                .perform(get((String.format("%s//activity/all", URL))))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(latitude.toString())));
+    }
+
+    @Test
+    public void WhenNoActivitiesSavedAndRetrievingSavedAllPlans_thenReturnsEmptyList () throws Exception {
+        List<OutdoorActivity> expected = new ArrayList<>();
+
+        when(outdoorPlanServiceMock.getAllPlans())
+                .thenReturn(expected);
+        System.out.println(expected);
+
+        this.mockMvc
+                .perform(get((String.format("%s//activity/all", URL))))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("[]")));
+    }
+
     //delete activity
     @Test
     public void WhenDeletingOutdoorPlanById_thenCallsOutdoorPlanService() throws Exception{

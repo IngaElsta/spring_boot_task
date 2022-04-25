@@ -20,11 +20,11 @@ import java.util.Map;
 @RequestMapping ("api/v1/outdoor-planner")
 public class OutdoorPlanController {
 
-    private final OutdoorPlanService outdoorActivityPlanningService;
+    private final OutdoorPlanService outdoorPlanService;
 
     @Autowired
-    public OutdoorPlanController(OutdoorPlanService outdoorActivityPlanningService) {
-        this.outdoorActivityPlanningService = outdoorActivityPlanningService;
+    public OutdoorPlanController(OutdoorPlanService outdoorPlanService) {
+        this.outdoorPlanService = outdoorPlanService;
     }
 
     @GetMapping ("/weather")
@@ -35,7 +35,7 @@ public class OutdoorPlanController {
             @RequestParam (value = "lon", required = false, defaultValue = "24.11")
             @Min(-180) @Max(180)
                     Double longitude) {
-        return outdoorActivityPlanningService.getWeather(new Location(latitude, longitude));
+        return outdoorPlanService.getWeather(new Location(latitude, longitude));
     }
 
     @PostMapping (value = "/activity", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -43,12 +43,7 @@ public class OutdoorPlanController {
             @Validated
             @RequestBody
             OutdoorActivity plan) {
-        try {
-        return outdoorActivityPlanningService.saveOutdoorPlan(plan);
-        } catch (Exception e) {
-            System.out.println(e);
-            throw e;
-        }
+        return outdoorPlanService.saveOutdoorPlan(plan);
     }
 
 }

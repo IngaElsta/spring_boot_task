@@ -333,7 +333,7 @@ class OutdoorPlanControllerIntegrationTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(outdoorPlanServiceMock).deleteOutdoorPlan(1);
+        verify(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
     }
 
     @Test

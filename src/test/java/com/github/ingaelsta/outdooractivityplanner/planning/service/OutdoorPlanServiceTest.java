@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import static java.lang.invoke.MethodHandles.catchException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -241,5 +242,19 @@ class OutdoorPlanServiceTest {
                 .thenReturn(weatherConditionsMap);
 
         assertThrows(PastDateException.class, () -> outdoorServiceMock.saveSafeOutdoorPlan(outdoorActivity));
+    }
+
+    @Test void WhenAttemptingToDeleteActivityById_thenNoExceptionIsThrown() {
+        doNothing().when(outdoorPlanRepositoryMock).deleteById(1L);
+        outdoorServiceMock.deleteOutdoorPlan(1L);
+        verify(outdoorPlanRepositoryMock).deleteById(1L);
+    }
+
+    @Test void WhenAttemptingToDeleteActivityWithoutPassingId_thenIllegalArgumentExceptionIsThrown() {
+        doThrow(new IllegalArgumentException()).when(outdoorPlanRepositoryMock).deleteById(null);
+        outdoorServiceMock.deleteOutdoorPlan(1L);
+        verify(outdoorPlanRepositoryMock).deleteById(1L);
+
+        assertThrows(IllegalArgumentException.class, () -> outdoorServiceMock.deleteOutdoorPlan(null));
     }
 }

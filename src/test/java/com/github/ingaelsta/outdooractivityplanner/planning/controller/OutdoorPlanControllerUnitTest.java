@@ -167,4 +167,13 @@ class OutdoorPlanControllerUnitTest {
         verify(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
     }
 
+    @Test
+    void WhenAttemptingToDeleteActivityWithoutPassingId_thenIllegalArgumentExceptionIsThrown() {
+        doThrow(new IllegalArgumentException()).when(outdoorPlanServiceMock).deleteOutdoorPlan(null);
+        outdoorPlanControllerMock.deleteOutdoorPlan(1L);
+        verify(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
+
+        assertThrows(IllegalArgumentException.class, () -> outdoorPlanControllerMock.deleteOutdoorPlan(null));
+    }
+
 }

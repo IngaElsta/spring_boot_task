@@ -39,7 +39,7 @@ public class OutdoorPlanService {
     }
 
     //saves plan regardless of weather conditions
-    public OutdoorPlanResponse saveOutdoorPlan  (OutdoorActivity plan) {
+    public OutdoorPlanResponse saveOutdoorPlan (OutdoorActivity plan) {
         Location location = new Location(plan.getLatitude(), plan.getLongitude());
         LocalDate planDate = plan.getPlanDate();
         List<Alert> alerts;
@@ -56,7 +56,27 @@ public class OutdoorPlanService {
         return new OutdoorPlanResponse(plan, alerts);
     }
 
-    //todo: add safe planning method that refuses to book an activity if weather warning expected or info unavailable
+    //saves plan only if no alerts are present otherwise returns a list of alerts
+    public OutdoorPlanResponse saveSafeOutdoorPlan (OutdoorActivity plan) {
+        Location location = new Location(plan.getLatitude(), plan.getLongitude());
+        LocalDate planDate = plan.getPlanDate();
+        List<Alert> alerts;
+        try {
+            alerts = getAlerts(location, planDate);
+        } catch (PastDateException e) {
+            log.error(String.format("%s is in the past", plan));
+            throw e;
+        }
+
+        if (!alerts.isEmpty()) {
+            //todo: check if a day has plans already and refuse if so?
+            return new OutdoorPlanResponse(null, alerts);
+        }
+
+        outdoorActivitiesPlanRepository.save(plan);
+        return new OutdoorPlanResponse(plan, alerts);
+    }
+
     //todo: add method to retrieve all plans
     //todo: add a method to retrieve all future plans
     //todo: add a method to retrieve all future plans that have an alert currently

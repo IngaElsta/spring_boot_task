@@ -6,6 +6,7 @@ import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherData
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -30,18 +31,6 @@ public class OutdoorPlanControllerAdvice {
                 HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(WeatherDataException.class)
-    public ResponseEntity<ErrorResponse> HandleWeatherDataException(Exception e) {
-        List<String> errors = new ArrayList<>();
-        errors.add (e.getMessage());
-
-        return new ResponseEntity<>(new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR, errors),
-                HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
@@ -55,6 +44,29 @@ public class OutdoorPlanControllerAdvice {
                 new ErrorResponse(HttpStatus.BAD_REQUEST, errors),
                 HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(
+            MissingServletRequestParameterException e){
+        List<String> errors = new ArrayList<>();
+        errors.add (e.getMessage());
+
+        return new ResponseEntity<>(
+                new ErrorResponse(HttpStatus.BAD_REQUEST, errors),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WeatherDataException.class)
+    public ResponseEntity<ErrorResponse> HandleWeatherDataException(Exception e) {
+        List<String> errors = new ArrayList<>();
+        errors.add (e.getMessage());
+
+        return new ResponseEntity<>(new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR, errors),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
 
     @ExceptionHandler(PastDateException.class)
     public ResponseEntity<ErrorResponse> HandlePastDateException(Exception e) {

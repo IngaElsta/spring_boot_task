@@ -83,6 +83,11 @@ public class OutdoorPlanService {
     //todo: add method to retrieve a plan by id, date or probably location
     //todo: add method to delete plans
 
+    //delete activity plan by passed id
+    public void deleteOutdoorPlan(long id) {
+        outdoorActivitiesPlanRepository.deleteById(id);
+    }
+
 
     private List<Alert> getAlerts(Location location, LocalDate planDate) {
         Map<LocalDate, WeatherConditions> weatherConditionsMap = weatherDataService.retrieveWeather(location);
@@ -104,5 +109,4 @@ public class OutdoorPlanService {
         alerts.add(tooFarToGetAlerts);
         return alerts;
     }
-
 }

@@ -15,10 +15,10 @@ import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherData
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -158,6 +158,13 @@ class OutdoorPlanControllerUnitTest {
                 .thenThrow(new PastDateException("placeholder"));
 
         assertThrows(PastDateException.class, () -> outdoorPlanControllerMock.saveSafeOutdoorPlan(outdoorActivity));
+    }
+
+    @Test
+    public void WhenPassingIdAndDeletingPlan_thenNoExceptionThrown (){
+        doNothing().when(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
+        outdoorPlanControllerMock.deleteOutdoorPlan(1L);
+        verify(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
     }
 
 }

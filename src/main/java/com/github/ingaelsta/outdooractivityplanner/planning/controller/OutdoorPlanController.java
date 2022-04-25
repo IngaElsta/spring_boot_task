@@ -46,4 +46,12 @@ public class OutdoorPlanController {
         return outdoorPlanService.saveOutdoorPlan(plan);
     }
 
+    @PostMapping (value = "/safeactivity", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public OutdoorPlanResponse saveSafeOutdoorPlan (
+            @Validated
+            @RequestBody
+            OutdoorActivity plan) {
+        return outdoorPlanService.saveOutdoorPlan(plan);
+    }
+
 }

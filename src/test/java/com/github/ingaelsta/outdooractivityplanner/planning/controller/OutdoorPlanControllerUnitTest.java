@@ -120,4 +120,44 @@ class OutdoorPlanControllerUnitTest {
         assertThrows(PastDateException.class, () -> outdoorPlanControllerMock.saveOutdoorPlan(outdoorActivity));
     }
 
+    //saveSafeOutdoorPlan
+    @Test
+    public void WhenSafeSavingPlanOnDayWithAlerts_thenReturnsOnlyListOfAlerts() {
+
+        OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
+        OutdoorPlanResponse expected = new OutdoorPlanResponse(null, alerts);
+
+        when(outdoorPlanServiceMock.saveSafeOutdoorPlan(outdoorActivity))
+                .thenReturn(expected);
+
+        OutdoorPlanResponse result = outdoorPlanControllerMock.saveSafeOutdoorPlan(outdoorActivity);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void WhenSafeSavingValidPlanOnDayWithoutAlerts_thenReturnsEntityAndEmptyAlertList() {
+
+        OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
+        OutdoorPlanResponse expected = new OutdoorPlanResponse(outdoorActivity, null);
+
+        when(outdoorPlanServiceMock.saveSafeOutdoorPlan(outdoorActivity))
+                .thenReturn(expected);
+
+        OutdoorPlanResponse result = outdoorPlanControllerMock.saveSafeOutdoorPlan(outdoorActivity);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void WhenSafeSavingPlanOnDayBeforePrognosisRange_thenThrowsPastDateException() {
+
+        OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
+
+        when(outdoorPlanServiceMock.saveSafeOutdoorPlan(outdoorActivity))
+                .thenThrow(new PastDateException("placeholder"));
+
+        assertThrows(PastDateException.class, () -> outdoorPlanControllerMock.saveSafeOutdoorPlan(outdoorActivity));
+    }
+
 }

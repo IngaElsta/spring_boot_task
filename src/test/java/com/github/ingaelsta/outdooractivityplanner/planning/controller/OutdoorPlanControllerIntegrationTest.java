@@ -19,7 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -61,6 +61,7 @@ class OutdoorPlanControllerIntegrationTest {
         alerts.add(alert2);
     }
 
+    //get weather
     @Test
     public void WhenNoParametersPassedToGetWeather_thenUsesDefaultValuesAndReturnsData() throws Exception {
         Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
@@ -124,8 +125,9 @@ class OutdoorPlanControllerIntegrationTest {
                 .andExpect(content().string(containsString("placeholder")));
     }
 
+    //post activity
     @Test
-    public void WhenSavingValidPlanOnDayWithAlerts_thenReturnEntityAndListOfAlerts()  throws Exception{
+    public void WhenSavingValidPlanOnDayWithAlerts_thensReturnEntityAndListOfAlerts()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -147,7 +149,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSavingValidPlanOnDayWithoutAlerts_thenReturnEntityAndEmptyAlertList()  throws Exception{
+    public void WhenSavingValidPlanOnDayWithoutAlerts_thenReturnsEntityAndEmptyAlertList()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -207,6 +209,105 @@ class OutdoorPlanControllerIntegrationTest {
 
     @Test
     public void WhenSavingPlanWithArgumentMissing_thenThrowsMethodArgumentNotValidException()  throws Exception{
+
+        String requestBody =
+                (String.format("{\"latitude\": %s,\"planDate\":\"%s\"}",
+                        latitude, date.toString()));
+
+        this.mockMvc
+                .perform(post(String.format("%s//activity", URL))
+                        .content(requestBody)
+                        .header("Content-Type", "application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Longitude value should not be empty")));
+    }
+
+    //post safeactivity
+    @Test
+    public void WhenSafeSavingPlanOnDayWithAlerts_thenReturnsOnlyListOfAlerts()  throws Exception{
+
+        String requestBody =
+                (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
+                        latitude, longitude, date.toString()));
+
+        OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
+        OutdoorPlanResponse expected = new OutdoorPlanResponse(null, alerts);
+
+        when(outdoorPlanServiceMock.saveOutdoorPlan(outdoorActivity))
+                .thenReturn(expected);
+
+        this.mockMvc
+                .perform(post(String.format("%s//activity", URL))
+                        .content(requestBody)
+                        .header("Content-Type", "application/json"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Yellow Flooding Warning")))
+                .andExpect(content().string(not(containsString("planDate"))));
+    }
+
+    @Test
+    public void WhenSavingSafeValidPlanOnDayWithoutAlerts_thenReturnEntityAndEmptyAlertList()  throws Exception{
+
+        String requestBody =
+                (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
+                        latitude, longitude, date.toString()));
+
+        OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
+        OutdoorPlanResponse expected = new OutdoorPlanResponse(outdoorActivity, null);
+
+        when(outdoorPlanServiceMock.saveOutdoorPlan(outdoorActivity))
+                .thenReturn(expected);
+
+        this.mockMvc
+                .perform(post(String.format("%s//activity", URL))
+                        .content(requestBody)
+                        .header("Content-Type", "application/json"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("planDate")));
+    }
+
+    @Test
+    public void WhenSafeSavingPlanOnDayBeforePrognosisRange_thenThrowsPastDateException()  throws Exception{
+
+        String requestBody =
+                (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
+                        latitude, longitude, date.toString()));
+
+        OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
+
+        when(outdoorPlanServiceMock.saveOutdoorPlan(outdoorActivity))
+                .thenThrow(new PastDateException("placeholder"));
+
+        this.mockMvc
+                .perform(post(String.format("%s//activity", URL))
+                        .content(requestBody)
+                        .header("Content-Type", "application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("placeholder")));
+    }
+
+    @Test
+    public void WhenSafeSavingPlanWithInvalidCoordinates_thenThrowsMethodArgumentNotValidException()  throws Exception{
+
+        String requestBody =
+                (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
+                        latitude, "555", date.toString()));
+
+        this.mockMvc
+                .perform(post(String.format("%s//activity", URL))
+                        .content(requestBody)
+                        .header("Content-Type", "application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Longitude must be less")));
+    }
+
+    @Test
+    public void WhenSafeSavingPlanWithArgumentMissing_thenThrowsMethodArgumentNotValidException()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"planDate\":\"%s\"}",

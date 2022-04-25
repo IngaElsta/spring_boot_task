@@ -51,7 +51,7 @@ public class OutdoorPlanController {
             @Validated
             @RequestBody
             OutdoorActivity plan) {
-        return outdoorPlanService.saveOutdoorPlan(plan);
+        return outdoorPlanService.saveSafeOutdoorPlan(plan);
     }
 
 }

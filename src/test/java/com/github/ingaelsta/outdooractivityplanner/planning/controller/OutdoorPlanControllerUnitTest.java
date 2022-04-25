@@ -120,6 +120,23 @@ class OutdoorPlanControllerUnitTest {
         assertThrows(PastDateException.class, () -> outdoorPlanControllerMock.saveOutdoorPlan(outdoorActivity));
     }
 
+    //deleteOutdoorPlan
+    @Test
+    public void WhenPassingIdAndDeletingPlan_thenNoExceptionThrown (){
+        doNothing().when(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
+        outdoorPlanControllerMock.deleteOutdoorPlan(1L);
+        verify(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
+    }
+
+    @Test
+    void WhenAttemptingToDeleteActivityWithoutPassingId_thenIllegalArgumentExceptionIsThrown() {
+        doThrow(new IllegalArgumentException()).when(outdoorPlanServiceMock).deleteOutdoorPlan(null);
+        outdoorPlanControllerMock.deleteOutdoorPlan(1L);
+        verify(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
+
+        assertThrows(IllegalArgumentException.class, () -> outdoorPlanControllerMock.deleteOutdoorPlan(null));
+    }
+
     //saveSafeOutdoorPlan
     @Test
     public void WhenSafeSavingPlanOnDayWithAlerts_thenReturnsOnlyListOfAlerts() {
@@ -158,22 +175,6 @@ class OutdoorPlanControllerUnitTest {
                 .thenThrow(new PastDateException("placeholder"));
 
         assertThrows(PastDateException.class, () -> outdoorPlanControllerMock.saveSafeOutdoorPlan(outdoorActivity));
-    }
-
-    @Test
-    public void WhenPassingIdAndDeletingPlan_thenNoExceptionThrown (){
-        doNothing().when(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
-        outdoorPlanControllerMock.deleteOutdoorPlan(1L);
-        verify(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
-    }
-
-    @Test
-    void WhenAttemptingToDeleteActivityWithoutPassingId_thenIllegalArgumentExceptionIsThrown() {
-        doThrow(new IllegalArgumentException()).when(outdoorPlanServiceMock).deleteOutdoorPlan(null);
-        outdoorPlanControllerMock.deleteOutdoorPlan(1L);
-        verify(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
-
-        assertThrows(IllegalArgumentException.class, () -> outdoorPlanControllerMock.deleteOutdoorPlan(null));
     }
 
 }

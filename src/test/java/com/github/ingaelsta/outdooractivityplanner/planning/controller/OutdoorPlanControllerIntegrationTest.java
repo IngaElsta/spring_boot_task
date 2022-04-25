@@ -223,6 +223,29 @@ class OutdoorPlanControllerIntegrationTest {
                 .andExpect(content().string(containsString("Longitude value should not be empty")));
     }
 
+    //delete activity
+    @Test
+    public void WhenDeletingOutdoorPlanById_thenCallsOutdoorPlanService() throws Exception{
+
+        doNothing().when(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
+
+        this.mockMvc
+                .perform(delete((String.format("%s//activity?id=1", URL))))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
+    }
+
+    @Test
+    public void WhenDeletingByIdWithoutPassingId_thenReturnError() throws Exception {
+        this.mockMvc
+                .perform(delete((String.format("%s//activity", URL))))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("is not present")));
+    }
+
     //post safeactivity
     @Test
     public void WhenSafeSavingPlanOnDayWithAlerts_thenReturnsOnlyListOfAlerts()  throws Exception{
@@ -320,29 +343,6 @@ class OutdoorPlanControllerIntegrationTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("Longitude value should not be empty")));
-    }
-
-    //delete activity
-    @Test
-    public void WhenDeletingOutdoorPlanById_thenCallsOutdoorPlanService() throws Exception{
-
-        doNothing().when(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
-
-        this.mockMvc
-                .perform(delete((String.format("%s//activity?id=1", URL))))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        verify(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
-    }
-
-    @Test
-    public void WhenDeletingByIdWithoutPassingId_thenReturnError() throws Exception {
-        this.mockMvc
-                .perform(delete((String.format("%s//activity", URL))))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("is not present")));
     }
 
 }

@@ -62,7 +62,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenNoParametersPassedToGetWeather_ShouldUseDefaultValuesAndReturnData() throws Exception {
+    public void WhenNoParametersPassedToGetWeather_thenUsesDefaultValuesAndReturnsData() throws Exception {
         Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
         Wind wind = new Wind(8.23, 17.56, "S");
         List<String> weatherDescriptions = new ArrayList<>();
@@ -83,7 +83,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenValidLocationPassedToGetWeather_ShouldUsePassedValuesAndReturnData() throws Exception {
+    public void WhenValidLocationPassedToGetWeather_thenUsesPassedValuesAndReturnsData() throws Exception {
         Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
         Wind wind = new Wind(8.23, 17.56, "S");
         List<String> weatherDescriptions = new ArrayList<>();
@@ -105,7 +105,7 @@ class OutdoorPlanControllerIntegrationTest {
 
 
     @Test
-    public void WhenInvalidLocationPassedToGetWeather_ShouldReturnError() throws Exception {
+    public void WhenInvalidLocationPassedToGetWeather_thenReturnError() throws Exception {
         this.mockMvc
                 .perform(get((String.format("%s//weather?lat=555&lon=26.52", URL))))
                 .andDo(print())
@@ -113,7 +113,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenWeatherDataRetrievalUnsuccessful_ShouldReturnError() throws Exception {
+    public void WhenWeatherDataRetrievalUnsuccessful_thenReturnError() throws Exception {
         when(outdoorPlanServiceMock.getWeather(new Location(55.87, 26.52)))
                 .thenThrow(new WeatherDataException("placeholder") {});
 
@@ -125,7 +125,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSavingValidPlanOnDayWithAlerts_ShouldReturnEntityAndListOfAlerts()  throws Exception{
+    public void WhenSavingValidPlanOnDayWithAlerts_thenReturnEntityAndListOfAlerts()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -147,7 +147,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSavingValidPlanOnDayWithoutAlerts_ShouldReturnEntityAndEmptyAlertList()  throws Exception{
+    public void WhenSavingValidPlanOnDayWithoutAlerts_thenReturnEntityAndEmptyAlertList()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -169,7 +169,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSavingPlanOnDayBeforePrognosisRange_ShouldThrowPastDateException()  throws Exception{
+    public void WhenSavingPlanOnDayBeforePrognosisRange_thenThrowsPastDateException()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -190,7 +190,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSavingPlanWithInvalidCoordinates_ShouldThrowMethodArgumentNotValidException()  throws Exception{
+    public void WhenSavingPlanWithInvalidCoordinates_thenThrowsMethodArgumentNotValidException()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -206,7 +206,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSavingPlanWithArgumentMissing_ShouldThrowMethodArgumentNotValidException()  throws Exception{
+    public void WhenSavingPlanWithArgumentMissing_thenThrowsMethodArgumentNotValidException()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"planDate\":\"%s\"}",

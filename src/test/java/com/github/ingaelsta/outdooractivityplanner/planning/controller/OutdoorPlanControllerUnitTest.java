@@ -52,27 +52,9 @@ class OutdoorPlanControllerUnitTest {
         alerts.add(alert2);
     }
 
+    //getWeather
     @Test
-    public void WhenNoParametersPassedToGetWeather_ShouldUseDefaultValuesAndReturnData() {
-        Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
-        Wind wind = new Wind(8.23, 17.56, "S");
-        List<String> weatherDescriptions = new ArrayList<>();
-        weatherDescriptions.add("rain and snow");
-
-        Map<LocalDate, WeatherConditions> expected = new HashMap<>();
-        expected.put(date, new WeatherConditions(
-                date, weatherDescriptions, temperature, wind, new ArrayList<>()));
-
-        when(outdoorPlanServiceMock.getWeather(location))
-                .thenReturn(expected);
-
-        Map<LocalDate, WeatherConditions> result = outdoorPlanControllerMock.getWeather(latitude, longitude);
-
-        assertEquals(result, expected);
-    }
-
-    @Test
-    public void WhenValidLocationPassedToGetWeather_ShouldUsePassedValuesAndReturnData() {
+    public void WhenValidLocationPassedToGetWeather_thenReturnsData() {
         Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
         Wind wind = new Wind(8.23, 17.56, "S");
         List<String> weatherDescriptions = new ArrayList<>();
@@ -91,15 +73,16 @@ class OutdoorPlanControllerUnitTest {
     }
 
     @Test
-    public void WhenWeatherDataRetrievalUnsuccessful_ShouldReturnError() {
+    public void WhenWeatherDataRetrievalUnsuccessful_thenReturnsWeatherDataException() {
         when(outdoorPlanServiceMock.getWeather(new Location(55.87, 26.52)))
                 .thenThrow(new WeatherDataException("placeholder") {});
 
         assertThrows(WeatherDataException.class, () -> outdoorPlanControllerMock.getWeather(55.87, 26.52));
     }
 
+    //saveOutdoorPlan
     @Test
-    public void WhenSavingValidPlanOnDayWithAlerts_ShouldReturnEntityAndListOfAlerts() {
+    public void WhenSavingValidPlanOnDayWithAlerts_thenReturnsEntityAndListOfAlerts() {
 
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
         OutdoorPlanResponse expected = new OutdoorPlanResponse(outdoorActivity, alerts);
@@ -113,7 +96,7 @@ class OutdoorPlanControllerUnitTest {
     }
 
     @Test
-    public void WhenSavingValidPlanOnDayWithoutAlerts_ShouldReturnEntityAndEmptyAlertList() {
+    public void WhenSavingValidPlanOnDayWithoutAlerts_thenReturnsEntityAndEmptyAlertList() {
 
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
         OutdoorPlanResponse expected = new OutdoorPlanResponse(outdoorActivity, null);
@@ -127,7 +110,7 @@ class OutdoorPlanControllerUnitTest {
     }
 
     @Test
-    public void WhenSavingPlanOnDayBeforePrognosisRange_ShouldThrowPastDateException() {
+    public void WhenSavingPlanOnDayBeforePrognosisRange_thenThrowsPastDateException() {
 
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
 

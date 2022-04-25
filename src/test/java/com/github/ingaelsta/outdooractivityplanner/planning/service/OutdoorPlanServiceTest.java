@@ -171,6 +171,21 @@ class OutdoorPlanServiceTest {
         assertThrows(PastDateException.class, () -> outdoorServiceMock.saveOutdoorPlan(outdoorActivity));
     }
 
+    //delete activity by id
+    @Test void WhenAttemptingToDeleteActivityById_thenNoExceptionIsThrown() {
+        doNothing().when(outdoorPlanRepositoryMock).deleteById(1L);
+        outdoorServiceMock.deleteOutdoorPlan(1L);
+        verify(outdoorPlanRepositoryMock).deleteById(1L);
+    }
+
+    @Test void WhenAttemptingToDeleteActivityWithoutPassingId_thenIllegalArgumentExceptionIsThrown() {
+        doThrow(new IllegalArgumentException()).when(outdoorPlanRepositoryMock).deleteById(null);
+        outdoorServiceMock.deleteOutdoorPlan(1L);
+        verify(outdoorPlanRepositoryMock).deleteById(1L);
+
+        assertThrows(IllegalArgumentException.class, () -> outdoorServiceMock.deleteOutdoorPlan(null));
+    }
+
     //safe save activity
     @Test
     public void WhenAttemptingToSafeSaveActivityOnDayWithoutAlerts_thenReturnsSavedEntityAndEmptyAlertList() {
@@ -242,19 +257,5 @@ class OutdoorPlanServiceTest {
                 .thenReturn(weatherConditionsMap);
 
         assertThrows(PastDateException.class, () -> outdoorServiceMock.saveSafeOutdoorPlan(outdoorActivity));
-    }
-
-    @Test void WhenAttemptingToDeleteActivityById_thenNoExceptionIsThrown() {
-        doNothing().when(outdoorPlanRepositoryMock).deleteById(1L);
-        outdoorServiceMock.deleteOutdoorPlan(1L);
-        verify(outdoorPlanRepositoryMock).deleteById(1L);
-    }
-
-    @Test void WhenAttemptingToDeleteActivityWithoutPassingId_thenIllegalArgumentExceptionIsThrown() {
-        doThrow(new IllegalArgumentException()).when(outdoorPlanRepositoryMock).deleteById(null);
-        outdoorServiceMock.deleteOutdoorPlan(1L);
-        verify(outdoorPlanRepositoryMock).deleteById(1L);
-
-        assertThrows(IllegalArgumentException.class, () -> outdoorServiceMock.deleteOutdoorPlan(null));
     }
 }

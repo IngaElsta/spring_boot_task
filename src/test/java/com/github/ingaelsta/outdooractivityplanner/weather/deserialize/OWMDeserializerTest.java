@@ -43,13 +43,13 @@ public class OWMDeserializerTest {
         JacksonTester.initFields(this, mapper);
 
         jsonNoAlerts = ResourceUtils.getFile(
-                "classpath:valid_single_day_no_alerts.json");
+                "classpath:weather/valid_single_day_no_alerts.json");
         jsonWithAlerts = ResourceUtils.getFile(
-                "classpath:valid_two_days_with_alerts.json");
+                "classpath:weather/valid_two_days_with_alerts.json");
         jsonWrongDataType = ResourceUtils.getFile(
-                "classpath:invalid_single_day_wrong_data_type.json");
+                "classpath:weather/invalid_single_day_wrong_data_type.json");
         jsonMissingData = ResourceUtils.getFile(
-                "classpath:invalid_single_day_missing_data.json");
+                "classpath:weather/invalid_single_day_missing_data.json");
     }
 
     @Test

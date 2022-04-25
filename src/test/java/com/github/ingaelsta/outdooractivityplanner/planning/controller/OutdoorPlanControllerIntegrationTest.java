@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 @WebMvcTest(OutdoorPlanController.class)
-class OutdoorPlanControllerTest {
+class OutdoorPlanControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

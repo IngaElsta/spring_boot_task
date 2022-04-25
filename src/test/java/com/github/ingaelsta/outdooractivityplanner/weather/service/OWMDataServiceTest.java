@@ -42,8 +42,9 @@ public class OWMDataServiceTest {
     }
 
     @Test
-    void When_data_valid_with_no_alerts_then_conversion_succeeds ()
+    void WhenDataValidWithNoAlerts_thenConversionSucceeds ()
             throws IOException {
+        //todo: test this properly with mocks
 
         ObjectMapper mapper = Mockito.mock(ObjectMapper.class);
 

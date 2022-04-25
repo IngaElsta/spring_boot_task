@@ -53,7 +53,7 @@ public class OWMDeserializerTest {
     }
 
     @Test
-    void When_data_valid_with_no_alerts_then_conversion_succeeds () throws IOException {
+    void WhenDataValidWithNoAlerts_thenReturnsMapWithWeatherConditionsWithNoAlerts () throws IOException {
         String text = new String(Files.readAllBytes(jsonNoAlerts.toPath()));
         Map<LocalDate, WeatherConditions> weatherConditionsMap = this.json.parseObject(text);
 
@@ -73,7 +73,7 @@ public class OWMDeserializerTest {
     }
 
     @Test
-    void When_data_valid_with_alerts_then_conversion_succeeds () throws IOException {
+    void WhenDataValidWithAlerts_thenReturnsMapWithWeatherConditionsWithAlerts () throws IOException {
         String text = new String(Files.readAllBytes(jsonWithAlerts.toPath()));
 
         Map<LocalDate, WeatherConditions> weatherConditionsMap = this.json.parseObject(text);
@@ -127,14 +127,14 @@ public class OWMDeserializerTest {
     }
 
     @Test
-    void When_data_value_missing_then_conversion_fails () throws IOException {
+    void WhenDataValueMissing_thenConversionFails () throws IOException {
         String text = new String(Files.readAllBytes(jsonMissingData.toPath()));
 
         assertThrows(OWMDataException.class, () -> {this.json.parseObject(text);});
     }
 
     @Test
-    void When_json_has_non_numeric_value_for_number_then_conversion_fails () throws IOException {
+    void WhenJsonHasNonNumericValueForNumber_thenConversionFails () throws IOException {
         String text = new String(Files.readAllBytes(jsonWrongDataType.toPath()));
 
         assertThrows(OWMDataException.class, () -> {this.json.parseObject(text);});

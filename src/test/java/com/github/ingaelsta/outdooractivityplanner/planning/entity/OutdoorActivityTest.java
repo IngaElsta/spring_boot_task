@@ -12,7 +12,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class OutdoorActivitiesPlanDAOTest {
+public class OutdoorActivityTest {
     private Validator validator;
     private LocalDate planDate = LocalDate.now();
     private final Double latitude = 52.1;

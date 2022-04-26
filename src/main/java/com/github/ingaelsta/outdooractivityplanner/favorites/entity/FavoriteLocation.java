@@ -10,18 +10,18 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
-@Entity(name = "favorites")
-@Table(name = "FAVORITES")
+@Entity(name = "favorite")
+@Table(name = "FAVORITE")
 public class FavoriteLocation {
     @Id
     @SequenceGenerator(
-            name = "favorites_sequence",
-            sequenceName = "favorites_sequence",
+            name = "favorite_sequence",
+            sequenceName = "favorite_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy= GenerationType.AUTO,
-            generator = "favorites_sequence"
+            generator = "favorite_sequence"
     )
     private Long id;
     @NotNull(message = "Latitude value should not be empty")

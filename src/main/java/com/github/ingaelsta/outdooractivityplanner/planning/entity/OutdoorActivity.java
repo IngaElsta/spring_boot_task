@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @Entity(name = "OutdoorActivitiesPlan")
-@Table(name = "OUTDOORACTIVITIESPLAN")
+@Table(name = "OUTDOOR_ACTIVITIES_PLAN")
 public class OutdoorActivity {
 
     @Id

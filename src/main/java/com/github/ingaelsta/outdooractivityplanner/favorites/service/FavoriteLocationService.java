@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class FavoriteLocationService {
 
-    private FavoriteLocationRepository favoriteLocationRepository;
+    private final FavoriteLocationRepository favoriteLocationRepository;
 
     public FavoriteLocationService (FavoriteLocationRepository favoriteLocationRepository) {
         this.favoriteLocationRepository = favoriteLocationRepository;

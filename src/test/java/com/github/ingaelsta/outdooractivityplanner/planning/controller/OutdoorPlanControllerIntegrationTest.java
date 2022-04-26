@@ -1,15 +1,11 @@
 package com.github.ingaelsta.outdooractivityplanner.planning.controller;
 
 import com.github.ingaelsta.outdooractivityplanner.commons.Conversion;
-import com.github.ingaelsta.outdooractivityplanner.commons.model.Location;
 import com.github.ingaelsta.outdooractivityplanner.planning.entity.OutdoorActivity;
 import com.github.ingaelsta.outdooractivityplanner.planning.exception.PastDateException;
 import com.github.ingaelsta.outdooractivityplanner.planning.response.OutdoorPlanResponse;
 import com.github.ingaelsta.outdooractivityplanner.planning.service.OutdoorPlanService;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Alert;
-import com.github.ingaelsta.outdooractivityplanner.weather.model.Temperature;
-import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
-import com.github.ingaelsta.outdooractivityplanner.weather.model.Wind;
 
 import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherDataException;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,9 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @WebMvcTest(OutdoorPlanController.class)
 class OutdoorPlanControllerIntegrationTest {
@@ -41,7 +35,7 @@ class OutdoorPlanControllerIntegrationTest {
     @MockBean
     private OutdoorPlanService outdoorPlanServiceMock;
 
-    private static final String URL = "/api/v1/outdoor-planner";
+    private static final String URL = "/api/v1/outdoor-planner/activity";
     private static final Double latitude = 55.87;
     private static final Double longitude = 26.52;
     private static final LocalDate date = Conversion.convertDate(1643536800).toLocalDate();
@@ -60,74 +54,9 @@ class OutdoorPlanControllerIntegrationTest {
         alerts.add(alert2);
     }
 
-    //get weather
-    @Test
-    public void WhenNoParametersPassedToGetWeather_thenUsesDefaultValuesAndReturnsData() throws Exception {
-        Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
-        Wind wind = new Wind(8.23, 17.56, "S");
-        List<String> weatherDescriptions = new ArrayList<>();
-        weatherDescriptions.add("rain and snow");
-
-        Map<LocalDate, WeatherConditions> expected = new HashMap<>();
-        expected.put(date, new WeatherConditions(
-                date, weatherDescriptions, temperature, wind, new ArrayList<>()));
-
-        when(outdoorPlanServiceMock.getWeather(new Location(56.95, 24.11)))
-                .thenReturn(expected);
-
-        this.mockMvc
-                .perform(get((String.format("%s//weather", URL))))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("rain and snow")));
-    }
-
-    @Test
-    public void WhenValidLocationPassedToGetWeather_thenUsesPassedValuesAndReturnsData() throws Exception {
-        Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
-        Wind wind = new Wind(8.23, 17.56, "S");
-        List<String> weatherDescriptions = new ArrayList<>();
-        weatherDescriptions.add("rain and snow");
-
-        Map<LocalDate, WeatherConditions> expected = new HashMap<>();
-        expected.put(date, new WeatherConditions(
-                date, weatherDescriptions, temperature, wind, new ArrayList<>()));
-
-        when(outdoorPlanServiceMock.getWeather(new Location(55.87, 26.52)))
-                .thenReturn(expected);
-
-        this.mockMvc
-                .perform(get((String.format("%s//weather?lat=55.87&lon=26.52", URL))))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("rain and snow")));
-    }
-
-
-    @Test
-    public void WhenInvalidLocationPassedToGetWeather_thenReturnError() throws Exception {
-        this.mockMvc
-                .perform(get((String.format("%s//weather?lat=555&lon=26.52", URL))))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("must be less than")));
-    }
-
-    @Test
-    public void WhenWeatherDataRetrievalUnsuccessful_thenReturnError() throws Exception {
-        when(outdoorPlanServiceMock.getWeather(new Location(55.87, 26.52)))
-                .thenThrow(new WeatherDataException("placeholder") {});
-
-        this.mockMvc
-                .perform(get((String.format("%s//weather?lat=55.87&lon=26.52", URL))))
-                .andDo(print())
-                .andExpect(status().is5xxServerError())
-                .andExpect(content().string(containsString("placeholder")));
-    }
-
     //post activity
     @Test
-    public void WhenSavingValidPlanOnDayWithAlerts_thensReturnEntityAndListOfAlerts()  throws Exception{
+    public void WhenSavingValidPlanOnDayWithAlerts_thenReturnsEntityAndListOfAlerts()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -140,7 +69,7 @@ class OutdoorPlanControllerIntegrationTest {
                 .thenReturn(expected);
 
         this.mockMvc
-                .perform(post(String.format("%s//activity", URL))
+                .perform(post(URL)
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())
@@ -162,7 +91,7 @@ class OutdoorPlanControllerIntegrationTest {
                 .thenReturn(expected);
 
         this.mockMvc
-                .perform(post(String.format("%s//activity", URL))
+                .perform(post(URL)
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())
@@ -183,7 +112,7 @@ class OutdoorPlanControllerIntegrationTest {
                 .thenThrow(new PastDateException("placeholder"));
 
         this.mockMvc
-                .perform(post(String.format("%s//activity", URL))
+                .perform(post(URL)
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())
@@ -199,7 +128,7 @@ class OutdoorPlanControllerIntegrationTest {
                         latitude, "555", date.toString()));
 
         this.mockMvc
-                .perform(post(String.format("%s//activity", URL))
+                .perform(post(URL)
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())
@@ -215,12 +144,32 @@ class OutdoorPlanControllerIntegrationTest {
                         latitude, date.toString()));
 
         this.mockMvc
-                .perform(post(String.format("%s//activity", URL))
+                .perform(post(URL)
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("Longitude value should not be empty")));
+    }
+
+    @Test
+    public void WhenWeatherDataRetrievalUnsuccessfulWhileAttemptingToSave_thenReturnError() throws Exception {
+        String requestBody =
+                (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
+                        latitude, longitude, date.toString()));
+
+        OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
+
+        when(outdoorPlanServiceMock.saveOutdoorPlan(outdoorActivity))
+                .thenThrow(new WeatherDataException("placeholder") {});
+
+        this.mockMvc
+                .perform(post(URL)
+                        .content(requestBody)
+                        .header("Content-Type", "application/json"))
+                .andDo(print())
+                .andExpect(status().is5xxServerError())
+                .andExpect(content().string(containsString("placeholder")));
     }
 
     //get all activities
@@ -240,7 +189,7 @@ class OutdoorPlanControllerIntegrationTest {
                 .thenReturn(expected);
 
         this.mockMvc
-                .perform(get((String.format("%s//activity/all", URL))))
+                .perform(get((String.format("%s//all", URL))))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(latitude.toString())));
@@ -255,7 +204,7 @@ class OutdoorPlanControllerIntegrationTest {
         System.out.println(expected);
 
         this.mockMvc
-                .perform(get((String.format("%s//activity/all", URL))))
+                .perform(get((String.format("%s//all", URL))))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("[]")));
@@ -268,7 +217,7 @@ class OutdoorPlanControllerIntegrationTest {
         doNothing().when(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
 
         this.mockMvc
-                .perform(delete((String.format("%s//activity?id=1", URL))))
+                .perform(delete((String.format("%s?id=1", URL))))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -278,7 +227,7 @@ class OutdoorPlanControllerIntegrationTest {
     @Test
     public void WhenDeletingByIdWithoutPassingId_thenReturnError() throws Exception {
         this.mockMvc
-                .perform(delete((String.format("%s//activity", URL))))
+                .perform(delete((URL)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("is not present")));
@@ -299,7 +248,7 @@ class OutdoorPlanControllerIntegrationTest {
                 .thenReturn(expected);
 
         this.mockMvc
-                .perform(post(String.format("%s//activity/safe", URL))
+                .perform(post(String.format("%s//safe", URL))
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())
@@ -322,7 +271,7 @@ class OutdoorPlanControllerIntegrationTest {
                 .thenReturn(expected);
 
         this.mockMvc
-                .perform(post(String.format("%s//activity/safe", URL))
+                .perform(post(String.format("%s//safe", URL))
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())
@@ -343,7 +292,7 @@ class OutdoorPlanControllerIntegrationTest {
                 .thenThrow(new PastDateException("placeholder"));
 
         this.mockMvc
-                .perform(post(String.format("%s//activity/safe", URL))
+                .perform(post(String.format("%s//safe", URL))
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())
@@ -359,7 +308,7 @@ class OutdoorPlanControllerIntegrationTest {
                         latitude, "555", date.toString()));
 
         this.mockMvc
-                .perform(post(String.format("%s//activity/safe", URL))
+                .perform(post(String.format("%s//safe", URL))
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())
@@ -375,12 +324,32 @@ class OutdoorPlanControllerIntegrationTest {
                         latitude, date.toString()));
 
         this.mockMvc
-                .perform(post(String.format("%s//activity/safe", URL))
+                .perform(post(String.format("%s//safe", URL))
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("Longitude value should not be empty")));
+    }
+
+    @Test
+    public void WhenWeatherDataRetrievalUnsuccessfulWhileAttemptingToSafeSave_thenReturnError() throws Exception {
+        String requestBody =
+                (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
+                        latitude, longitude, date.toString()));
+
+        OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
+
+        when(outdoorPlanServiceMock.saveSafeOutdoorPlan(outdoorActivity))
+                .thenThrow(new WeatherDataException("placeholder") {});
+
+        this.mockMvc
+                .perform(post(String.format("%s//safe", URL))
+                        .content(requestBody)
+                        .header("Content-Type", "application/json"))
+                .andDo(print())
+                .andExpect(status().is5xxServerError())
+                .andExpect(content().string(containsString("placeholder")));
     }
 
 }

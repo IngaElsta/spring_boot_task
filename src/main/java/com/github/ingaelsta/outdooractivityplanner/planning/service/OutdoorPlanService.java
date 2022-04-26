@@ -31,13 +31,6 @@ public class OutdoorPlanService {
         this.outdoorActivitiesPlanRepository = outdoorActivitiesPlanRepository;
     }
 
-    //return weather information for following 7 days
-    public Map<LocalDate, WeatherConditions> getWeather (Location location) {
-        //todo: implement actual connecting to cache and processing
-        Map<LocalDate, WeatherConditions> weatherConditionsMap = weatherDataService.retrieveWeather(location);
-        return weatherConditionsMap;
-    }
-
     //saves plan regardless of weather conditions
     public OutdoorPlanResponse saveOutdoorPlan (OutdoorActivity plan) {
         Location location = new Location(plan.getLatitude(), plan.getLongitude());
@@ -95,6 +88,7 @@ public class OutdoorPlanService {
     private List<Alert> getAlerts(Location location, LocalDate planDate) {
         Map<LocalDate, WeatherConditions> weatherConditionsMap = weatherDataService.retrieveWeather(location);
 
+        //todo: look into that "get" without "isPresent" warning
         LocalDate weatherConditionFirstDay = weatherConditionsMap.keySet().stream().findFirst().get();
         if (planDate.isBefore(weatherConditionFirstDay)) {
             //todo: probably should check for past while validating when I figure out testing for it

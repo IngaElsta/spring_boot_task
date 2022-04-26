@@ -13,10 +13,8 @@ import com.github.ingaelsta.outdooractivityplanner.weather.model.Wind;
 import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherDataException;
 import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherDataService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static java.lang.invoke.MethodHandles.catchException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -36,8 +34,8 @@ class OutdoorPlanServiceTest {
     private OutdoorPlanService outdoorServiceMock;
 
 
-    Double latitude = 55.87;
-    Double longitude = 26.52;
+    private final Double latitude = 55.87;
+    private final Double longitude = 26.52;
     private final Location location = new Location(latitude, longitude);
     private final LocalDate date = Conversion.convertDate(1643536800).toLocalDate();
 
@@ -73,29 +71,6 @@ class OutdoorPlanServiceTest {
         weatherConditionsMapWithAlerts = new HashMap<>();
         weatherConditionsMapWithAlerts.put(date, new WeatherConditions(
                 date, weatherDescriptions, temperature, wind, alerts));
-    }
-
-    //getWeather
-    @Test
-    public void WhenWeatherDataProcessedSuccessfully_thenReturnsWeatherData() {
-
-        when(weatherDataServiceMock.retrieveWeather(location))
-                .thenReturn(weatherConditionsMap);
-
-        Map<LocalDate, WeatherConditions> result = outdoorServiceMock.getWeather(location);
-
-        assertEquals(weatherConditionsMap, result);
-    }
-
-    @Test
-    public void WhenWeatherDataProcessingHasFailed_thenThrowsWeatherDataException() {
-        Location location = new Location(55.87, 26.52);
-
-        when(weatherDataServiceMock.retrieveWeather(location))
-                .thenThrow(new WeatherDataException("Failed") {
-        });
-
-        assertThrows(WeatherDataException.class, () -> outdoorServiceMock.getWeather(location));
     }
 
     //save activity
@@ -171,6 +146,18 @@ class OutdoorPlanServiceTest {
         assertThrows(PastDateException.class, () -> outdoorServiceMock.saveOutdoorPlan(outdoorActivity));
     }
 
+    @Test
+    public void WhenWeatherDataProcessingHasFailedWhileAttemptingToSavePlan_thenThrowsWeatherDataException() {
+        OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
+        outdoorActivity.setId(1L);
+
+        when(weatherDataServiceMock.retrieveWeather(location))
+                .thenThrow(new WeatherDataException("Failed") {
+                });
+
+        assertThrows(WeatherDataException.class, () -> outdoorServiceMock.saveOutdoorPlan(outdoorActivity));
+    }
+
     //get all saved activities
     @Test
     public void WhenRetrievingSavedAllPlans_thenReturnsData () {
@@ -211,6 +198,7 @@ class OutdoorPlanServiceTest {
         verify(outdoorPlanRepositoryMock).deleteById(1L);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test void WhenAttemptingToDeleteActivityWithoutPassingId_thenIllegalArgumentExceptionIsThrown() {
         doThrow(new IllegalArgumentException()).when(outdoorPlanRepositoryMock).deleteById(null);
         outdoorServiceMock.deleteOutdoorPlan(1L);
@@ -290,5 +278,17 @@ class OutdoorPlanServiceTest {
                 .thenReturn(weatherConditionsMap);
 
         assertThrows(PastDateException.class, () -> outdoorServiceMock.saveSafeOutdoorPlan(outdoorActivity));
+    }
+
+    @Test
+    public void WhenWeatherDataProcessingHasFailedWhileAttemptingToSaveSafePlan_thenThrowsWeatherDataException() {
+        OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
+        outdoorActivity.setId(1L);
+
+        when(weatherDataServiceMock.retrieveWeather(location))
+                .thenThrow(new WeatherDataException("Failed") {
+                });
+
+        assertThrows(WeatherDataException.class, () -> outdoorServiceMock.saveSafeOutdoorPlan(outdoorActivity));
     }
 }

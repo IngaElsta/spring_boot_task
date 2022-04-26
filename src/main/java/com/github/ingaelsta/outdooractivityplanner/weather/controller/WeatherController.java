@@ -2,7 +2,7 @@ package com.github.ingaelsta.outdooractivityplanner.weather.controller;
 
 import com.github.ingaelsta.outdooractivityplanner.commons.model.Location;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
-import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherDataService;
+import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +20,11 @@ import java.util.Map;
 @RequestMapping("api/v1/outdoor-planner/weather")
 public class WeatherController {
 
-    private final WeatherDataService weatherDataService;
+    private final WeatherService weatherService;
 
     @Autowired
-    public WeatherController(WeatherDataService weatherDataService) {
-        this.weatherDataService = weatherDataService;
+    public WeatherController(WeatherService weatherService) {
+        this.weatherService = weatherService;
     }
 
     @GetMapping
@@ -35,6 +35,6 @@ public class WeatherController {
             @RequestParam (value = "lon", required = false, defaultValue = "24.11")
             @Min(-180) @Max(180)
             Double longitude) {
-        return weatherDataService.retrieveWeather(new Location(latitude, longitude));
+        return weatherService.getWeather(new Location(latitude, longitude));
     }
 }

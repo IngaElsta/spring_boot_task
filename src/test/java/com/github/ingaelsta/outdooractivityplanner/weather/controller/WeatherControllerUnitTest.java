@@ -6,7 +6,7 @@ import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherData
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Temperature;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Wind;
-import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherDataService;
+import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class WeatherControllerUnitTest {
-    private final WeatherDataService weatherDataServiceMock = Mockito.mock(WeatherDataService .class);
+    private final WeatherService weatherServiceMock = Mockito.mock(WeatherService .class);
 
     private WeatherController weatherControllerMock;
 
@@ -32,7 +32,7 @@ class WeatherControllerUnitTest {
 
     @BeforeEach
     public void setup () {
-        weatherControllerMock = new WeatherController(weatherDataServiceMock) ;
+        weatherControllerMock = new WeatherController(weatherServiceMock) ;
     }
 
     @Test
@@ -46,7 +46,7 @@ class WeatherControllerUnitTest {
         expected.put(date, new WeatherConditions(
                 date, weatherDescriptions, temperature, wind, new ArrayList<>()));
 
-        when(weatherDataServiceMock.retrieveWeather(location))
+        when(weatherServiceMock.getWeather(location))
                 .thenReturn(expected);
 
         Map<LocalDate, WeatherConditions> result = weatherControllerMock.getWeather(latitude, longitude);
@@ -56,7 +56,7 @@ class WeatherControllerUnitTest {
 
     @Test
     public void WhenWeatherDataRetrievalUnsuccessful_thenReturnsWeatherDataException() {
-        when(weatherDataServiceMock.retrieveWeather(new Location(55.87, 26.52)))
+        when(weatherServiceMock.getWeather(new Location(55.87, 26.52)))
                 .thenThrow(new WeatherDataException("placeholder") {});
 
         assertThrows(WeatherDataException.class, () -> weatherControllerMock.getWeather(55.87, 26.52));

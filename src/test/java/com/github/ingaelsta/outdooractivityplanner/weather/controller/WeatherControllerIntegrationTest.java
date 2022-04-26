@@ -6,7 +6,7 @@ import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherData
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Temperature;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Wind;
-import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherDataService;
+import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -33,7 +33,7 @@ class WeatherControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private WeatherDataService weatherDataServiceMock;
+    private WeatherService weatherServiceMock;
     private static final String URL = "/api/v1/outdoor-planner/weather";
     private static final LocalDate date = Conversion.convertDate(1643536800).toLocalDate();
 
@@ -49,7 +49,7 @@ class WeatherControllerIntegrationTest {
         expected.put(date, new WeatherConditions(
                 date, weatherDescriptions, temperature, wind, new ArrayList<>()));
 
-        when(weatherDataServiceMock.retrieveWeather(new Location(56.95, 24.11)))
+        when(weatherServiceMock.getWeather(new Location(56.95, 24.11)))
                 .thenReturn(expected);
 
         this.mockMvc
@@ -70,7 +70,7 @@ class WeatherControllerIntegrationTest {
         expected.put(date, new WeatherConditions(
                 date, weatherDescriptions, temperature, wind, new ArrayList<>()));
 
-        when(weatherDataServiceMock.retrieveWeather(new Location(55.87, 26.52)))
+        when(weatherServiceMock.getWeather(new Location(55.87, 26.52)))
                 .thenReturn(expected);
 
         this.mockMvc
@@ -91,7 +91,7 @@ class WeatherControllerIntegrationTest {
 
     @Test
     public void WhenWeatherDataRetrievalUnsuccessful_thenReturnError() throws Exception {
-        when(weatherDataServiceMock.retrieveWeather(new Location(55.87, 26.52)))
+        when(weatherServiceMock.getWeather(new Location(55.87, 26.52)))
                 .thenThrow(new WeatherDataException("placeholder") {});
 
         this.mockMvc

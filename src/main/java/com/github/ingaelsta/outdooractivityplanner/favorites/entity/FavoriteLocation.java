@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -34,9 +35,13 @@ public class FavoriteLocation {
     @Max(value = 180, message = "Longitude must be less than or equal to 180 (180 West)")
     private Double longitude;
 
-    public FavoriteLocation(Double latitude, Double longitude) {
+    @NotBlank
+    private String locationName;
+
+    public FavoriteLocation(Double latitude, Double longitude, String locationName) {
         this();
         this.latitude = latitude;
         this.longitude = longitude;
+        this.locationName = locationName;
     }
 }

@@ -1,11 +1,9 @@
 package com.github.ingaelsta.outdooractivityplanner.weather.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.ingaelsta.outdooractivityplanner.commons.model.Location;
 import com.github.ingaelsta.outdooractivityplanner.weather.configuration.OWMConfiguration;
-import com.github.ingaelsta.outdooractivityplanner.weather.deserialize.OWMDeserializer;
+import com.github.ingaelsta.outdooractivityplanner.weather.configuration.OWMObjectMapperConfiguration;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
 import com.github.ingaelsta.outdooractivityplanner.weather.exception.OWMDataException;
 
@@ -13,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -26,24 +23,18 @@ import java.util.*;
 @Slf4j
 @Component
 public class OWMDataService implements WeatherDataService {
-
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final OWMConfiguration owmConfiguration;
 
-    @Autowired
-    public OWMDataService(RestTemplateBuilder restTemplateBuilder, ObjectMapper objectMapper,
-                          OWMConfiguration owmConfiguration) {
+    public OWMDataService(RestTemplateBuilder restTemplateBuilder,
+                          OWMConfiguration owmConfiguration,
+                          OWMObjectMapperConfiguration OWMobjectMapperConfiguration) {
         this.restTemplate = restTemplateBuilder.build();
         this.owmConfiguration = owmConfiguration;
 
         //todo: move this to a separate config class?
-        this.objectMapper = objectMapper;
-        SimpleModule module = new SimpleModule("OWMDeserializer",
-                new Version(1, 0, 0, null, null, null));
-        module.addDeserializer(Map.class, new OWMDeserializer());
-        System.out.println(module);
-        objectMapper.registerModule(module);
+        this.objectMapper = OWMobjectMapperConfiguration.getObjectMapper();
     }
 
 

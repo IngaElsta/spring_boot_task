@@ -1,7 +1,7 @@
 package com.github.ingaelsta.outdooractivityplanner.planning.configuration;
 
 import com.github.ingaelsta.outdooractivityplanner.planning.exception.PastDateException;
-import com.github.ingaelsta.outdooractivityplanner.planning.response.ErrorResponse;
+import com.github.ingaelsta.outdooractivityplanner.commons.response.ErrorResponse;
 import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherDataException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

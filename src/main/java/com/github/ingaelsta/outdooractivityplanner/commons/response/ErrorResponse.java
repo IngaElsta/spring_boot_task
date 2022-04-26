@@ -1,4 +1,4 @@
-package com.github.ingaelsta.outdooractivityplanner.planning.response;
+package com.github.ingaelsta.outdooractivityplanner.commons.response;
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;

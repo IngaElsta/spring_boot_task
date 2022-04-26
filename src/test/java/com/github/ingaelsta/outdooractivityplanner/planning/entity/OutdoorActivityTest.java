@@ -4,23 +4,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import javax.validation.Validator;
 import java.time.LocalDate;
 import java.util.Set;
 
+import static javax.validation.Validation.buildDefaultValidatorFactory;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OutdoorActivityTest {
     private Validator validator;
-    private LocalDate planDate = LocalDate.now();
+    private final LocalDate planDate = LocalDate.now();
     private final Double latitude = 52.1;
     private final Double longitude = -0.78;
 
     @BeforeEach
     public void setup() {
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
+        validator = buildDefaultValidatorFactory().getValidator();
     }
 
     @Test

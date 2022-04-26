@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OWMDeserializerTest {
     private JacksonTester<Map<LocalDate, WeatherConditions>> json;
-    private ObjectMapper mapper;
     private File jsonNoAlerts;
     private File jsonWithAlerts;
     private File jsonWrongDataType;
@@ -33,7 +32,7 @@ public class OWMDeserializerTest {
 
     @BeforeEach
     public void setup() throws IOException {
-        mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
         OWMDeserializer deserializer = new OWMDeserializer();
         SimpleModule module = new SimpleModule("OWMDeserializer",
                 new Version(1, 0, 0, null, null, null));
@@ -57,7 +56,7 @@ public class OWMDeserializerTest {
         String text = new String(Files.readAllBytes(jsonNoAlerts.toPath()));
         Map<LocalDate, WeatherConditions> weatherConditionsMap = this.json.parseObject(text);
 
-        LocalDate date = Conversion.convertDate(1643536800).toLocalDate();;
+        LocalDate date = Conversion.convertDate(1643536800).toLocalDate();
         Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
         Wind wind = new Wind(8.23, 17.56, "S");
         List<String> weatherDescriptions = new ArrayList<>();
@@ -110,7 +109,7 @@ public class OWMDeserializerTest {
         WeatherConditions conditions1 = new WeatherConditions(date, weatherDescriptions, temperature, wind, alerts);
         expected.put(date, conditions1);
 
-        date = Conversion.convertDate(1643623200).toLocalDate();;
+        date = Conversion.convertDate(1643623200).toLocalDate();
         temperature = new Temperature(-0.73, -0.26, -1.17, -1.92);
         wind = new Wind(12.78, 16.97, "N");
         weatherDescriptions = new ArrayList<>();
@@ -130,13 +129,13 @@ public class OWMDeserializerTest {
     void WhenDataValueMissing_thenConversionFails () throws IOException {
         String text = new String(Files.readAllBytes(jsonMissingData.toPath()));
 
-        assertThrows(OWMDataException.class, () -> {this.json.parseObject(text);});
+        assertThrows(OWMDataException.class, () -> this.json.parseObject(text));
     }
 
     @Test
     void WhenJsonHasNonNumericValueForNumber_thenConversionFails () throws IOException {
         String text = new String(Files.readAllBytes(jsonWrongDataType.toPath()));
 
-        assertThrows(OWMDataException.class, () -> {this.json.parseObject(text);});
+        assertThrows(OWMDataException.class, () -> this.json.parseObject(text));
     }
 }

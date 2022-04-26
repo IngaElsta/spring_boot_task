@@ -10,7 +10,7 @@ class ConversionTest {
 
     @Test
     void ConversionFromSecondsToDateTimeIsSuccessful() {
-        LocalDateTime expectedDateTime = LocalDateTime.of(2022, 01, 28,12,0);
+        LocalDateTime expectedDateTime = LocalDateTime.of(2022, 1, 28,12,0);
         assertEquals(Conversion.convertDate(1643364000), expectedDateTime);
     }
 }

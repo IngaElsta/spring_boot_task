@@ -113,7 +113,7 @@ public class WindTest {
         assertEquals(Wind.degreesToDirection(260), ("W"));
         assertEquals(Wind.degreesToDirection(300), ("NW"));
         assertEquals(Wind.degreesToDirection(0), ("N"));
-        assertEquals(Wind.degreesToDirection(-400), null);
+        assertNull(Wind.degreesToDirection(-400));
     }
 
 }

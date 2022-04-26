@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import javax.validation.Validator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,32 +11,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static javax.validation.Validation.buildDefaultValidatorFactory;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WeatherConditionsTest {
 
-    private Alert alert1 = new Alert("Yellow Flooding Warning",
-            LocalDateTime.now(),
-            LocalDateTime.now().plusHours(1));
-    private Alert alert2 = new Alert("Red Wind Warning",
-            LocalDateTime.now(),
-            LocalDateTime.now().plusHours(1));
+    private final Temperature temperature = new Temperature( -3.0, 2.0, 0.2, -5.6);
+    private final Wind wind = new Wind(2.1, 7.4, "S");
+    private List<Alert> alerts;
 
-    private Temperature temperature = new Temperature( -3.0, 2.0, 0.2, -5.6);
-    private Wind wind = new Wind(2.1, 7.4, "S");
-    private List alerts;
-
-    private List weatherDescriptions = new ArrayList<>();
+    private List<String> weatherDescriptions;
     private Validator validator;
 
     @BeforeEach
     public void setup() {
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
+        validator = buildDefaultValidatorFactory().getValidator();
+
+        Alert alert1 = new Alert("Yellow Flooding Warning",
+                LocalDateTime.now(),
+                LocalDateTime.now().plusHours(1));
+        Alert alert2 = new Alert("Red Wind Warning",
+                LocalDateTime.now(),
+                LocalDateTime.now().plusHours(1));
 
         alerts = new ArrayList<>();
         alerts.add(alert1);
         alerts.add(alert2);
 
+        weatherDescriptions = new ArrayList<>();
         weatherDescriptions.add("rain and snow");
     }
 

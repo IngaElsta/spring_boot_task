@@ -2,13 +2,13 @@ package com.github.ingaelsta.outdooractivityplanner.weather.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import javax.validation.Validator;
 import java.util.Set;
+
+import static javax.validation.Validation.buildDefaultValidatorFactory;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TemperatureTest {
 
@@ -16,7 +16,7 @@ public class TemperatureTest {
 
     @BeforeEach
     public void setup() {
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
+        validator = buildDefaultValidatorFactory().getValidator();
     }
 
     @Test
@@ -44,11 +44,15 @@ public class TemperatureTest {
 
     @Test
     void ItIsPossibleToRetrieveAndResetAnyValue(){
-        Temperature temperature = new Temperature(1.5, 10.4, 7.1, -2.05);
-        Double morning = temperature.getMorn();
-        Double day = temperature.getDay();
-        Double evening = temperature.getEve();
-        Double night =  temperature.getNight();
+        Double morning = 1.5;
+        Double day = 10.4;
+        Double evening = 7.1;
+        Double night = -2.05;
+        Temperature temperature = new Temperature(morning, day, evening, night);
+        assertEquals(temperature.getMorn(), morning);
+        assertEquals(temperature.getDay(), day);
+        assertEquals(temperature.getEve(), evening);
+        assertEquals(temperature.getNight(), night);
 
         temperature.setMorn(0.0);
         temperature.setDay(4.5);

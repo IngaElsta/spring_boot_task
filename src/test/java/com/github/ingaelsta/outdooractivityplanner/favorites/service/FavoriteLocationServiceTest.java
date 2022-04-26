@@ -25,6 +25,7 @@ class FavoriteLocationServiceTest {
     void setUp() {
         favoriteLocationServiceMock = new FavoriteLocationService(favoriteLocationRepositoryMock);
         location1.setId(1L);
+        location2.setId(2L);
     }
 
     @Test

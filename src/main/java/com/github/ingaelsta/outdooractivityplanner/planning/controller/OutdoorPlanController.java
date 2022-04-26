@@ -58,7 +58,7 @@ public class OutdoorPlanController {
         outdoorPlanService.deleteOutdoorPlan(id);
     }
 
-    @PostMapping (value = "/safeactivity", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping (value = "/activity/safe", consumes = MediaType.APPLICATION_JSON_VALUE)
     public OutdoorPlanResponse saveSafeOutdoorPlan (
             @Validated
             @RequestBody

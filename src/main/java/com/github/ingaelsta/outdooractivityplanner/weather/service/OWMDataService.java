@@ -32,8 +32,6 @@ public class OWMDataService implements WeatherDataService {
                           OWMObjectMapperConfiguration OWMobjectMapperConfiguration) {
         this.restTemplate = restTemplateBuilder.build();
         this.owmConfiguration = owmConfiguration;
-
-        //todo: move this to a separate config class?
         this.objectMapper = OWMobjectMapperConfiguration.getObjectMapper();
     }
 

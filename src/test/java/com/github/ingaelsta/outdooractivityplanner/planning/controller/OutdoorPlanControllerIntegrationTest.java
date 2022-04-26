@@ -284,7 +284,7 @@ class OutdoorPlanControllerIntegrationTest {
                 .andExpect(content().string(containsString("is not present")));
     }
 
-    //post safeactivity
+    //post safe activity
     @Test
     public void WhenSafeSavingPlanOnDayWithAlerts_thenReturnsOnlyListOfAlerts()  throws Exception{
 
@@ -295,11 +295,11 @@ class OutdoorPlanControllerIntegrationTest {
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
         OutdoorPlanResponse expected = new OutdoorPlanResponse(null, alerts);
 
-        when(outdoorPlanServiceMock.saveOutdoorPlan(outdoorActivity))
+        when(outdoorPlanServiceMock.saveSafeOutdoorPlan(outdoorActivity))
                 .thenReturn(expected);
 
         this.mockMvc
-                .perform(post(String.format("%s//activity", URL))
+                .perform(post(String.format("%s//activity/safe", URL))
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())
@@ -318,11 +318,11 @@ class OutdoorPlanControllerIntegrationTest {
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
         OutdoorPlanResponse expected = new OutdoorPlanResponse(outdoorActivity, null);
 
-        when(outdoorPlanServiceMock.saveOutdoorPlan(outdoorActivity))
+        when(outdoorPlanServiceMock.saveSafeOutdoorPlan(outdoorActivity))
                 .thenReturn(expected);
 
         this.mockMvc
-                .perform(post(String.format("%s//activity", URL))
+                .perform(post(String.format("%s//activity/safe", URL))
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())
@@ -339,11 +339,11 @@ class OutdoorPlanControllerIntegrationTest {
 
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
 
-        when(outdoorPlanServiceMock.saveOutdoorPlan(outdoorActivity))
+        when(outdoorPlanServiceMock.saveSafeOutdoorPlan(outdoorActivity))
                 .thenThrow(new PastDateException("placeholder"));
 
         this.mockMvc
-                .perform(post(String.format("%s//activity", URL))
+                .perform(post(String.format("%s//activity/safe", URL))
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())
@@ -359,7 +359,7 @@ class OutdoorPlanControllerIntegrationTest {
                         latitude, "555", date.toString()));
 
         this.mockMvc
-                .perform(post(String.format("%s//activity", URL))
+                .perform(post(String.format("%s//activity/safe", URL))
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())
@@ -375,7 +375,7 @@ class OutdoorPlanControllerIntegrationTest {
                         latitude, date.toString()));
 
         this.mockMvc
-                .perform(post(String.format("%s//activity", URL))
+                .perform(post(String.format("%s//activity/safe", URL))
                         .content(requestBody)
                         .header("Content-Type", "application/json"))
                 .andDo(print())

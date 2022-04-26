@@ -1,4 +1,4 @@
-package com.github.ingaelsta.outdooractivityplanner.planning.configuration;
+package com.github.ingaelsta.outdooractivityplanner.commons.configuration;
 
 import com.github.ingaelsta.outdooractivityplanner.planning.exception.PastDateException;
 import com.github.ingaelsta.outdooractivityplanner.commons.response.ErrorResponse;
@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestControllerAdvice
-public class OutdoorPlanControllerAdvice {
+public class ControllerAdvice {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolationException(Exception e) {

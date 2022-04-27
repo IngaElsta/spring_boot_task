@@ -28,11 +28,9 @@ public class WeatherCacheSchedulingService {
 
     @Scheduled(cron = "0 * * * * *")
     public void cacheWeatherForFavoriteLocations () {
-        System.out.println("\n\tTried to cache");
         List<FavoriteLocation> allFavoriteLocations =  favoriteLocationService.getAllFavorites();
         allFavoriteLocations
                 .forEach(favorite -> {
-                    System.out.println("favorite: " + favorite);
                     Location location = new Location(favorite.getLatitude(), favorite.getLongitude());
                     weatherService.getWeather(location);
                 });

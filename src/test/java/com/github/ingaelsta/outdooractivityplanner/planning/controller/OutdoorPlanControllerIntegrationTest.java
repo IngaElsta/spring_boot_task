@@ -201,7 +201,6 @@ class OutdoorPlanControllerIntegrationTest {
 
         when(outdoorPlanServiceMock.getAllPlans())
                 .thenReturn(expected);
-        System.out.println(expected);
 
         this.mockMvc
                 .perform(get((String.format("%s//all", URL))))

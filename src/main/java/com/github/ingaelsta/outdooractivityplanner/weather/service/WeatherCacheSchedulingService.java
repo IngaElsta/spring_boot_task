@@ -18,6 +18,7 @@ public class WeatherCacheSchedulingService {
 
     private final WeatherService weatherService;
 
+    //todo: might be better to call favorite location controller API instead of service and make those functionalities independent
     private final FavoriteLocationService favoriteLocationService;
 
 

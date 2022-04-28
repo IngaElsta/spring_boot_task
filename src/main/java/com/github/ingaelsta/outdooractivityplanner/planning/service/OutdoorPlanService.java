@@ -7,7 +7,7 @@ import com.github.ingaelsta.outdooractivityplanner.planning.repository.OutdoorAc
 import com.github.ingaelsta.outdooractivityplanner.planning.response.OutdoorPlanResponse;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Alert;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
-import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherDataService;
+import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,13 +21,14 @@ import java.util.Map;
 @Service
 public class OutdoorPlanService {
 
-    private final WeatherDataService weatherDataService;
+    //todo: would be better to call the weather controller API instead of service and make those functionalities independent
+    private final WeatherService weatherService;
     private final OutdoorActivitiesRepository outdoorActivitiesPlanRepository;
 
     @Autowired
-    public OutdoorPlanService(WeatherDataService weatherDataService,
+    public OutdoorPlanService(WeatherService weatherService,
                               OutdoorActivitiesRepository outdoorActivitiesPlanRepository) {
-        this.weatherDataService = weatherDataService;
+        this.weatherService = weatherService;
         this.outdoorActivitiesPlanRepository = outdoorActivitiesPlanRepository;
     }
 
@@ -86,7 +87,7 @@ public class OutdoorPlanService {
     }
 
     private List<Alert> getAlerts(Location location, LocalDate planDate) {
-        Map<LocalDate, WeatherConditions> weatherConditionsMap = weatherDataService.retrieveWeather(location);
+        Map<LocalDate, WeatherConditions> weatherConditionsMap = weatherService.getWeather(location);
 
         //todo: look into that "get" without "isPresent" warning
         LocalDate weatherConditionFirstDay = weatherConditionsMap.keySet().stream().findFirst().get();

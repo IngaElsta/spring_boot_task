@@ -11,7 +11,7 @@ import com.github.ingaelsta.outdooractivityplanner.commons.Conversion;
 import com.github.ingaelsta.outdooractivityplanner.commons.model.Location;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Wind;
 import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherDataException;
-import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherDataService;
+import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +29,7 @@ import java.util.Map;
 
 class OutdoorPlanServiceTest {
 
-    private final WeatherDataService weatherDataServiceMock = Mockito.mock(WeatherDataService.class);
+    private final WeatherService weatherServiceMock = Mockito.mock(WeatherService.class);
     private final OutdoorActivitiesRepository outdoorPlanRepositoryMock = Mockito.mock(OutdoorActivitiesRepository.class);
     private OutdoorPlanService outdoorServiceMock;
 
@@ -53,7 +53,7 @@ class OutdoorPlanServiceTest {
     @BeforeEach
     public void setup() {
         outdoorServiceMock = new OutdoorPlanService(
-                weatherDataServiceMock,
+                weatherServiceMock,
                 outdoorPlanRepositoryMock);
         Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
         Wind wind = new Wind(8.23, 17.56, "S");
@@ -81,7 +81,7 @@ class OutdoorPlanServiceTest {
 
         when(outdoorPlanRepositoryMock.save(outdoorActivity))
                 .thenReturn(outdoorActivity);
-        when(weatherDataServiceMock.retrieveWeather(location))
+        when(weatherServiceMock.getWeather(location))
                 .thenReturn(weatherConditionsMap);
 
         OutdoorPlanResponse expected = new OutdoorPlanResponse(outdoorActivity, new ArrayList<>());
@@ -97,7 +97,7 @@ class OutdoorPlanServiceTest {
 
         when(outdoorPlanRepositoryMock.save(outdoorActivity))
                 .thenReturn(outdoorActivity);
-        when(weatherDataServiceMock.retrieveWeather(location))
+        when(weatherServiceMock.getWeather(location))
                 .thenReturn(weatherConditionsMapWithAlerts);
 
         OutdoorPlanResponse expected = new OutdoorPlanResponse(outdoorActivity, alerts);
@@ -115,7 +115,7 @@ class OutdoorPlanServiceTest {
 
         when(outdoorPlanRepositoryMock.save(outdoorActivity))
                 .thenReturn(outdoorActivity);
-        when(weatherDataServiceMock.retrieveWeather(location))
+        when(weatherServiceMock.getWeather(location))
                 .thenReturn(weatherConditionsMap);
 
         Alert alertsUnknownAlert = new Alert(
@@ -140,7 +140,7 @@ class OutdoorPlanServiceTest {
 
         when(outdoorPlanRepositoryMock.save(outdoorActivity))
                 .thenReturn(outdoorActivity);
-        when(weatherDataServiceMock.retrieveWeather(location))
+        when(weatherServiceMock.getWeather(location))
                 .thenReturn(weatherConditionsMap);
 
         assertThrows(PastDateException.class, () -> outdoorServiceMock.saveOutdoorPlan(outdoorActivity));
@@ -151,7 +151,7 @@ class OutdoorPlanServiceTest {
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
         outdoorActivity.setId(1L);
 
-        when(weatherDataServiceMock.retrieveWeather(location))
+        when(weatherServiceMock.getWeather(location))
                 .thenThrow(new WeatherDataException("Failed") {
                 });
 
@@ -215,7 +215,7 @@ class OutdoorPlanServiceTest {
 
         when(outdoorPlanRepositoryMock.save(outdoorActivity))
                 .thenReturn(outdoorActivity);
-        when(weatherDataServiceMock.retrieveWeather(location))
+        when(weatherServiceMock.getWeather(location))
                 .thenReturn(weatherConditionsMap);
 
         OutdoorPlanResponse expected = new OutdoorPlanResponse(outdoorActivity, new ArrayList<>());
@@ -231,7 +231,7 @@ class OutdoorPlanServiceTest {
 
         when(outdoorPlanRepositoryMock.save(outdoorActivity))
                 .thenReturn(outdoorActivity);
-        when(weatherDataServiceMock.retrieveWeather(location))
+        when(weatherServiceMock.getWeather(location))
                 .thenReturn(weatherConditionsMapWithAlerts);
 
         OutdoorPlanResponse expected = new OutdoorPlanResponse(null, alerts);
@@ -249,7 +249,7 @@ class OutdoorPlanServiceTest {
 
         when(outdoorPlanRepositoryMock.save(outdoorActivity))
                 .thenReturn(outdoorActivity);
-        when(weatherDataServiceMock.retrieveWeather(location))
+        when(weatherServiceMock.getWeather(location))
                 .thenReturn(weatherConditionsMap);
 
         Alert alertsUnknownAlert = new Alert(
@@ -274,7 +274,7 @@ class OutdoorPlanServiceTest {
 
         when(outdoorPlanRepositoryMock.save(outdoorActivity))
                 .thenReturn(outdoorActivity);
-        when(weatherDataServiceMock.retrieveWeather(location))
+        when(weatherServiceMock.getWeather(location))
                 .thenReturn(weatherConditionsMap);
 
         assertThrows(PastDateException.class, () -> outdoorServiceMock.saveSafeOutdoorPlan(outdoorActivity));
@@ -285,7 +285,7 @@ class OutdoorPlanServiceTest {
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
         outdoorActivity.setId(1L);
 
-        when(weatherDataServiceMock.retrieveWeather(location))
+        when(weatherServiceMock.getWeather(location))
                 .thenThrow(new WeatherDataException("Failed") {
                 });
 

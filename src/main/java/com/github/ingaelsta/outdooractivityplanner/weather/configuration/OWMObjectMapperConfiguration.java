@@ -21,7 +21,6 @@ public class OWMObjectMapperConfiguration {
         SimpleModule module = new SimpleModule("OWMDeserializer",
                 new Version(1, 0, 0, null, null, null));
         module.addDeserializer(Map.class, new OWMDeserializer());
-        System.out.println(module);
         objectMapper.registerModule(module);
     }
 }

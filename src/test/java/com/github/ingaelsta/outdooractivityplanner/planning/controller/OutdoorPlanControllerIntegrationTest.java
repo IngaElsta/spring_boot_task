@@ -9,6 +9,7 @@ import com.github.ingaelsta.outdooractivityplanner.weather.model.Alert;
 
 import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherDataException;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -100,7 +101,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSavingPlanOnDayBeforePrognosisRange_thenThrowsPastDateException()  throws Exception{
+    public void WhenSavingPlanOnDayBeforePrognosisRange_thenReturnsBadRequest()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -121,7 +122,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSavingPlanWithInvalidCoordinates_thenThrowsMethodArgumentNotValidException()  throws Exception{
+    public void WhenSavingPlanWithInvalidParameters_thenReturnsBadRequest()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -137,23 +138,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSavingPlanWithArgumentMissing_thenThrowsMethodArgumentNotValidException()  throws Exception{
-
-        String requestBody =
-                (String.format("{\"latitude\": %s,\"planDate\":\"%s\"}",
-                        latitude, date.toString()));
-
-        this.mockMvc
-                .perform(post(URL)
-                        .content(requestBody)
-                        .header("Content-Type", "application/json"))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("Longitude value should not be empty")));
-    }
-
-    @Test
-    public void WhenWeatherDataRetrievalUnsuccessfulWhileAttemptingToSave_thenReturnError() throws Exception {
+    public void WhenWeatherDataRetrievalUnsuccessfulWhileAttemptingToSave_thenReturnsServerError() throws Exception {
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
                         latitude, longitude, date.toString()));
@@ -213,23 +198,23 @@ class OutdoorPlanControllerIntegrationTest {
     @Test
     public void WhenDeletingOutdoorPlanById_thenCallsOutdoorPlanService() throws Exception{
 
-        doNothing().when(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
+        doNothing().when(outdoorPlanServiceMock).deleteOutdoorPlanById(1L);
 
         this.mockMvc
-                .perform(delete((String.format("%s?id=1", URL))))
+                .perform(delete((String.format("%s//1", URL))))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
+        verify(outdoorPlanServiceMock).deleteOutdoorPlanById(1L);
     }
 
     @Test
-    public void WhenDeletingByIdWithoutPassingId_thenReturnError() throws Exception {
+    public void WhenDeletingByIdWithPassingInvalidTypeOfArgument_thenReturnsBadRequest() throws Exception {
         this.mockMvc
-                .perform(delete((URL)))
+                .perform(delete((String.format("%s//a", URL))))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("is not present")));
+                .andExpect(content().string(containsString("Failed to convert value")));
     }
 
     //post safe activity
@@ -279,7 +264,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSafeSavingPlanOnDayBeforePrognosisRange_thenThrowsPastDateException()  throws Exception{
+    public void WhenSafeSavingPlanOnDayBeforePrognosisRange_thenReturnsBadRequest()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -300,7 +285,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSafeSavingPlanWithInvalidCoordinates_thenThrowsMethodArgumentNotValidException()  throws Exception{
+    public void WhenSafeSavingPlanWithInvalidParameters_thenReturnsBadRequest()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -316,23 +301,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSafeSavingPlanWithArgumentMissing_thenThrowsMethodArgumentNotValidException()  throws Exception{
-
-        String requestBody =
-                (String.format("{\"latitude\": %s,\"planDate\":\"%s\"}",
-                        latitude, date.toString()));
-
-        this.mockMvc
-                .perform(post(String.format("%s//safe", URL))
-                        .content(requestBody)
-                        .header("Content-Type", "application/json"))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("Longitude value should not be empty")));
-    }
-
-    @Test
-    public void WhenWeatherDataRetrievalUnsuccessfulWhileAttemptingToSafeSave_thenReturnError() throws Exception {
+    public void WhenWeatherDataRetrievalUnsuccessfulWhileAttemptingToSafeSave_thenReturnServerError() throws Exception {
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
                         latitude, longitude, date.toString()));

@@ -83,7 +83,7 @@ public class OutdoorPlanService {
     //todo: add method to delete plans
 
     //delete activity plan by passed id
-    public void deleteOutdoorPlan(Long id) {
+    public void deleteOutdoorPlanById(Long id) {
         outdoorActivitiesPlanRepository.deleteById(id);
     }
 

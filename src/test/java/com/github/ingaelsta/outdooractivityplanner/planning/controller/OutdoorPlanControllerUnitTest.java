@@ -129,18 +129,18 @@ class OutdoorPlanControllerUnitTest {
     //deleteOutdoorPlan
     @Test
     public void WhenPassingIdAndDeletingPlan_thenNoExceptionThrown (){
-        doNothing().when(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
-        outdoorPlanControllerMock.deleteOutdoorPlan(1L);
-        verify(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
+        doNothing().when(outdoorPlanServiceMock).deleteOutdoorPlanById(1L);
+        outdoorPlanControllerMock.deleteOutdoorPlanById(1L);
+        verify(outdoorPlanServiceMock).deleteOutdoorPlanById(1L);
     }
 
     @Test
     void WhenAttemptingToDeleteActivityWithoutPassingId_thenIllegalArgumentExceptionIsThrown() {
-        doThrow(new IllegalArgumentException()).when(outdoorPlanServiceMock).deleteOutdoorPlan(null);
-        outdoorPlanControllerMock.deleteOutdoorPlan(1L);
-        verify(outdoorPlanServiceMock).deleteOutdoorPlan(1L);
+        doThrow(new IllegalArgumentException()).when(outdoorPlanServiceMock).deleteOutdoorPlanById(null);
+        outdoorPlanControllerMock.deleteOutdoorPlanById(1L);
+        verify(outdoorPlanServiceMock).deleteOutdoorPlanById(1L);
 
-        assertThrows(IllegalArgumentException.class, () -> outdoorPlanControllerMock.deleteOutdoorPlan(null));
+        assertThrows(IllegalArgumentException.class, () -> outdoorPlanControllerMock.deleteOutdoorPlanById(null));
     }
 
     //saveSafeOutdoorPlan

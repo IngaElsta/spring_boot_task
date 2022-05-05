@@ -43,34 +43,37 @@ class OutdoorPlanServiceTest {
 
     private List<Alert> alerts;
 
-    private final Alert alert1 = new Alert("Yellow Flooding Warning",
-            date.atStartOfDay().plusHours(3),
-            date.atStartOfDay().plusHours(7));
-    private final Alert alert2 = new Alert("Red Wind Warning",
-            date.atStartOfDay().plusHours(0),
-            date.atStartOfDay().plusHours(23).plusMinutes(59).plusSeconds(59));
-
     @BeforeEach
     public void setup() {
         outdoorServiceMock = new OutdoorPlanService(
                 weatherServiceMock,
                 outdoorPlanRepositoryMock);
-        Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
-        Wind wind = new Wind(8.23, 17.56, "S");
-        List<String> weatherDescriptions = new ArrayList<>();
-        weatherDescriptions.add("rain and snow");
 
-        alerts = new ArrayList<>();
-        alerts.add(alert1);
-        alerts.add(alert2);
+        {
+            Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
+            Wind wind = new Wind(8.23, 17.56, "S");
+            List<String> weatherDescriptions = new ArrayList<>();
+            weatherDescriptions.add("rain and snow");
 
-        weatherConditionsMap = new HashMap<>();
-        weatherConditionsMap.put(date, new WeatherConditions(
-                date, weatherDescriptions, temperature, wind, new ArrayList<>()));
+            Alert alert1 = new Alert("Yellow Flooding Warning",
+                    date.atStartOfDay().plusHours(3),
+                    date.atStartOfDay().plusHours(7));
+            Alert alert2 = new Alert("Red Wind Warning",
+                    date.atStartOfDay().plusHours(0),
+                    date.atStartOfDay().plusHours(23).plusMinutes(59).plusSeconds(59));
 
-        weatherConditionsMapWithAlerts = new HashMap<>();
-        weatherConditionsMapWithAlerts.put(date, new WeatherConditions(
-                date, weatherDescriptions, temperature, wind, alerts));
+            alerts = new ArrayList<>();
+            alerts.add(alert1);
+            alerts.add(alert2);
+
+            weatherConditionsMap = new HashMap<>();
+            weatherConditionsMap.put(date, new WeatherConditions(
+                    date, weatherDescriptions, temperature, wind, new ArrayList<>()));
+
+            weatherConditionsMapWithAlerts = new HashMap<>();
+            weatherConditionsMapWithAlerts.put(date, new WeatherConditions(
+                    date, weatherDescriptions, temperature, wind, alerts));
+        }
     }
 
     //save activity
@@ -194,17 +197,17 @@ class OutdoorPlanServiceTest {
     //delete activity by id
     @Test void WhenAttemptingToDeleteActivityById_thenNoExceptionIsThrown() {
         doNothing().when(outdoorPlanRepositoryMock).deleteById(1L);
-        outdoorServiceMock.deleteOutdoorPlan(1L);
+        outdoorServiceMock.deleteOutdoorPlanById(1L);
         verify(outdoorPlanRepositoryMock).deleteById(1L);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test void WhenAttemptingToDeleteActivityWithoutPassingId_thenIllegalArgumentExceptionIsThrown() {
         doThrow(new IllegalArgumentException()).when(outdoorPlanRepositoryMock).deleteById(null);
-        outdoorServiceMock.deleteOutdoorPlan(1L);
+        outdoorServiceMock.deleteOutdoorPlanById(1L);
         verify(outdoorPlanRepositoryMock).deleteById(1L);
 
-        assertThrows(IllegalArgumentException.class, () -> outdoorServiceMock.deleteOutdoorPlan(null));
+        assertThrows(IllegalArgumentException.class, () -> outdoorServiceMock.deleteOutdoorPlanById(null));
     }
 
     //safe save activity

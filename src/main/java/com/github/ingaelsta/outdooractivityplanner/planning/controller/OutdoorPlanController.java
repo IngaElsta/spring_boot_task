@@ -36,9 +36,9 @@ public class OutdoorPlanController {
         return outdoorPlanService.getAllPlans();
     }
 
-    @DeleteMapping
-    public void deleteOutdoorPlan (@RequestParam (value = "id") @NotNull Long id) {
-        outdoorPlanService.deleteOutdoorPlan(id);
+    @DeleteMapping(value = "/{id}")
+    public void deleteOutdoorPlanById(@PathVariable (value = "id") @NotNull Long id) {
+        outdoorPlanService.deleteOutdoorPlanById(id);
     }
 
     @PostMapping (value = "/safe", consumes = MediaType.APPLICATION_JSON_VALUE)

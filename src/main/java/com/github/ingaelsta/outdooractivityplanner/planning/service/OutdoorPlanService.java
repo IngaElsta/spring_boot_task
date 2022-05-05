@@ -5,6 +5,7 @@ import com.github.ingaelsta.outdooractivityplanner.commons.model.Location;
 import com.github.ingaelsta.outdooractivityplanner.planning.exception.PastDateException;
 import com.github.ingaelsta.outdooractivityplanner.planning.repository.OutdoorActivitiesRepository;
 import com.github.ingaelsta.outdooractivityplanner.planning.response.OutdoorPlanResponse;
+import com.github.ingaelsta.outdooractivityplanner.weather.exception.OWMDataException;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Alert;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
 import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherService;
@@ -89,8 +90,14 @@ public class OutdoorPlanService {
     private List<Alert> getAlerts(Location location, LocalDate planDate) {
         Map<LocalDate, WeatherConditions> weatherConditionsMap = weatherService.getWeather(location);
 
-        //todo: look into that "get" without "isPresent" warning
-        LocalDate weatherConditionFirstDay = weatherConditionsMap.keySet().stream().findFirst().get();
+        LocalDate weatherConditionFirstDay = weatherConditionsMap.keySet().stream()
+                .findFirst()
+                .orElse(null);
+
+        if (weatherConditionFirstDay == null) {
+            throw new OWMDataException("Failed to retrieve data from weather service");
+        }
+
         if (planDate.isBefore(weatherConditionFirstDay)) {
             //todo: probably should check for past while validating when I figure out testing for it
             throw new PastDateException(String.format("%s is in the past", planDate));

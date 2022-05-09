@@ -36,7 +36,7 @@ class WeatherControllerUnitTest {
     }
 
     @Test
-    public void WhenValidLocationPassedToGetWeather_thenReturnsData() {
+    public void When_WeatherDataSuccessfullyRetrieved_Then_GetWeatherReturnsData() {
         Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
         Wind wind = new Wind(8.23, 17.56, "S");
         List<String> weatherDescriptions = new ArrayList<>();
@@ -55,7 +55,7 @@ class WeatherControllerUnitTest {
     }
 
     @Test
-    public void WhenWeatherDataRetrievalUnsuccessful_thenReturnsWeatherDataException() {
+    public void When_WeatherDataRetrievalUnsuccessful_Then_GetWeatherReturnsWeatherDataException() {
         when(weatherServiceMock.getWeather(new Location(55.87, 26.52)))
                 .thenThrow(new WeatherDataException("placeholder") {});
 

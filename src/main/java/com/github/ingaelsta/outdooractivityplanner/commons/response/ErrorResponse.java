@@ -9,17 +9,10 @@ import java.util.List;
 public class ErrorResponse {
     private HttpStatus status;
     private List<String> messages;
-    private String stackTrace;
 
     public ErrorResponse(HttpStatus status, List<String> messages) {
         this.status = status;
         this.messages = messages;
-    }
-
-    public ErrorResponse(HttpStatus status, List<String> messages, String stackTrace) {
-        this.status = status;
-        this.messages = messages;
-        this.stackTrace = stackTrace;
     }
 }
 

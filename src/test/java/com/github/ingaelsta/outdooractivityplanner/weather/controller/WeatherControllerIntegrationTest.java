@@ -37,6 +37,12 @@ class WeatherControllerIntegrationTest {
     private static final String URL = "/api/v1/outdoor-planner/weather";
     private static final LocalDate date = Conversion.convertDate(1643536800).toLocalDate();
 
+    private static class TestException extends RuntimeException {
+        TestException(String message) {
+            super(message);
+        }
+    }
+
     //get weather
     @Test
     public void WhenNoParametersPassedToGetWeather_thenUsesDefaultValuesAndReturnsData() throws Exception {
@@ -81,7 +87,7 @@ class WeatherControllerIntegrationTest {
     }
 
     @Test
-    public void WhenInvalidLocationPassedToGetWeather_thenReturnError() throws Exception {
+    public void WhenInvalidLocationPassedToGetWeather_thenReturnBadRequestError() throws Exception {
         this.mockMvc
                 .perform(get((String.format("%s?lat=555&lon=26.52", URL))))
                 .andDo(print())
@@ -90,9 +96,21 @@ class WeatherControllerIntegrationTest {
     }
 
     @Test
-    public void WhenWeatherDataRetrievalUnsuccessful_thenReturnError() throws Exception {
+    public void WhenWeatherDataRetrievalUnsuccessful_thenReturnServerError() throws Exception {
         when(weatherServiceMock.getWeather(new Location(55.87, 26.52)))
                 .thenThrow(new WeatherDataException("placeholder") {});
+
+        this.mockMvc
+                .perform(get((String.format("%s?lat=55.87&lon=26.52", URL))))
+                .andDo(print())
+                .andExpect(status().is5xxServerError())
+                .andExpect(content().string(containsString("placeholder")));
+    }
+
+    @Test
+    public void WhenWeatherDataRetrievalThrowsOtherException_thenReturnServerError() throws Exception {
+        when(weatherServiceMock.getWeather(new Location(55.87, 26.52)))
+                .thenThrow(new TestException("placeholder") {});
 
         this.mockMvc
                 .perform(get((String.format("%s?lat=55.87&lon=26.52", URL))))

@@ -86,7 +86,11 @@ public class ControllerAdvice {
         List<String> errors = new ArrayList<>();
         errors.add (e.getMessage());
 
-        log.error( stackTrace);
+        log.error(stackTrace);
+        log.error(String.valueOf(errors));
+
+        List<String> responseMessage = new ArrayList<>();
+        responseMessage.add("A server error has occurred");
 
         return new ResponseEntity<>(
                 new ErrorResponse(status, errors),

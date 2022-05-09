@@ -108,7 +108,7 @@ class WeatherControllerIntegrationTest {
     }
 
     @Test
-    public void WhenWeatherDataRetrievalThrowsOtherException_thenReturnServerError() throws Exception {
+    public void WhenWeatherDataServiceThrowsOtherException_thenReturnServerError() throws Exception {
         when(weatherServiceMock.getWeather(new Location(55.87, 26.52)))
                 .thenThrow(new TestException("placeholder") {});
 

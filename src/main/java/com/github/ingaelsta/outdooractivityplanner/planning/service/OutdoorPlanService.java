@@ -101,8 +101,7 @@ public class OutdoorPlanService {
             return getWeatherRetrievalFailureAlerts(planDate);
         }
 
-        LocalDate weatherConditionFirstDay = weatherConditionFirstDayOptional.get();
-        if (planDate.isBefore(weatherConditionFirstDay)) {
+        if (planDate.isBefore(weatherConditionFirstDayOptional.get())) {
             //todo: probably should check for past while validating when I figure out testing for it
             throw new PastDateException(String.format("%s is in the past", planDate));
         }

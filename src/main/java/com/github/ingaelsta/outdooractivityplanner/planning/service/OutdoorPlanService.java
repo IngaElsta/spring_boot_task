@@ -5,7 +5,6 @@ import com.github.ingaelsta.outdooractivityplanner.commons.model.Location;
 import com.github.ingaelsta.outdooractivityplanner.planning.exception.PastDateException;
 import com.github.ingaelsta.outdooractivityplanner.planning.repository.OutdoorActivitiesRepository;
 import com.github.ingaelsta.outdooractivityplanner.planning.response.OutdoorPlanResponse;
-import com.github.ingaelsta.outdooractivityplanner.weather.exception.OWMDataException;
 import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherDataException;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Alert;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
@@ -92,23 +91,17 @@ public class OutdoorPlanService {
         try {
             weatherConditionsMap = weatherService.getWeather(location);
         } catch (WeatherDataException wde) {
-            List<Alert> alerts = new ArrayList<>();
-            Alert tooFarToGetAlerts = new Alert(
-                    wde.getMessage(),
-                    planDate.atStartOfDay(),
-                    planDate.atStartOfDay());
-            alerts.add(tooFarToGetAlerts);
-            return alerts;
+            return getWeatherRetrievalFailureAlerts(planDate);
         }
 
-        LocalDate weatherConditionFirstDay = weatherConditionsMap.keySet().stream()
-                .findFirst()
-                .orElse(null);
+        Optional<LocalDate> weatherConditionFirstDayOptional = weatherConditionsMap.keySet().stream()
+                .findFirst();
 
-        if (weatherConditionFirstDay == null) {
-            throw new OWMDataException("Failed to retrieve data from weather service");
+        if (weatherConditionFirstDayOptional.isEmpty()) {
+            return getWeatherRetrievalFailureAlerts(planDate);
         }
 
+        LocalDate weatherConditionFirstDay = weatherConditionFirstDayOptional.get();
         if (planDate.isBefore(weatherConditionFirstDay)) {
             //todo: probably should check for past while validating when I figure out testing for it
             throw new PastDateException(String.format("%s is in the past", planDate));
@@ -117,9 +110,24 @@ public class OutdoorPlanService {
         if (weatherConditionsMap.containsKey(planDate)) {
             return weatherConditionsMap.get(planDate).getAlerts();
         }
+
+        return getTooFarToPredictAlerts(planDate);
+    }
+
+    private List<Alert> getTooFarToPredictAlerts(LocalDate planDate) {
         List<Alert> alerts = new ArrayList<>();
         Alert tooFarToGetAlerts = new Alert(
                 (String.format("%s is after the last day when alerts can be predicted", planDate)),
+                planDate.atStartOfDay(),
+                planDate.atStartOfDay());
+        alerts.add(tooFarToGetAlerts);
+        return alerts;
+    }
+
+    private List<Alert> getWeatherRetrievalFailureAlerts(LocalDate planDate) {
+        List<Alert> alerts = new ArrayList<>();
+        Alert tooFarToGetAlerts = new Alert(
+                "Failed to retrieve weather data",
                 planDate.atStartOfDay(),
                 planDate.atStartOfDay());
         alerts.add(tooFarToGetAlerts);

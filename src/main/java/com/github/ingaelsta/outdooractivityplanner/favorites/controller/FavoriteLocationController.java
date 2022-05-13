@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("api/v1/outdoor-planner/favorite")
+@RequestMapping("api/v1/outdoor-planner/favorites")
 public class FavoriteLocationController {
 
     private final FavoriteLocationService favoriteLocationService;
@@ -22,7 +22,7 @@ public class FavoriteLocationController {
         this.favoriteLocationService = favoriteLocationService;
     }
 
-    @GetMapping(value = "all")
+    @GetMapping
     public List<FavoriteLocation> getAllFavorites() {
         return favoriteLocationService.getAllFavorites();
     }

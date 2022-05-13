@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping ("api/v1/outdoor-planner/activity")
+@RequestMapping ("api/v1/outdoor-planner/activities")
 public class OutdoorPlanController {
 
     private final OutdoorPlanService outdoorPlanService;
@@ -31,7 +31,7 @@ public class OutdoorPlanController {
         return outdoorPlanService.saveOutdoorPlan(plan);
     }
 
-    @GetMapping(value = "/all")
+    @GetMapping
     public List<OutdoorActivity> getAllPlans() {
         return outdoorPlanService.getAllPlans();
     }

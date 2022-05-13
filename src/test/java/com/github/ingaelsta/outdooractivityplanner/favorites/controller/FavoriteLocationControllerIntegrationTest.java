@@ -36,7 +36,7 @@ class FavoriteLocationControllerIntegrationTest {
     private final FavoriteLocation location1 = new FavoriteLocation(latitude, longitude, locationName);
     private final FavoriteLocation location2 = new FavoriteLocation(-63.81,-57.69,"Watching Antarctic birds");
 
-    private static final String URL = "/api/v1/outdoor-planner/favorite";
+    private static final String URL = "/api/v1/outdoor-planner/favorites";
 
     private static class TestException extends RuntimeException {
         TestException(String message) {
@@ -91,7 +91,7 @@ class FavoriteLocationControllerIntegrationTest {
                 .thenReturn(favoriteLocations);
 
         this.mockMvc
-                .perform(get((String.format("%s//all", URL))))
+                .perform(get((URL)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(latitude.toString())));
@@ -105,7 +105,7 @@ class FavoriteLocationControllerIntegrationTest {
                 .thenReturn(favoriteLocations);
 
         this.mockMvc
-                .perform(get((String.format("%s//all", URL))))
+                .perform(get((URL)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("[]")));
@@ -118,7 +118,7 @@ class FavoriteLocationControllerIntegrationTest {
                 .thenThrow(new TestException("placeholder") {});
 
         this.mockMvc
-                .perform(get((String.format("%s//all", URL))))
+                .perform(get((URL)))
                 .andDo(print())
                 .andExpect(status().is5xxServerError())
                 .andExpect(content().string(not(containsString("placeholder"))))

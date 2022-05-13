@@ -34,7 +34,7 @@ class OutdoorPlanControllerIntegrationTest {
     @MockBean
     private OutdoorPlanService outdoorPlanServiceMock;
 
-    private static final String URL = "/api/v1/outdoor-planner/activity";
+    private static final String URL = "/api/v1/outdoor-planner/activities";
     private static final Double latitude = 55.87;
     private static final Double longitude = 26.52;
     private static final LocalDate date = Conversion.convertDate(1643536800).toLocalDate();
@@ -180,7 +180,7 @@ class OutdoorPlanControllerIntegrationTest {
                 .thenReturn(expected);
 
         this.mockMvc
-                .perform(get((String.format("%s//all", URL))))
+                .perform(get(URL))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(latitude.toString())));
@@ -194,7 +194,7 @@ class OutdoorPlanControllerIntegrationTest {
                 .thenReturn(expected);
 
         this.mockMvc
-                .perform(get((String.format("%s//all", URL))))
+                .perform(get(URL))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("[]")));

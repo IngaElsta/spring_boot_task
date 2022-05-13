@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -42,13 +43,9 @@ public class OWMDataService implements WeatherDataService {
                         owmConfiguration.getAuthToken());
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-        //todo: manage error responses properly
-        if (response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 400) {
-            return processWeatherData(
-                    response.getBody(), objectMapper);
-        } else {
+        if (response.getStatusCodeValue() != HttpStatus.OK.value())
             throw new OWMDataException("Failed to retrieve weather data");
-        }
+        return processWeatherData(response.getBody(), objectMapper);
     }
 
     //todo: probably integrate it back into retrieve weather method

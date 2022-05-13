@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -116,6 +117,7 @@ class WeatherControllerIntegrationTest {
                 .perform(get((String.format("%s?lat=55.87&lon=26.52", URL))))
                 .andDo(print())
                 .andExpect(status().is5xxServerError())
-                .andExpect(content().string(containsString("placeholder")));
+                .andExpect(content().string(not(containsString("placeholder"))))
+                .andExpect(content().string(containsString("A server error has occurred")));
     }
 }

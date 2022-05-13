@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -36,6 +37,12 @@ class FavoriteLocationControllerIntegrationTest {
     private final FavoriteLocation location2 = new FavoriteLocation(-63.81,-57.69,"Watching Antarctic birds");
 
     private static final String URL = "/api/v1/outdoor-planner/favorite";
+
+    private static class TestException extends RuntimeException {
+        TestException(String message) {
+            super(message);
+        }
+    }
 
     //post
     @Test
@@ -102,6 +109,20 @@ class FavoriteLocationControllerIntegrationTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("[]")));
+    }
+
+    @Test
+    public void When_ServiceReturnsUnexpectedException_Then_getAllFavoritesReturnsServerErrorWithNoExplicitDetails () throws Exception {
+
+        when(favoriteLocationServiceMock.getAllFavorites())
+                .thenThrow(new TestException("placeholder") {});
+
+        this.mockMvc
+                .perform(get((String.format("%s//all", URL))))
+                .andDo(print())
+                .andExpect(status().is5xxServerError())
+                .andExpect(content().string(not(containsString("placeholder"))))
+                .andExpect(content().string(containsString("A server error has occurred")));
     }
 
     //delete

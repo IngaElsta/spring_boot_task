@@ -89,11 +89,11 @@ public class ControllerAdvice {
         log.error(stackTrace);
         log.error(String.valueOf(errors));
 
-        List<String> responseMessage = new ArrayList<>();
-        responseMessage.add("A server error has occurred");
+        List<String> responseErrors = new ArrayList<>();
+        responseErrors.add("A server error has occurred");
 
         return new ResponseEntity<>(
-                new ErrorResponse(status, errors),
+                new ErrorResponse(status, responseErrors),
                 status
         );
     }

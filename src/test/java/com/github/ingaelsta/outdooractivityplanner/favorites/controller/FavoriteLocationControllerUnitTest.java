@@ -29,7 +29,7 @@ class FavoriteLocationControllerUnitTest {
     }
 
     @Test
-    void whenSavingFavorite_thenReturnSavedEntity() {
+    void When_SavingFavoriteSuccessful_Then_saveFavoriteReturnsSavedEntity() {
         when(favoriteLocationServiceMock.saveFavorite(location1))
                 .thenReturn(location1);
 
@@ -39,7 +39,7 @@ class FavoriteLocationControllerUnitTest {
     }
 
     @Test
-    void WhenRetrievingAllSavedFavorites_thenReturnsListOfFavorites() {
+    void When_NonemptyFavoriteListIsRetrieved_Then_getAllFavoritesReturnsListOfFavorites() {
         List<FavoriteLocation> favoriteLocations = new ArrayList<>();
         favoriteLocations.add(location1);
         favoriteLocations.add(location2);
@@ -53,7 +53,7 @@ class FavoriteLocationControllerUnitTest {
     }
 
     @Test
-    public void WhenNoFavoritesSavedAndRetrievingAllSavedFavorites_thenReturnsEmptyList () {
+    public void When_EmptyFavoriteListIsRetrieved_Then_getAllFavoritesReturnsEmptyList () {
         List<FavoriteLocation> favoriteLocations = new ArrayList<>();
 
         when(favoriteLocationServiceMock.getAllFavorites())
@@ -64,16 +64,14 @@ class FavoriteLocationControllerUnitTest {
         assertEquals(favoriteLocations, result);
     }
 
-    @Test void WhenAttemptingToDeleteActivityById_thenNoExceptionIsThrown() {
+    @Test void When_IdIsLong_Then_deleteFavoriteByIdCallsFavoriteLocationService() {
         doNothing().when(favoriteLocationServiceMock).deleteFavoriteById(1L);
         favoriteLocationControllerMock.deleteFavoriteById(1L);
         verify(favoriteLocationServiceMock).deleteFavoriteById(1L);
     }
 
-    @Test void WhenAttemptingToDeleteActivityWithoutPassingId_thenIllegalArgumentExceptionIsThrown() {
+    @Test void When_IdIsNull_Then_deleteFavoriteByIdThrowsIllegalArgumentException() {
         doThrow(new IllegalArgumentException()).when(favoriteLocationServiceMock).deleteFavoriteById(null);
-        favoriteLocationControllerMock.deleteFavoriteById(1L);
-        verify(favoriteLocationServiceMock).deleteFavoriteById(1L);
 
         assertThrows(IllegalArgumentException.class, () -> favoriteLocationServiceMock.deleteFavoriteById(null));
     }

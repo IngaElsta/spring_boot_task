@@ -39,7 +39,7 @@ class FavoriteLocationControllerIntegrationTest {
 
     //post
     @Test
-    public void whenSavingFavoriteWithValid_thenReturnSavedEntity() throws Exception {
+    public void When_ValidParameters_Then_saveFavoriteReturnsSavedEntity() throws Exception {
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"locationName\":\"%s\"}",
@@ -58,7 +58,7 @@ class FavoriteLocationControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSavingFavoriteWithInvalidCoordinates_thenThrowsMethodArgumentNotValidException()  throws Exception{
+    public void When_InvalidCoordinates_Then_saveFavoriteReturnsBadRequest()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"locationName\":\"%s\"}",
@@ -75,7 +75,7 @@ class FavoriteLocationControllerIntegrationTest {
 
     //get
     @Test
-    public void WhenRetrievingAllSavedFavorites_thenReturnsListOfFavorites() throws Exception {
+    public void When_NonemptyFavoriteListRetrieved_Then_getAllFavoritesReturnsListOfFavorites() throws Exception {
         List<FavoriteLocation> favoriteLocations = new ArrayList<>();
         favoriteLocations.add(location1);
         favoriteLocations.add(location2);
@@ -91,7 +91,7 @@ class FavoriteLocationControllerIntegrationTest {
     }
 
     @Test
-    public void WhenNoFavoritesSavedAndRetrievingAllSavedFavorites_thenReturnsEmptyList () throws Exception {
+    public void When_EmptyFavoriteListRetrieved_Then_getAllFavoritesReturnsEmptyList () throws Exception {
         List<FavoriteLocation> favoriteLocations = new ArrayList<>();
 
         when(favoriteLocationServiceMock.getAllFavorites())
@@ -106,7 +106,7 @@ class FavoriteLocationControllerIntegrationTest {
 
     //delete
     @Test
-    public void WhenAttemptingToDeleteActivityById_thenNoExceptionIsThrown() throws Exception {
+    public void When_IdPassed_Then_deleteActivityByIdCallsService() throws Exception {
         doNothing().when(favoriteLocationServiceMock).deleteFavoriteById(1L);
 
         this.mockMvc
@@ -118,7 +118,7 @@ class FavoriteLocationControllerIntegrationTest {
     }
 
     @Test
-    public void WhenDeletingByIdWithoutPassingId_thenReturnError() throws Exception {
+    public void When_NoIdPassed_Then_deleteByIdReturnsBadRequest() throws Exception {
         this.mockMvc
                 .perform(delete((URL)))
                 .andDo(print())

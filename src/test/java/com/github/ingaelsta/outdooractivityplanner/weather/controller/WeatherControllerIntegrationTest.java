@@ -45,7 +45,7 @@ class WeatherControllerIntegrationTest {
 
     //get weather
     @Test
-    public void When_NoLocationPassed_Then_GetWeatherUsesDefaultValuesAndReturnsData() throws Exception {
+    public void When_NoLocationPassed_Then_getWeatherUsesDefaultValuesAndReturnsData() throws Exception {
         Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
         Wind wind = new Wind(8.23, 17.56, "S");
         List<String> weatherDescriptions = new ArrayList<>();
@@ -66,7 +66,7 @@ class WeatherControllerIntegrationTest {
     }
 
     @Test
-    public void When_ValidLocation_Then_GetWeatherUsesPassedValuesAndReturnsData() throws Exception {
+    public void When_ValidLocation_Then_getWeatherUsesPassedValuesAndReturnsData() throws Exception {
         Temperature temperature = new Temperature(1.64, 1.09, -0.16, -0.94);
         Wind wind = new Wind(8.23, 17.56, "S");
         List<String> weatherDescriptions = new ArrayList<>();
@@ -87,7 +87,7 @@ class WeatherControllerIntegrationTest {
     }
 
     @Test
-    public void When_InvalidLocation_Then_GetWeatherReturnsBadRequestError() throws Exception {
+    public void When_InvalidLocation_Then_getWeatherReturnsBadRequestError() throws Exception {
         this.mockMvc
                 .perform(get((String.format("%s?lat=555&lon=26.52", URL))))
                 .andDo(print())
@@ -96,7 +96,7 @@ class WeatherControllerIntegrationTest {
     }
 
     @Test
-    public void When_WeatherDataRetrievalUnsuccessful_Then_GetWeatherReturnsServerError() throws Exception {
+    public void When_WeatherDataRetrievalUnsuccessful_Then_getWeatherReturnsServerError() throws Exception {
         when(weatherServiceMock.getWeather(new Location(55.87, 26.52)))
                 .thenThrow(new WeatherDataException("placeholder") {});
 
@@ -108,7 +108,7 @@ class WeatherControllerIntegrationTest {
     }
 
     @Test
-    public void When_WeatherDataServiceThrowsOtherException_Then_GetWeatherReturnsServerError() throws Exception {
+    public void When_WeatherDataServiceThrowsOtherException_Then_getWeatherReturnsServerError() throws Exception {
         when(weatherServiceMock.getWeather(new Location(55.87, 26.52)))
                 .thenThrow(new TestException("placeholder") {});
 

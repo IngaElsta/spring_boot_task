@@ -78,7 +78,7 @@ class OutdoorPlanServiceTest {
 
     //save activity
     @Test
-    public void WhenAttemptingToSaveActivityOnDayWithoutAlerts_thenReturnsSavedEntityAndEmptyAlertList() {
+    public void When_DayWithoutAlerts_Then_saveOutdoorPlanReturnsSavedEntityAndEmptyAlertList() {
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
         outdoorActivity.setId(1L);
 
@@ -93,8 +93,9 @@ class OutdoorPlanServiceTest {
 
         assertEquals(expected, result);
     }
+
     @Test
-    public void WhenAttemptingToSaveActivityOnDayWithAlerts_thenReturnsSavedEntityAndListOfAlerts() {
+    public void When_DayWithAlerts_Then_saveOutdoorPlanReturnsSavedEntityAndListOfAlerts() {
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
         outdoorActivity.setId(1L);
 
@@ -111,7 +112,7 @@ class OutdoorPlanServiceTest {
     }
 
     @Test
-    public void WhenAttemptingToSaveActivityOnDayAfterWeatherPrognosisAvailable_thenReturnsSavedEntityAndListWithAlert() {
+    public void When_PlanDateAfterWeatherPrognosisAvailable_Then_saveOutdoorPlanReturnsSavedEntityAndListWithAlert() {
         LocalDate afterPrognosisPlanDate = date.plusDays(2);
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, afterPrognosisPlanDate);
         outdoorActivity.setId(1L);
@@ -136,7 +137,7 @@ class OutdoorPlanServiceTest {
     }
 
     @Test
-    public void WhenAttemptingToSaveActivityBeforePrognosisRange_thenThrowsPastDateException() {
+    public void When_PlanDateBeforePrognosisRange_Then_saveOutdoorPlanThrowsPastDateException() {
         LocalDate afterPrognosisPlanDate = date.minusDays(2);
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, afterPrognosisPlanDate);
         outdoorActivity.setId(1L);
@@ -150,20 +151,33 @@ class OutdoorPlanServiceTest {
     }
 
     @Test
-    public void WhenWeatherDataProcessingHasFailedWhileAttemptingToSavePlan_thenThrowsWeatherDataException() {
+    public void When_WeatherDataException_Then_saveOutdoorPlanSavedEntityAndListOfAlerts() {
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
         outdoorActivity.setId(1L);
 
+        when(outdoorPlanRepositoryMock.save(outdoorActivity))
+                .thenReturn(outdoorActivity);
         when(weatherServiceMock.getWeather(location))
                 .thenThrow(new WeatherDataException("Failed") {
                 });
 
-        assertThrows(WeatherDataException.class, () -> outdoorServiceMock.saveOutdoorPlan(outdoorActivity));
+        Alert failedToRetrieveWeatherData = new Alert(
+                "Failed to retrieve weather data",
+                date.atStartOfDay(),
+                date.atStartOfDay());
+        List<Alert> alertsUnknown = new ArrayList<>();
+        alertsUnknown.add(failedToRetrieveWeatherData);
+
+        OutdoorPlanResponse expected = new OutdoorPlanResponse(outdoorActivity, alertsUnknown);
+
+        OutdoorPlanResponse result = outdoorServiceMock.saveOutdoorPlan(outdoorActivity);
+
+        assertEquals(expected, result);
     }
 
     //get all saved activities
     @Test
-    public void WhenRetrievingSavedAllPlans_thenReturnsData () {
+    public void When_NonemptyPlanListRetrieved_Then_getAllPlansReturnsData () {
         List<OutdoorActivity> expected = new ArrayList<>();
 
         OutdoorActivity activity1  = new OutdoorActivity(latitude, longitude, date);
@@ -183,7 +197,7 @@ class OutdoorPlanServiceTest {
     }
 
     @Test
-    public void WhenNoActivitiesSavedAndRetrievingSavedAllPlans_thenReturnsEmptyList () {
+    public void When_EmptyPlanListRetrieved_Then_getAllPlansReturnsEmptyList () {
         List<OutdoorActivity> expected = new ArrayList<>();
 
         when(outdoorPlanRepositoryMock.findAll())
@@ -195,14 +209,13 @@ class OutdoorPlanServiceTest {
     }
 
     //delete activity by id
-    @Test void WhenAttemptingToDeleteActivityById_thenNoExceptionIsThrown() {
+    @Test void When_IdPassed_Then_deleteByIdCallsService() {
         doNothing().when(outdoorPlanRepositoryMock).deleteById(1L);
         outdoorServiceMock.deleteOutdoorPlanById(1L);
         verify(outdoorPlanRepositoryMock).deleteById(1L);
     }
 
-    @SuppressWarnings("ConstantConditions")
-    @Test void WhenAttemptingToDeleteActivityWithoutPassingId_thenIllegalArgumentExceptionIsThrown() {
+    @Test void When_IdNotPassed_Then_deleteByIdThrowsIllegalArgumentException() {
         doThrow(new IllegalArgumentException()).when(outdoorPlanRepositoryMock).deleteById(null);
         outdoorServiceMock.deleteOutdoorPlanById(1L);
         verify(outdoorPlanRepositoryMock).deleteById(1L);
@@ -212,7 +225,7 @@ class OutdoorPlanServiceTest {
 
     //safe save activity
     @Test
-    public void WhenAttemptingToSafeSaveActivityOnDayWithoutAlerts_thenReturnsSavedEntityAndEmptyAlertList() {
+    public void When_DayWithoutAlerts_Then_saveSafeOutdoorPlanReturnsSavedEntityAndEmptyAlertList() {
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
         outdoorActivity.setId(1L);
 
@@ -227,8 +240,9 @@ class OutdoorPlanServiceTest {
 
         assertEquals(expected, result);
     }
+
     @Test
-    public void WhenAttemptingToSaveActivityOnDayWithAlerts_thenSkipsSavingAndReturnsOnlyListOfAlerts() {
+    public void When_DayWithAlerts_Then_saveSafeOutdoorPlanSkipsSavingAndReturnsOnlyListOfAlerts() {
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
         outdoorActivity.setId(1L);
 
@@ -245,7 +259,7 @@ class OutdoorPlanServiceTest {
     }
 
     @Test
-    public void WhenAttemptingToSafeSaveActivityOnDayAfterWeatherPrognosisAvailable_thenSkipsSavingAndReturnsOnlyListWithAlert() {
+    public void When_PlanDateAfterWeatherPrognosisAvailable_Then_saveSafeOutdoorPlanSkipsSavingAndReturnsOnlyListWithAlert() {
         LocalDate afterPrognosisPlanDate = date.plusDays(2);
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, afterPrognosisPlanDate);
         outdoorActivity.setId(1L);
@@ -270,7 +284,7 @@ class OutdoorPlanServiceTest {
     }
 
     @Test
-    public void WhenAttemptingToSafeSaveActivityBeforePrognosisRange_thenThrowsPastDateException() {
+    public void When_PlanDateBeforePrognosisRange_Then_saveSafeOutdoorPlanThrowsPastDateException() {
         LocalDate afterPrognosisPlanDate = date.minusDays(2);
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, afterPrognosisPlanDate);
         outdoorActivity.setId(1L);
@@ -284,14 +298,27 @@ class OutdoorPlanServiceTest {
     }
 
     @Test
-    public void WhenWeatherDataProcessingHasFailedWhileAttemptingToSaveSafePlan_thenThrowsWeatherDataException() {
+    public void When_WeatherDataException_Then_saveSafeOutdoorPlanThrowsWeatherDataException() {
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
         outdoorActivity.setId(1L);
 
+        when(outdoorPlanRepositoryMock.save(outdoorActivity))
+                .thenReturn(outdoorActivity);
         when(weatherServiceMock.getWeather(location))
                 .thenThrow(new WeatherDataException("Failed") {
                 });
 
-        assertThrows(WeatherDataException.class, () -> outdoorServiceMock.saveSafeOutdoorPlan(outdoorActivity));
+        Alert failedToRetrieveWeatherData = new Alert(
+                "Failed to retrieve weather data",
+                date.atStartOfDay(),
+                date.atStartOfDay());
+        List<Alert> alertsUnknown = new ArrayList<>();
+        alertsUnknown.add(failedToRetrieveWeatherData);
+
+        OutdoorPlanResponse expected = new OutdoorPlanResponse(null, alertsUnknown);
+
+        OutdoorPlanResponse result = outdoorServiceMock.saveSafeOutdoorPlan(outdoorActivity);
+
+        assertEquals(expected, result);
     }
 }

@@ -7,9 +7,7 @@ import com.github.ingaelsta.outdooractivityplanner.planning.response.OutdoorPlan
 import com.github.ingaelsta.outdooractivityplanner.planning.service.OutdoorPlanService;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Alert;
 
-import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherDataException;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -42,6 +40,13 @@ class OutdoorPlanControllerIntegrationTest {
     private static final LocalDate date = Conversion.convertDate(1643536800).toLocalDate();
     private static List<Alert> alerts;
 
+
+    private static class TestException extends RuntimeException {
+        TestException(String message) {
+            super(message);
+        }
+    }
+
     @BeforeAll
     public static void setup () {
         Alert alert1 = new Alert("Yellow Flooding Warning",
@@ -57,7 +62,7 @@ class OutdoorPlanControllerIntegrationTest {
 
     //post activity
     @Test
-    public void WhenSavingValidPlanOnDayWithAlerts_thenReturnsEntityAndListOfAlerts()  throws Exception{
+    public void When_SavingValidPlanOnDayWithAlerts_Then_saveOutdoorPlanReturnsEntityAndListOfAlerts()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -79,7 +84,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSavingValidPlanOnDayWithoutAlerts_thenReturnsEntityAndEmptyAlertList()  throws Exception{
+    public void When_SavingValidPlanOnDayWithoutAlerts_Then_saveOutdoorPlanReturnsEntityAndEmptyAlertList()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -101,7 +106,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSavingPlanOnDayBeforePrognosisRange_thenReturnsBadRequest()  throws Exception{
+    public void When_SavingPlanOnDayBeforePrognosisRange_Then_saveOutdoorPlanReturnsBadRequest()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -122,7 +127,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSavingPlanWithInvalidParameters_thenReturnsBadRequest()  throws Exception{
+    public void When_SavingPlanWithInvalidParameters_Then_saveOutdoorPlanReturnsBadRequest()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -138,7 +143,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenWeatherDataRetrievalUnsuccessfulWhileAttemptingToSave_thenReturnsServerError() throws Exception {
+    public void When_WeatherServiceThrowsAnotherException_Then_saveOutdoorPlanReturnsServerErrorWithNoExplicitDetails() throws Exception {
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
                         latitude, longitude, date.toString()));
@@ -146,7 +151,7 @@ class OutdoorPlanControllerIntegrationTest {
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
 
         when(outdoorPlanServiceMock.saveOutdoorPlan(outdoorActivity))
-                .thenThrow(new WeatherDataException("placeholder") {});
+                .thenThrow(new TestException("placeholder") {});
 
         this.mockMvc
                 .perform(post(URL)
@@ -154,12 +159,13 @@ class OutdoorPlanControllerIntegrationTest {
                         .header("Content-Type", "application/json"))
                 .andDo(print())
                 .andExpect(status().is5xxServerError())
-                .andExpect(content().string(containsString("placeholder")));
+                .andExpect(content().string(not(containsString("placeholder"))))
+                .andExpect(content().string(containsString("A server error has occurred")));
     }
 
     //get all activities
     @Test
-    public void WhenRetrievingSavedAllPlans_thenReturnsData () throws Exception{
+    public void When_NonEmptyActivityPlanListRetrieved_Then_getAllPlansReturnsData () throws Exception{
         List<OutdoorActivity> expected = new ArrayList<>();
 
         OutdoorActivity activity1  = new OutdoorActivity(latitude, longitude, date);
@@ -181,7 +187,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenNoActivitiesSavedAndRetrievingSavedAllPlans_thenReturnsEmptyList () throws Exception {
+    public void When_EmptyActivityPlanListRetrieved_Then_getAllPlansReturnsEmptyList () throws Exception {
         List<OutdoorActivity> expected = new ArrayList<>();
 
         when(outdoorPlanServiceMock.getAllPlans())
@@ -196,7 +202,7 @@ class OutdoorPlanControllerIntegrationTest {
 
     //delete activity
     @Test
-    public void WhenDeletingOutdoorPlanById_thenCallsOutdoorPlanService() throws Exception{
+    public void When_ValidId_Then_deleteOutdoorPlanByIdCallsOutdoorPlanService() throws Exception{
 
         doNothing().when(outdoorPlanServiceMock).deleteOutdoorPlanById(1L);
 
@@ -209,7 +215,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenDeletingByIdWithPassingInvalidTypeOfArgument_thenReturnsBadRequest() throws Exception {
+    public void When_InvalidTypeOfArgument_Then_deleteOutdoorPlanByIdReturnsBadRequest() throws Exception {
         this.mockMvc
                 .perform(delete((String.format("%s//a", URL))))
                 .andDo(print())
@@ -219,7 +225,7 @@ class OutdoorPlanControllerIntegrationTest {
 
     //post safe activity
     @Test
-    public void WhenSafeSavingPlanOnDayWithAlerts_thenReturnsOnlyListOfAlerts()  throws Exception{
+    public void When_DayWithAlerts_Then_saveSafeOutdoorPlanReturnsListOfAlertsAndNoPlan()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -242,7 +248,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSavingSafeValidPlanOnDayWithoutAlerts_thenReturnEntityAndEmptyAlertList()  throws Exception{
+    public void When_DayWithoutAlerts_Then_saveSafeOutdoorPlanReturnsSavedPlanAndEmptyAlertList()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -264,7 +270,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSafeSavingPlanOnDayBeforePrognosisRange_thenReturnsBadRequest()  throws Exception{
+    public void When_PlanDateIsBeforePrognosisRange_Then_saveSafeOutdoorPlanReturnsBadRequest()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -285,7 +291,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenSafeSavingPlanWithInvalidParameters_thenReturnsBadRequest()  throws Exception{
+    public void When_InvalidParameters_Then_saveSafeOutdoorPlanReturnsBadRequest()  throws Exception{
 
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
@@ -301,7 +307,7 @@ class OutdoorPlanControllerIntegrationTest {
     }
 
     @Test
-    public void WhenWeatherDataRetrievalUnsuccessfulWhileAttemptingToSafeSave_thenReturnServerError() throws Exception {
+    public void When_WeatherServiceThrowsOtherException_Then_saveSafeOutdoorPlanReturnsServerErrorWithNoExplicitDetails() throws Exception {
         String requestBody =
                 (String.format("{\"latitude\": %s,\"longitude\": %s,\"planDate\":\"%s\"}",
                         latitude, longitude, date.toString()));
@@ -309,7 +315,7 @@ class OutdoorPlanControllerIntegrationTest {
         OutdoorActivity outdoorActivity = new OutdoorActivity(latitude, longitude, date);
 
         when(outdoorPlanServiceMock.saveSafeOutdoorPlan(outdoorActivity))
-                .thenThrow(new WeatherDataException("placeholder") {});
+                .thenThrow(new TestException("placeholder") {});
 
         this.mockMvc
                 .perform(post(String.format("%s//safe", URL))
@@ -317,7 +323,8 @@ class OutdoorPlanControllerIntegrationTest {
                         .header("Content-Type", "application/json"))
                 .andDo(print())
                 .andExpect(status().is5xxServerError())
-                .andExpect(content().string(containsString("placeholder")));
+                .andExpect(content().string(not(containsString("placeholder"))))
+                .andExpect(content().string(containsString("A server error has occurred")));
     }
 
 }

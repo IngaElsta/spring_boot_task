@@ -6,6 +6,7 @@ import com.github.ingaelsta.outdooractivityplanner.planning.exception.PastDateEx
 import com.github.ingaelsta.outdooractivityplanner.planning.repository.OutdoorActivitiesRepository;
 import com.github.ingaelsta.outdooractivityplanner.planning.response.OutdoorPlanResponse;
 import com.github.ingaelsta.outdooractivityplanner.weather.exception.OWMDataException;
+import com.github.ingaelsta.outdooractivityplanner.weather.exception.WeatherDataException;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Alert;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
 import com.github.ingaelsta.outdooractivityplanner.weather.service.WeatherService;
@@ -14,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -88,7 +87,19 @@ public class OutdoorPlanService {
     }
 
     private List<Alert> getAlerts(Location location, LocalDate planDate) {
-        Map<LocalDate, WeatherConditions> weatherConditionsMap = weatherService.getWeather(location);
+        Map<LocalDate, WeatherConditions> weatherConditionsMap;
+
+        try {
+            weatherConditionsMap = weatherService.getWeather(location);
+        } catch (WeatherDataException wde) {
+            List<Alert> alerts = new ArrayList<>();
+            Alert tooFarToGetAlerts = new Alert(
+                    wde.getMessage(),
+                    planDate.atStartOfDay(),
+                    planDate.atStartOfDay());
+            alerts.add(tooFarToGetAlerts);
+            return alerts;
+        }
 
         LocalDate weatherConditionFirstDay = weatherConditionsMap.keySet().stream()
                 .findFirst()

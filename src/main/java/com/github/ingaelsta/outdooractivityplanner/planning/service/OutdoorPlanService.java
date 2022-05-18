@@ -94,14 +94,14 @@ public class OutdoorPlanService {
             return getWeatherRetrievalFailureAlerts(planDate);
         }
 
-        Optional<LocalDate> weatherConditionFirstDayOptional = weatherConditionsMap.keySet().stream()
+        Optional<LocalDate> weatherConditionFirstDay = weatherConditionsMap.keySet().stream()
                 .findFirst();
 
-        if (weatherConditionFirstDayOptional.isEmpty()) {
+        if (weatherConditionFirstDay.isEmpty()) {
             return getWeatherRetrievalFailureAlerts(planDate);
         }
 
-        if (planDate.isBefore(weatherConditionFirstDayOptional.get())) {
+        if (planDate.isBefore(weatherConditionFirstDay.get())) {
             //todo: probably should check for past while validating when I figure out testing for it
             throw new PastDateException(String.format("%s is in the past", planDate));
         }

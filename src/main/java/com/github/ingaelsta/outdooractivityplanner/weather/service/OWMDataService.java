@@ -11,41 +11,57 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriBuilder;
 
-import java.time.*;
-import java.util.*;
+import java.net.URI;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Map;
 
 @Slf4j
 @Component
 public class OWMDataService implements WeatherDataService {
-    private final RestTemplate restTemplate;
+    private final String owmOneApiUrl = "https://api.openweathermap.org/data/2.5";
     private final ObjectMapper objectMapper;
     private final OWMConfiguration owmConfiguration;
 
-    public OWMDataService(RestTemplateBuilder restTemplateBuilder,
-                          OWMConfiguration owmConfiguration,
+    private final WebClient webClient;
+
+    public OWMDataService(OWMConfiguration owmConfiguration,
                           OWMObjectMapperConfiguration OWMobjectMapperConfiguration) {
-        this.restTemplate = restTemplateBuilder.build();
         this.owmConfiguration = owmConfiguration;
         this.objectMapper = OWMobjectMapperConfiguration.getObjectMapper();
+        this.webClient = WebClient.create(owmOneApiUrl);
     }
 
-
     public Map<LocalDate, WeatherConditions> retrieveWeather (Location location) {
-        var url = new UriTemplate(owmConfiguration.getOneApiUrl())
-                .expand(location.getLatitude(), location.getLongitude(),
-                        owmConfiguration.getAuthToken());
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        //todo: might try again using the original string from properties file
+        //todo: works but seems much slower (15s???)... commit now, investigate later
+        //todo: add circuit breaker
+        String response = webClient.get()
+                .uri(uriBuilder -> buildWithParams(location, uriBuilder))
+                .retrieve()
+                .onStatus(HttpStatus::isError, throwable -> {
+                    throw new OWMDataException("Failed to retrieve weather data");
+                })
+                .bodyToMono(String.class)
+                .block(Duration.of(60000, ChronoUnit.MILLIS));
+        return processWeatherData(response, objectMapper);
+    }
 
-        if (response.getStatusCodeValue() != HttpStatus.OK.value())
-            throw new OWMDataException("Failed to retrieve weather data");
-        return processWeatherData(response.getBody(), objectMapper);
+    private URI buildWithParams(Location location, UriBuilder uriBuilder) {
+        return uriBuilder
+                .path("/onecall")
+                .queryParam("lat", location.getLatitude())
+                .queryParam("lon", location.getLongitude())
+                .queryParam("exclude", "minutely,hourly,current")
+                .queryParam("appid", owmConfiguration.getAuthToken())
+                .queryParam("units", "metric")
+                .build();
     }
 
     //todo: probably integrate it back into retrieve weather method

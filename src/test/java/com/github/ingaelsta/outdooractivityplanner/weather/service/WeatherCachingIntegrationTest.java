@@ -7,6 +7,7 @@ import com.github.ingaelsta.outdooractivityplanner.weather.model.Temperature;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.WeatherConditions;
 import com.github.ingaelsta.outdooractivityplanner.weather.model.Wind;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,22 +92,43 @@ public class WeatherCachingIntegrationTest {
                 .thenReturn(weatherConditionsMap);
         when(weatherServiceMock.getWeather(location2))
                 .thenReturn(weatherConditionsMapWithAlerts);
-
+        cacheManager.getCache("weather").clear();
     }
 
     @Test
-    public void methodInvocationShouldBeCached() {
-
+    public void When_getWeatherIsCalled_Then_methodInvocationShouldBeCached() {
+        //calls once for the same parameters
         Map<LocalDate, WeatherConditions> result1 = weatherServiceWrappedMock.getWeather(location1);
         assertEquals(result1, weatherConditionsMap);
-
         Map<LocalDate, WeatherConditions> result2 = weatherServiceWrappedMock.getWeather(location1);
         assertEquals(result2, weatherConditionsMap);
-
         verify(weatherServiceMock, times(1)).getWeather(location1);
         assertNotNull(cacheManager.getCache("weather").get(location1));
 
+        //calls again for new parameters
         Map<LocalDate, WeatherConditions> result3 = weatherServiceWrappedMock.getWeather(location2);
         assertEquals(result3, weatherConditionsMapWithAlerts);
+        verify(weatherServiceMock, times(1)).getWeather(location2);
+        assertNotNull(cacheManager.getCache("weather").get(location2));
+    }
+
+    @Test
+    public void When_evictWeatherCacheValueCalledOnCachedValue_Then_theEvictedValueCantBeFoundInCacheLater () {
+        weatherServiceWrappedMock.getWeather(location1);
+        weatherServiceWrappedMock.getWeather(location2);
+
+        weatherServiceWrappedMock.evictWeatherCacheValue(location2);
+        assertNotNull(cacheManager.getCache("weather").get(location1));
+        assertNull(cacheManager.getCache("weather").get(location2));
+    }
+
+    @Test
+    public void When_valueCachedAndEvictAllCacheCalled_Then_thePreviouslyStoredValueCantBeFoundInCacheLater () {
+        weatherServiceWrappedMock.getWeather(location1);
+        weatherServiceWrappedMock.getWeather(location2);
+
+        weatherServiceWrappedMock.evictAllWeatherCache();
+        assertNull(cacheManager.getCache("weather").get(location1));
+        assertNull(cacheManager.getCache("weather").get(location2));
     }
 }

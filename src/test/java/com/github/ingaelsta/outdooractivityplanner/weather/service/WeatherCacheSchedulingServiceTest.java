@@ -71,10 +71,8 @@ class WeatherCacheSchedulingServiceTest {
         WeatherCacheSchedulingService = new WeatherCacheSchedulingService(weatherServiceMock, favoriteLocationServiceMock);
     }
 
-
     @Test
-    public void WhenCallingFavoriteLocationCaching_thenGetWeatherIsCalled() {
-
+    public void When_twoFavoriteLocationsStored_Then_evictWeatherCacheValueAndGetWeatherIsCalledTwiceEach() {
         List<FavoriteLocation> favoriteLocations = new ArrayList<>();
         favoriteLocations.add(favoriteLocation1);
         favoriteLocations.add(favoriteLocation2);
@@ -90,6 +88,14 @@ class WeatherCacheSchedulingServiceTest {
         WeatherCacheSchedulingService.cacheWeatherForFavoriteLocations();
 
         verify(weatherServiceMock, times(2)).getWeather(any());
+        verify(weatherServiceMock, times(2)).evictWeatherCacheValue(any());
+    }
+
+    @Test
+    public void When_clearAllCacheCalled_Then_evictAllWeatherCacheIsCalled() {
+        WeatherCacheSchedulingService.clearAllCache();
+
+        verify(weatherServiceMock).evictAllWeatherCache();
     }
 
 }

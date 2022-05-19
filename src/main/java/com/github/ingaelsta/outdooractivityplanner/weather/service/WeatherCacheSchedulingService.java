@@ -28,7 +28,14 @@ public class WeatherCacheSchedulingService {
         allFavoriteLocations
                 .forEach(favorite -> {
                     Location location = new Location(favorite.getLatitude(), favorite.getLongitude());
+                    weatherService.evictWeatherCacheValue(location);
                     weatherService.getWeather(location);
                 });
     }
+
+    @Scheduled(cron = "* 0 * * * *")
+    public void clearAllCache () {
+        weatherService.evictAllWeatherCache();
+    }
+
 }

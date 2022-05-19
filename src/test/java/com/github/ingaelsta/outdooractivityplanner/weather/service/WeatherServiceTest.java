@@ -63,7 +63,7 @@ class WeatherServiceTest {
 
     //getWeather
     @Test
-    public void WhenWeatherDataProcessedSuccessfully_thenReturnsWeatherData() {
+    public void When_weatherDataServiceReturnsData_then_getWeatherReturnsWeatherData() {
 
         when(weatherDataServiceMock.retrieveWeather(location))
                 .thenReturn(weatherConditionsMap);
@@ -74,7 +74,7 @@ class WeatherServiceTest {
     }
 
     @Test
-    public void WhenWeatherDataProcessingHasFailed_thenThrowsWeatherDataException() {
+    public void When_weatherDataServiceThrowsWeatherDataException_thenThrowsWeatherDataException() {
         Location location = new Location(55.87, 26.52);
 
         when(weatherDataServiceMock.retrieveWeather(location))

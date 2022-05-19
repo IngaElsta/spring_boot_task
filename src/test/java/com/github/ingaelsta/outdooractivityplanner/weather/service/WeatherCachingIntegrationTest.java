@@ -30,6 +30,8 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class WeatherCachingIntegrationTest {
     @Autowired
+    CacheManager cacheManager;
+    @Autowired
     WeatherService weatherServiceWrappedMock;
     private static final WeatherService weatherServiceMock = Mockito.mock(WeatherService.class);
 
@@ -47,9 +49,6 @@ public class WeatherCachingIntegrationTest {
             return new ConcurrentMapCacheManager("weather");
         }
     }
-
-    @Autowired
-    CacheManager cacheManager;
 
     private final LocalDate date = Conversion.convertDate(1643536800).toLocalDate();
     private final Location location1 = new Location(12.34, 56.67);
@@ -116,7 +115,6 @@ public class WeatherCachingIntegrationTest {
     public void When_evictWeatherCacheValueCalledOnCachedValue_Then_theEvictedValueCantBeFoundInCacheLater () {
         weatherServiceWrappedMock.getWeather(location1);
         weatherServiceWrappedMock.getWeather(location2);
-
         weatherServiceWrappedMock.evictWeatherCacheValue(location2);
         assertNotNull(cacheManager.getCache("weather").get(location1));
         assertNull(cacheManager.getCache("weather").get(location2));
@@ -126,7 +124,6 @@ public class WeatherCachingIntegrationTest {
     public void When_valueCachedAndEvictAllCacheCalled_Then_thePreviouslyStoredValueCantBeFoundInCacheLater () {
         weatherServiceWrappedMock.getWeather(location1);
         weatherServiceWrappedMock.getWeather(location2);
-
         weatherServiceWrappedMock.evictAllWeatherCache();
         assertNull(cacheManager.getCache("weather").get(location1));
         assertNull(cacheManager.getCache("weather").get(location2));

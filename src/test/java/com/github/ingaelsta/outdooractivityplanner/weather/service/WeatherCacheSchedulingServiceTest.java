@@ -72,7 +72,7 @@ class WeatherCacheSchedulingServiceTest {
     }
 
     @Test
-    public void When_twoFavoriteLocationsStored_Then_evictWeatherCacheValueAndGetWeatherIsCalledTwiceEach() {
+    public void When_twoFavoriteLocationsStored_Then_GetWeatherAndEvictWeatherCacheValueIsCalledTwiceEach() {
         List<FavoriteLocation> favoriteLocations = new ArrayList<>();
         favoriteLocations.add(favoriteLocation1);
         favoriteLocations.add(favoriteLocation2);

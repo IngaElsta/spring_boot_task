@@ -15,7 +15,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +28,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@TestPropertySource(locations="classpath:test.properties")
+@TestPropertySource(locations="classpath:test.properties") //doesn't work with yaml, might need a workaround
 public class OWMDataServiceTest {
 
     //todo: try checking if correct arguments are passed
 //    @Captor
 //    private ArgumentCaptor<ClientRequest> argumentCaptor;
+
     @Autowired
     private OWMConfiguration owmConfiguration;
     private ObjectMapper objectMapperMock = Mockito.mock(ObjectMapper.class);
@@ -76,7 +75,6 @@ public class OWMDataServiceTest {
             Double longitude = 26.52;
             location = new Location(latitude, longitude);
         }
-        System.out.println(owmConfiguration);
         objectMapperConfigMock = new OWMObjectMapperConfiguration(objectMapperMock);
         owmDataServiceMock = new OWMDataService(owmConfiguration, objectMapperConfigMock);
     }
